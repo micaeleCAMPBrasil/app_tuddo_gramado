@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "111160179496",
+    "project_id": "tuddo-gramado-app",
+    "storage_bucket": "tuddo-gramado-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:111160179496:android:bdd76adedad9012a812e1d",
+        "android_client_info": {
+          "package_name": "com.example.app_tuddo_gramado"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNFCBCw-ynEYG6TwG2sCNIB255MjJ63Ls"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
