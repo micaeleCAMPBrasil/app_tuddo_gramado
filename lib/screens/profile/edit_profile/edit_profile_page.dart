@@ -86,6 +86,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       setState(() {
         images = File(pickedFile.path);
       });
+      uploadImage();
     }
   }
 
@@ -96,6 +97,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       setState(() {
         images = File(pickedFile.path);
       });
+      uploadImage();
     }
   }
 
@@ -178,6 +180,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
+  String imgURL = '';
+
   void uploadImage() async {
     try {
       String fileName = images!.path.split('/').last;
@@ -193,11 +197,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
       Dio dio = Dio();
       dio.post("https://api.imgbb.com/1/upload", data: data).then((response) {
         var data = response.data;
-        String imgURL = data['data']['url'];
+
+        debugPrint('Função - ${data['data']['url']}');
 
         setState(() {
-          widget.usuario.photo = imgURL;
+          imgURL = data['data']['url'];
         });
+
         // ignore: invalid_return_type_for_catch_error
       }).catchError((error) => debugPrint(error.toString()));
       // ignore: empty_catches
@@ -238,27 +244,31 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 child: PrimaryButton(
                   text: 'Salvar',
                   onTap: () {
-                    uploadImage();
-
-                    debugPrint("A foto do usuário é ${widget.usuario.photo}");
-
-                    setState(() {
-                      widget.usuario.nome = _nameController.text;
-                      widget.usuario.username = _userNameController.text;
-                      widget.usuario.email = _emailController.text;
-                      widget.usuario.telefone = _phoneNumberController.text;
-                    });
-
-                    Provider.of<UsuarioProvider>(context, listen: false)
-                        .updateUsuario(widget.usuario);
-
-                    editarUsuario(widget.usuario);
-
-                    UiHelper.showLoadingDialog(context, 'Aguarde...');
+                    UiHelper.showLoadingDialog(context, 'Aguarda...');
 
                     Future.delayed(
-                      const Duration(seconds: 5),
+                      const Duration(seconds: 3),
                       () {
+                        debugPrint("IMG URL $imgURL");
+
+                        setState(() {
+                          widget.usuario.nome = _nameController.text;
+                          widget.usuario.username = _userNameController.text;
+                          widget.usuario.email = _emailController.text;
+                          widget.usuario.telefone = _phoneNumberController.text;
+                          widget.usuario.photo = imgURL;
+                        });
+
+                        debugPrint(
+                            "A foto do usuário é ${widget.usuario.photo}");
+
+                        Provider.of<UsuarioProvider>(context, listen: false)
+                            .updateUsuario(widget.usuario);
+
+                        editarUsuario(widget.usuario);
+
+                        UiHelper.showLoadingDialog(context, 'Aguarde...');
+
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(

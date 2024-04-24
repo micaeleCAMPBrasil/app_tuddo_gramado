@@ -26,15 +26,11 @@ class _CheckUserLoggedInOrNotState extends State<CheckUserLoggedInOrNot> {
 
   @override
   void initState() {
-    
     AuthService.isLoggedIn().then((value) async {
       if (value) {
         User userFire = AuthService.gerarUserFirebase();
         await storeUser.getUID(userFire.uid);
-        await storeUser.getUID(userFire.uid);
         Usuario usuario = storeUser.state.value;
-
-        debugPrint("USUARIO _ ${usuario.nome}");
 
         // ignore: use_build_context_synchronously
         Provider.of<UsuarioProvider>(context, listen: false)

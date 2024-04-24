@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, file_names, deprecated_member_use
+// ignore_for_file: library_private_types_in_public_api, file_names, deprecated_member_use, use_build_context_synchronously
 
 import 'dart:async';
 
@@ -102,15 +102,28 @@ class _ALoginScreenState extends State<ALoginScreen> {
                             phone: _phoneTextController.text,
                             erroStep: () =>
                                 ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
+                              SnackBar(
+                                content: const Text(
                                   "Erro ao enviar o número",
                                   style: TextStyle(color: Colors.white),
                                 ),
-                                backgroundColor: Colors.red,
+                                backgroundColor: primaryColor,
                               ),
                             ),
                             nextStep: () {
+                              /*await storeUser
+                                  .getUserTelefone(_phoneTextController.text);
+
+                              bool check = storeUser.isExist.value;
+
+                              if (check) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => BottomNavigation(),
+                                  ),
+                                );
+                              } else {*/
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -119,6 +132,7 @@ class _ALoginScreenState extends State<ALoginScreen> {
                                   ),
                                 ),
                               );
+                              //}
                             },
                           );
                         }
@@ -167,7 +181,7 @@ class _ALoginScreenState extends State<ALoginScreen> {
                                 String? nome = user.displayName;
                                 String? emailEscolhido = user.email;
 
-                                storeUser.getUID(uid);
+                                await storeUser.getUID(uid);
 
                                 Usuario usuarioBase = storeUser.state.value;
 
@@ -217,7 +231,7 @@ class _ALoginScreenState extends State<ALoginScreen> {
                                           color: Colors.white,
                                         ),
                                       ),
-                                      backgroundColor: Colors.red,
+                                      backgroundColor: primaryColor,
                                     ),
                                   );
                                 }

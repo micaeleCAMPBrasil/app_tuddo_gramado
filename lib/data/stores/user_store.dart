@@ -8,6 +8,7 @@ class UsuarioStore {
 
   final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
   final ValueNotifier<bool> isEditable = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> isExist = ValueNotifier<bool>(false);
 
   final ValueNotifier<Usuario> state = ValueNotifier<Usuario>(
     Usuario(
@@ -49,6 +50,21 @@ class UsuarioStore {
     try {
       final result = await repository.getUsuarioUID(uid);
       state.value = result;
+    } on NotFoundException catch (e) {
+      erro.value = e.message;
+    } catch (e) {
+      erro.value = e.toString();
+    }
+
+    isLoading.value = false;
+  }
+
+  Future getUserTelefone(String telefone) async {
+    isLoading.value = true;
+
+    try {
+      final result = await repository.getUsuarioTelefone(telefone);
+      isExist.value = result;
     } on NotFoundException catch (e) {
       erro.value = e.message;
     } catch (e) {

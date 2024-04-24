@@ -10,6 +10,7 @@ import 'package:app_tuddo_gramado/data/php/http_client.dart';
 abstract class IFuncoes {
   Future<List<Usuario>> getAllUsuario();
   Future<Usuario> getUsuarioUID(String uid);
+  Future<bool> getUsuarioTelefone(String telefone);
   Future<bool> updateUser(Usuario usuario);
 
   Future<List<Patrocinadores>> getListPatrocinadores();
@@ -221,6 +222,34 @@ class IFuncoesPHP implements IFuncoes {
       throw NotFoundException("A url informada não é válida.");
     } else {
       throw Exception("Não foi possível carregar os usuários.");
+    }
+  }
+
+  @override
+  Future<bool> getUsuarioTelefone(String telefone) async {
+    final response = await client.get(
+      url:
+          "https://campbrasil.com/tuddo_gramado/php/getUsuarioTelefone.php?telefone=$telefone",
+    );
+
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+
+      if (body == 'dados_vazios') {
+        return false;
+      } else if (body == 'true') {
+        return true;
+      } else if (body == 'false') {
+        return false;
+      } else {
+        return false;
+      }
+    } else if (response.statusCode == 404) {
+      debugPrint('erro 404');
+      throw NotFoundException("A url informada não é válida.");
+    } else {
+      debugPrint('outro erro');
+      throw Exception("Não foi possível carregar os post.");
     }
   }
 

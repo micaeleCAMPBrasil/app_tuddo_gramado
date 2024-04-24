@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, file_names
+// ignore_for_file: library_private_types_in_public_api, file_names, use_build_context_synchronously
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -98,7 +98,7 @@ class _AVerifyCodeState extends State<AVerifyCode> {
                   ),
                   heightSpace20,
                   Text(
-                    'Digite o código de verificação de 4 dígitos. Acabamos de te enviar para\n +55 ${widget.telefone}',
+                    'Digite o código de verificação de 6 dígitos. Acabamos de te enviar para\n +55 ${widget.telefone}',
                     style: whiteRegular16,
                     textAlign: TextAlign.justify,
                   ),
@@ -119,14 +119,19 @@ class _AVerifyCodeState extends State<AVerifyCode> {
                     onTap: () {
                       if (mykey.currentState!.validate()) {
                         AuthService.loginWithOtp(otp: _optController.text).then(
-                          (value) {
+                          (value) async {
                             User user = AuthService.gerarUserFirebase();
                             String uid = user.uid;
                             String? telefone = user.phoneNumber;
 
-                            storeUser.getUID(uid);
+                            await storeUser.getUID(uid);
 
                             Usuario usuarioBase = storeUser.state.value;
+
+                            debugPrint('Nome - ${usuarioBase.nome}');
+                            debugPrint('Email - ${usuarioBase.email}');
+                            debugPrint('Telefone - ${usuarioBase.telefone}');
+
                             if (value == "Sucess") {
                               UiHelper.showLoadingDialog(context, 'Aguarde...');
 

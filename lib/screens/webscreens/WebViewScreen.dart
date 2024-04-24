@@ -34,9 +34,11 @@ class _WebViewScreenState extends State<WebViewScreen> {
     Future.delayed(
       const Duration(seconds: 2),
       () {
-        setState(() {
-          _loading = true;
-        });
+        if (mounted) {
+          setState(() {
+            _loading = true;
+          });
+        }
       },
     );
   }
