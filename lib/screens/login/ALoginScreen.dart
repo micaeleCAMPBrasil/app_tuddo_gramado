@@ -18,6 +18,7 @@ import 'package:app_tuddo_gramado/utils/bottom_navigation.dart';
 
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:app_tuddo_gramado/utils/widgets.dart';
+import 'package:provider/provider.dart';
 
 class ALoginScreen extends StatefulWidget {
   const ALoginScreen({super.key});
@@ -96,8 +97,8 @@ class _ALoginScreenState extends State<ALoginScreen> {
                     PrimaryButton(
                       text: 'Continue',
                       onTap: () {
-                        UiHelper.showLoadingDialog(context, 'Aguarde...');
                         if (mykey.currentState!.validate()) {
+                          UiHelper.showLoadingDialog(context, 'Aguarde...');
                           AuthService.sendOtp(
                             phone: _phoneTextController.text,
                             erroStep: () =>
@@ -111,19 +112,6 @@ class _ALoginScreenState extends State<ALoginScreen> {
                               ),
                             ),
                             nextStep: () {
-                              /*await storeUser
-                                  .getUserTelefone(_phoneTextController.text);
-
-                              bool check = storeUser.isExist.value;
-
-                              if (check) {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => BottomNavigation(),
-                                  ),
-                                );
-                              } else {*/
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -132,7 +120,6 @@ class _ALoginScreenState extends State<ALoginScreen> {
                                   ),
                                 ),
                               );
-                              //}
                             },
                           );
                         }
@@ -209,6 +196,10 @@ class _ALoginScreenState extends State<ALoginScreen> {
                                       },
                                     );
                                   } else {
+                                    Provider.of<UsuarioProvider>(context,
+                                            listen: false)
+                                        .updateUsuario(usuarioBase);
+
                                     Timer(
                                       const Duration(seconds: 1),
                                       () {

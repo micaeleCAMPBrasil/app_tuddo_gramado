@@ -59,21 +59,6 @@ class UsuarioStore {
     isLoading.value = false;
   }
 
-  Future getUserTelefone(String telefone) async {
-    isLoading.value = true;
-
-    try {
-      final result = await repository.getUsuarioTelefone(telefone);
-      isExist.value = result;
-    } on NotFoundException catch (e) {
-      erro.value = e.message;
-    } catch (e) {
-      erro.value = e.toString();
-    }
-
-    isLoading.value = false;
-  }
-
   Future update(Usuario usuario) async {
     final result = await repository.updateUser(usuario);
     isEditable.value = result;

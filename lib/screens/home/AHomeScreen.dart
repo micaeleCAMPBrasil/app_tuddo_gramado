@@ -326,7 +326,7 @@ class _AHomeScreenState extends State<AHomeScreen> {
                             ? const EdgeInsets.only(left: 5)
                             : const EdgeInsets.symmetric(horizontal: 5),
                     width: 120,
-                    height: 80,
+                    height: 100,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                           begin: Alignment.topCenter,

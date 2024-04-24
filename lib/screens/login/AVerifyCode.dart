@@ -13,6 +13,7 @@ import 'package:app_tuddo_gramado/services/auth_service.dart';
 import 'package:app_tuddo_gramado/utils/bottom_navigation.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:app_tuddo_gramado/utils/widgets.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class AVerifyCode extends StatefulWidget {
@@ -127,11 +128,6 @@ class _AVerifyCodeState extends State<AVerifyCode> {
                             await storeUser.getUID(uid);
 
                             Usuario usuarioBase = storeUser.state.value;
-
-                            debugPrint('Nome - ${usuarioBase.nome}');
-                            debugPrint('Email - ${usuarioBase.email}');
-                            debugPrint('Telefone - ${usuarioBase.telefone}');
-
                             if (value == "Sucess") {
                               UiHelper.showLoadingDialog(context, 'Aguarde...');
 
@@ -154,6 +150,9 @@ class _AVerifyCodeState extends State<AVerifyCode> {
                                   },
                                 );
                               } else {
+                                Provider.of<UsuarioProvider>(context,
+                                        listen: false)
+                                    .updateUsuario(usuarioBase);
                                 Timer(
                                   const Duration(seconds: 1),
                                   () {
@@ -178,7 +177,7 @@ class _AVerifyCodeState extends State<AVerifyCode> {
                                       color: Colors.white,
                                     ),
                                   ),
-                                  backgroundColor: primaryColor,
+                                  backgroundColor: Colors.red,
                                 ),
                               );*/
                             }
