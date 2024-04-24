@@ -9,14 +9,15 @@ class SVCommentModel {
   bool? isCommentReply;
   bool? like;
 
-  SVCommentModel(
-      {this.name,
-      this.profileImage,
-      this.time,
-      this.comment,
-      this.likeCount,
-      this.isCommentReply,
-      this.like});
+  SVCommentModel({
+    this.name,
+    this.profileImage,
+    this.time,
+    this.comment,
+    this.likeCount,
+    this.isCommentReply,
+    this.like,
+  });
 }
 
 List<SVCommentModel> getComments() {

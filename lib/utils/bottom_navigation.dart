@@ -87,15 +87,15 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 icon: Icon(
                   Icons.home,
                   color: widget.selectedIndex == 0 ? primaryColor : color94,
-                  size: 25,
+                  size: 35,
                 ),
                 label: '',
               ),
               BottomNavigationBarItem(
                 icon: Image.asset(
                   "assets/icones/cup.png",
-                  width: 25,
-                  height: 25,
+                  width: 35,
+                  height: 35,
                   color: widget.selectedIndex == 1 ? primaryColor : color94,
                 ),
                 label: '',
@@ -104,15 +104,15 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 icon: Icon(
                   Icons.search,
                   color: widget.selectedIndex == 2 ? primaryColor : color94,
-                  size: 25,
+                  size: 35,
                 ),
                 label: '',
               ),
               BottomNavigationBarItem(
                 icon: Image.asset(
                   "assets/icones/map.png",
-                  width: 25,
-                  height: 25,
+                  width: 35,
+                  height: 35,
                   color: widget.selectedIndex == 3 ? primaryColor : color94,
                 ),
                 label: '',
@@ -121,7 +121,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 icon: Icon(
                   Icons.people,
                   color: widget.selectedIndex == 4 ? primaryColor : color94,
-                  size: 25,
+                  size: 35,
                 ),
                 label: '',
               ),

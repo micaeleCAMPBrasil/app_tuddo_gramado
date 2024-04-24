@@ -11,6 +11,9 @@ class SVCommentReplyComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
+      margin: EdgeInsets.only(
+          top: MediaQuery.of(context).padding.top,
+          bottom: MediaQuery.of(context).padding.bottom),
       color: scaffoldColor,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -19,7 +22,7 @@ class SVCommentReplyComponent extends StatelessWidget {
           Row(
             children: [
               16.width,
-              Image.asset('images/socialv/faces/face_5.png',
+              Image.asset('assets/social/face_5.png',
                       height: 48, width: 48, fit: BoxFit.cover)
                   .cornerRadiusWithClipRRect(8),
               10.width,

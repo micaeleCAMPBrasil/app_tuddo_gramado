@@ -1,10 +1,11 @@
 // ignore_for_file: file_names
-
-import 'package:flutter/material.dart';
-
 class CategoriasButoon {
-  String name;
-  MaterialPageRoute route;
+  String name, backgroundImage;
+  int route;
 
-  CategoriasButoon({required this.name, required this.route});
+  CategoriasButoon({
+    required this.name,
+    required this.backgroundImage,
+    required this.route,
+  });
 }

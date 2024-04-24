@@ -20,14 +20,12 @@ class PrimaryButton extends StatelessWidget {
         alignment: Alignment.center,
         width: 120,
         height: 40,
-        padding: const EdgeInsets.symmetric(
-          vertical: 10,
-        ),
         decoration: BoxDecoration(
           color: primaryColor,
           borderRadius: BorderRadius.circular(5),
         ),
         child: Text(
+          textAlign: TextAlign.center,
           text,
           style: whiteBold18,
         ),
@@ -224,15 +222,16 @@ class PrimaryTextfield extends StatelessWidget {
   final TextInputType? keyboardType;
   final String lableText;
 
-  const PrimaryTextfield(
-      {super.key,
-      required this.lableText,
-      this.keyboardType,
-      this.textInputAction = TextInputAction.next,
-      this.maxLength,
-      this.controller,
-      this.obsecureText,
-      this.hintText});
+  const PrimaryTextfield({
+    super.key,
+    required this.lableText,
+    this.keyboardType,
+    this.textInputAction = TextInputAction.next,
+    this.maxLength,
+    this.controller,
+    this.obsecureText,
+    this.hintText,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -246,15 +245,16 @@ class PrimaryTextfield extends StatelessWidget {
       style: whiteMedium16,
       maxLength: maxLength,
       decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: whiteMedium16,
-          counterText: '',
-          enabledBorder:
-              UnderlineInputBorder(borderSide: BorderSide(color: color94)),
-          focusedBorder:
-              UnderlineInputBorder(borderSide: BorderSide(color: color94)),
-          labelText: lableText,
-          labelStyle: color94Regular15),
+        hintText: hintText,
+        hintStyle: whiteMedium16,
+        counterText: '',
+        enabledBorder:
+            UnderlineInputBorder(borderSide: BorderSide(color: color94)),
+        focusedBorder:
+            UnderlineInputBorder(borderSide: BorderSide(color: color94)),
+        labelText: lableText,
+        labelStyle: color94Regular15,
+      ),
     );
   }
 }
@@ -278,4 +278,12 @@ Future<File> svGetImageSource() async {
   final picker = ImagePicker();
   final pickedImage = await picker.pickImage(source: ImageSource.camera);
   return File(pickedImage!.path);
+}
+
+String formatarNome(String nome) {
+  final nomeDividido = nome.split(' ');
+  String pNome = nomeDividido[0];
+  String sNome = nomeDividido[1];
+  String nomeFormatado = '$pNome $sNome';
+  return nomeFormatado;
 }

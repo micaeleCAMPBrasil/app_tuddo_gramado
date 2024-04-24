@@ -1,62 +1,41 @@
-import 'package:app_tuddo_gramado/screens/rede_social/SVHomeFragment.dart';
-import 'package:flutter/material.dart';
 import 'package:app_tuddo_gramado/data/models/categoriasButton.dart';
-import 'package:app_tuddo_gramado/screens/patrocinadores/patrocinadores_page.dart';
-import 'package:app_tuddo_gramado/screens/webscreens/WebViewScreen.dart';
 
 class CategoriasButoonStore {
   static List<CategoriasButoon> getbuttons = [
     CategoriasButoon(
       name: 'Patrocinadores',
-      route: MaterialPageRoute(
-        builder: (context) => PatrocinadoresScreen(),
-      ),
+      backgroundImage: 'assets/image/a1.png',
+      route: 1,
     ),
     CategoriasButoon(
       name: 'Tuddo em Dobro',
-      route: MaterialPageRoute(
-        builder: (context) => WebViewScreen(
-          url: "https://www.google.com/",
-        ),
-      ),
+      backgroundImage: 'assets/image/a2.png',
+      route: 2,
     ),
     CategoriasButoon(
       name: 'Transfer',
-      route: MaterialPageRoute(
-        builder: (context) => WebViewScreen(
-          url: "https://www.google.com/",
-        ),
-      ),
+      backgroundImage: 'assets/image/a3.png',
+      route: 3,
     ),
     CategoriasButoon(
       name: 'Hospedagem',
-      route: MaterialPageRoute(
-        builder: (context) => WebViewScreen(
-          url: "https://www.google.com/",
-        ),
-      ),
+      backgroundImage: 'assets/image/a4.png',
+      route: 4,
     ),
-    CategoriasButoon(
+    /*CategoriasButoon(
       name: 'Dicas e Roteiros',
-      route: MaterialPageRoute(
-        builder: (context) => const SVHomeFragment(),
-      ),
-    ),
+      backgroundImage: 'assets/image/a5.png',
+      route: 5,
+    ),*/
     CategoriasButoon(
       name: 'Assine',
-      route: MaterialPageRoute(
-        builder: (context) => WebViewScreen(
-          url: "https://www.google.com/",
-        ),
-      ),
+      backgroundImage: 'assets/image/a6.png',
+      route: 6,
     ),
     CategoriasButoon(
       name: 'Faça Parte',
-      route: MaterialPageRoute(
-        builder: (context) => WebViewScreen(
-          url: "https://www.google.com/",
-        ),
-      ),
+      backgroundImage: 'assets/image/a7.png',
+      route: 7,
     ),
   ];
 }

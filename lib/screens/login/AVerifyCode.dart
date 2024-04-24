@@ -74,12 +74,12 @@ class _AVerifyCodeState extends State<AVerifyCode> {
           top: MediaQuery.of(context).viewPadding.top,
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        /*decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/image/login_register_bg.png"),
-                fit: BoxFit.fill,
-              ),
-            ),*/
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/image/login_register_bg.png"),
+            fit: BoxFit.fill,
+          ),
+        ),
         child: Stack(
           alignment: Alignment.bottomCenter,
           children: [
@@ -164,7 +164,7 @@ class _AVerifyCodeState extends State<AVerifyCode> {
                               }
                             } else {
                               debugPrint('Erro Verificação Code - $value');
-                              
+
                               /*ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
@@ -173,7 +173,7 @@ class _AVerifyCodeState extends State<AVerifyCode> {
                                       color: Colors.white,
                                     ),
                                   ),
-                                  backgroundColor: Colors.red,
+                                  backgroundColor: primaryColor,
                                 ),
                               );*/
                             }

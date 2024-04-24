@@ -117,6 +117,11 @@ TextStyle blackMedium16 = TextStyle(
   color: black,
   fontFamily: 'M',
 );
+TextStyle blackBold18 = TextStyle(
+  fontSize: 18,
+  color: black,
+  fontFamily: 'B',
+);
 TextStyle whiteRegular15 = TextStyle(
   fontSize: 15,
   color: white,

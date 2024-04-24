@@ -1,3 +1,6 @@
+import 'package:flutter/foundation.dart';
+
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class Patrocinadores {
   int id;
   String nome,
@@ -25,6 +28,69 @@ class Patrocinadores {
     this.linkEndereco = '',
     this.isFavorite = false,
   });
+
+  @override
+  String toString() =>
+      'Patrocinadores(id: $id, nome: $nome, logo: $logo, imagemBG: $imagemBG, descricao: $descricao, linkWebSite: $linkWebSite, linkInstagram: $linkInstagram, linkFacebook: $linkFacebook, linkEndereco: $linkEndereco, isFavorite: $isFavorite, galeria: $galeria)';
+
+  @override
+  bool operator ==(covariant Patrocinadores other) {
+    if (identical(this, other)) return true;
+
+    return other.id == id &&
+        other.nome == nome &&
+        other.descricao == descricao &&
+        other.logo == logo &&
+        other.imagemBG == imagemBG &&
+        other.linkWebSite == linkWebSite &&
+        other.linkInstagram == linkInstagram &&
+        other.linkFacebook == linkFacebook &&
+        other.linkEndereco == linkEndereco &&
+        other.isFavorite == isFavorite &&
+        listEquals(other.galeria, galeria);
+  }
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      nome.hashCode ^
+      logo.hashCode ^
+      imagemBG.hashCode ^
+      descricao.hashCode ^
+      linkWebSite.hashCode ^
+      linkInstagram.hashCode ^
+      linkFacebook.hashCode ^
+      linkEndereco.hashCode ^
+      isFavorite.hashCode ^
+      galeria.hashCode;
+
+  Patrocinadores copyWith({
+    int? id,
+    String? nome,
+    String? logo,
+    String? imagemBG,
+    String? descricao,
+    String? linkWebSite,
+    String? linkInstagram,
+    String? linkFacebook,
+    String? linkEndereco,
+    bool? isFavorite,
+    List<GaleriaPatrocinador>? galeria,
+  }) {
+    return Patrocinadores(
+      id: id ?? this.id,
+      nome: nome ?? this.nome,
+      logo: logo ?? this.logo,
+      imagemBG: imagemBG ?? this.imagemBG,
+      descricao: descricao ?? this.descricao,
+      linkWebSite: linkWebSite ?? this.linkWebSite,
+      linkInstagram: linkInstagram ?? this.linkInstagram,
+      linkFacebook: linkFacebook ?? this.linkFacebook,
+      linkEndereco: linkEndereco ?? this.linkEndereco,
+      isFavorite: isFavorite ?? this.isFavorite,
+      galeria: galeria ?? this.galeria,
+    );
+  }
 }
 
 class GaleriaPatrocinador {

@@ -1,8 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:io';
+import 'package:app_tuddo_gramado/data/models/imgbbResponseModel.dart';
+import 'package:app_tuddo_gramado/helper/ui_helper.dart';
+import 'package:dio/dio.dart';
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,7 +13,6 @@ import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/data/php/functions.dart';
 import 'package:app_tuddo_gramado/data/php/http_client.dart';
 import 'package:app_tuddo_gramado/data/stores/user_store.dart';
-import 'package:app_tuddo_gramado/helper/ui_helper.dart';
 import 'package:app_tuddo_gramado/utils/bottom_navigation.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:app_tuddo_gramado/utils/widgets.dart';
@@ -68,28 +69,41 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   ImagePicker picker = ImagePicker();
 
-  XFile? images;
+  File? images;
 
-  Future pickGalleryImage(BuildContext context) async {
-    XFile? pickedFile =
+  final imgBBkey = '4cd0e929ee9db86448e68f47e4a33931';
+
+  String txt = '';
+
+  Dio dio = Dio();
+  late ImgbbResponseModel imgbbResponse;
+
+  Future pickGalleryImage() async {
+    final pickedFile =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 100);
 
     if (pickedFile != null) {
-      images = pickedFile;
-      // ignore: use_build_context_synchronously
-      uploadImage(context);
+      setState(() {
+        images = File(pickedFile.path);
+      });
     }
   }
 
-  Future pickCameraImage(BuildContext context) async {
-    XFile? pickedFile =
+  Future pickCameraImage() async {
+    final pickedFile =
         await picker.pickImage(source: ImageSource.camera, imageQuality: 100);
-
     if (pickedFile != null) {
-      images = pickedFile;
-      // ignore: use_build_context_synchronously
-      uploadImage(context);
+      setState(() {
+        images = File(pickedFile.path);
+      });
     }
+  }
+
+  removerFoto() {
+    setState(() {
+      images = null;
+      widget.usuario.photo = '';
+    });
   }
 
   openChangeProfilePhotoSheet(BuildContext context) {
@@ -122,9 +136,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               GestureDetector(
                                 onTap: () {
                                   if (e['title'] == 'Galeria') {
-                                    pickGalleryImage(context);
+                                    pickGalleryImage();
                                   } else if (e['title'] == 'Câmera') {
-                                    pickCameraImage(context);
+                                    pickCameraImage();
+                                  } else {
+                                    removerFoto();
                                   }
                                   Navigator.pop(context);
                                 },
@@ -162,28 +178,33 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  void uploadImage(BuildContext context) async {
-    Reference referenceRoot = FirebaseStorage.instance.ref();
-    Reference referenceDirImagens = referenceRoot.child('user_images');
-
-    Reference referenceImageToUpload = referenceDirImagens
-        .child('profileImage${widget.usuario.uid}-${images!.name}');
-
+  void uploadImage() async {
     try {
-      await referenceImageToUpload.putFile(File(images!.path));
-      final newUrl = await referenceImageToUpload.getDownloadURL();
-      setState(() {
-        widget.usuario.photo = newUrl;
+      String fileName = images!.path.split('/').last;
+
+      FormData data = FormData.fromMap({
+        "key": imgBBkey,
+        "image": await MultipartFile.fromFile(
+          images!.path,
+          filename: fileName,
+        ),
       });
-      debugPrint("A foto do usuário é ${widget.usuario.photo}");
-      // ignore: use_build_context_synchronously
-      Provider.of<UsuarioProvider>(context, listen: false)
-          .updateUsuario(widget.usuario);
+
+      Dio dio = Dio();
+      dio.post("https://api.imgbb.com/1/upload", data: data).then((response) {
+        var data = response.data;
+        String imgURL = data['data']['url'];
+
+        setState(() {
+          widget.usuario.photo = imgURL;
+        });
+        // ignore: invalid_return_type_for_catch_error
+      }).catchError((error) => debugPrint(error.toString()));
       // ignore: empty_catches
-    } catch (erro) {}
+    } catch (e) {}
   }
 
-  void editarUsuario(Usuario usuario, BuildContext context) {
+  void editarUsuario(Usuario usuario) {
     storeUser.update(
       usuario,
     );
@@ -217,7 +238,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 child: PrimaryButton(
                   text: 'Salvar',
                   onTap: () {
+                    uploadImage();
+
                     debugPrint("A foto do usuário é ${widget.usuario.photo}");
+
                     setState(() {
                       widget.usuario.nome = _nameController.text;
                       widget.usuario.username = _userNameController.text;
@@ -228,7 +252,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     Provider.of<UsuarioProvider>(context, listen: false)
                         .updateUsuario(widget.usuario);
 
-                    editarUsuario(widget.usuario, context);
+                    editarUsuario(widget.usuario);
 
                     UiHelper.showLoadingDialog(context, 'Aguarde...');
 

@@ -1,7 +1,6 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'AWalkThroughScreen.dart';
 
 class ASplashScreen extends StatefulWidget {
@@ -34,24 +33,16 @@ class _ASplashScreenState extends State<ASplashScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          Padding(
+          Container(
             padding: const EdgeInsets.all(28.0),
             child: Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'assets/image/Tuddo nome branca.png',
-                    fit: BoxFit.fill,
-                    width: 200,
-                    height: 100,
-                  ),
-                  widthSpace20,
-                  Image.asset(
-                    'assets/image/Tuddo favicon.png',
-                    fit: BoxFit.fill,
-                    width: 80,
-                    height: 80,
+                    'assets/image/Tuddo logo branca.png',
+                    fit: BoxFit.cover,
+                    width: MediaQuery.of(context).size.width * 0.8,
                   ),
                 ],
               ),

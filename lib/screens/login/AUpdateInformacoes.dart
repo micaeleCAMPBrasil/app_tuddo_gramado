@@ -185,12 +185,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   top: MediaQuery.of(context).viewPadding.top,
                   bottom: MediaQuery.of(context).viewInsets.bottom,
                 ),
-                /*decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(""),
-              fit: BoxFit.fill,
-            ),
-          ),*/
+                /*decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/image/login_register_bg.png"),
+                    fit: BoxFit.fill,
+                  ),
+                ),*/
                 child: Stack(
                   alignment: Alignment.bottomCenter,
                   children: [

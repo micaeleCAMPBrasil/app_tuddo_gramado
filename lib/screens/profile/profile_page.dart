@@ -1,11 +1,16 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:app_tuddo_gramado/data/models/patrocinadores.dart';
+import 'package:app_tuddo_gramado/data/php/functions.dart';
+import 'package:app_tuddo_gramado/data/php/http_client.dart';
+import 'package:app_tuddo_gramado/data/stores/patrocinadores_store.dart';
+import 'package:app_tuddo_gramado/screens/patrocinadores/patrocinadores_detail_page.dart';
+import 'package:app_tuddo_gramado/screens/profile/edit_profile/edit_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/helper/ui_helper.dart';
-import 'package:app_tuddo_gramado/screens/profile/edit_profile/edit_profile_page_2.dart';
 import 'package:app_tuddo_gramado/screens/webscreens/WebViewScreen.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 
@@ -22,6 +27,12 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  /*Future<void> _launchUrl(Uri url) async {
+    if (!await launchUrl(url)) {
+      debugPrint('Could not launch $url');
+    }
+  }*/
+
   late bool loaded;
   @override
   void initState() {
@@ -134,7 +145,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                         widthSpace10,
-                        Text(user.photo, style: color94Regular15),
+                        Text('Non-Premium', style: color94Regular15),
                       ],
                     )
                   ],
@@ -185,21 +196,37 @@ class _ProfilePageState extends State<ProfilePage> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => WebViewScreen(
-                    url:
-                        "https://wordpress.com/hosting/?aff=13357&url=https://wordpress.com/hosting/%3Fgad_source%3D1&gclid=Cj0KCQjwlN6wBhCcARIsAKZvD5hDxiJrS-k0iSj7iCIBP7DRRYUQ0R7Ed7nTrxeZ4tolemIAT5tGmYsaAiVwEALw_wcB",
+                    url: "https://www.google.com/",
                     index: 4,
                   ),
                 ),
               );
             } else if (e['navigate'] == "/SupportPage") {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => WebViewScreen(
+                    url: "https://www.google.com/",
+                    index: 4,
+                  ),
+                ),
+              );
             } else if (e['navigate'] == "/SettingsPage") {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => WebViewScreen(
+                    url: "https://www.google.com/",
+                    index: 4,
+                  ),
+                ),
+              );
             } else if (e['navigate'] == "/FavoritesListPage") {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => WebViewScreen(
-                    url:
-                        "https://wordpress.com/hosting/?aff=13357&url=https://wordpress.com/hosting/%3Fgad_source%3D1&gclid=Cj0KCQjwlN6wBhCcARIsAKZvD5hDxiJrS-k0iSj7iCIBP7DRRYUQ0R7Ed7nTrxeZ4tolemIAT5tGmYsaAiVwEALw_wcB",
+                    url: "https://www.google.com/",
                     index: 4,
                   ),
                 ),
@@ -220,7 +247,7 @@ class _ProfilePageState extends State<ProfilePage> {
             child: e['title'] == 'Favoritos'
                 ? SvgPicture.asset(
                     e['icon'],
-                    color: primaryColor,
+                    color: color94,
                   )
                 : Image.asset(
                     e['icon'],
@@ -238,6 +265,14 @@ class _ProfilePageState extends State<ProfilePage> {
     ];
   }
 
+  // Parte Final
+
+  final PatrocinadoresStore controller = PatrocinadoresStore(
+    repository: IFuncoesPHP(
+      client: HttpClient(),
+    ),
+  );
+
   Widget advertiseContainer(BuildContext context) {
     return SizedBox(
       height: 187,
@@ -247,20 +282,32 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           SizedBox(
             height: 100,
-            child: ListView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              scrollDirection: Axis.horizontal,
-              children: [
-                addvertise1(),
-                addvertise2(),
-                addvertise3(),
-              ],
+            child: ValueListenableBuilder<List<Patrocinadores>>(
+              valueListenable: controller.listPatrocinadores,
+              builder: (context, list, child) {
+                return ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: list.length,
+                  itemBuilder: (context, index) {
+                    return addvertise(list[index]);
+                  },
+                );
+              },
             ),
           ),
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/SubscribePage');
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => WebViewScreen(
+                    url: "https://www.google.com/",
+                    index: 4,
+                  ),
+                ),
+              );
             },
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -293,116 +340,56 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Padding addvertise3() {
-    return Padding(
-      padding: const EdgeInsets.only(right: 10),
-      child: Stack(
-        children: [
-          Container(
-            height: 100,
-            width: 280,
-            decoration: BoxDecoration(
-              color: color22,
-              borderRadius: BorderRadius.circular(5),
-              image: const DecorationImage(
-                image: AssetImage('assets/image/add3.png'),
-              ),
+  Widget addvertise(Patrocinadores item) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PatrocinadoresDetailPage(
+              patrocinador: item,
+              index: 4,
             ),
           ),
-          Container(
-            alignment: Alignment.centerLeft,
-            height: 100,
-            width: 280,
-            decoration: BoxDecoration(
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(right: 10),
+        child: Stack(
+          children: [
+            Container(
+              height: 100,
+              width: 280,
+              decoration: BoxDecoration(
                 color: color22,
                 borderRadius: BorderRadius.circular(5),
-                gradient: LinearGradient(colors: [
-                  black.withOpacity(.40),
-                  black.withOpacity(.40),
-                ])),
-            child: Padding(
-              padding: const EdgeInsets.all(13.0),
-              child: Text('Watch\nPremium Contents', style: whiteSemiBold18),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Padding addvertise2() {
-    return Padding(
-      padding: const EdgeInsets.only(right: 10),
-      child: Stack(
-        children: [
-          Container(
-            height: 100,
-            width: 280,
-            decoration: BoxDecoration(
-              color: color22,
-              borderRadius: BorderRadius.circular(5),
-              image: const DecorationImage(
-                image: AssetImage('assets/image/add2.png'),
+                image: DecorationImage(
+                  image: AssetImage(item.imagemBG),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          Container(
-            alignment: Alignment.centerLeft,
-            height: 100,
-            width: 280,
-            decoration: BoxDecoration(
-              color: color22,
-              borderRadius: BorderRadius.circular(5),
-              gradient: LinearGradient(
-                colors: [
-                  black.withOpacity(.40),
-                  black.withOpacity(.40),
-                ],
+            Container(
+              height: 100,
+              width: 280,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: color22,
+                  borderRadius: BorderRadius.circular(5),
+                  gradient: LinearGradient(colors: [
+                    black.withOpacity(.40),
+                    black.withOpacity(.40),
+                  ])),
+              child: Padding(
+                padding: const EdgeInsets.all(13.0),
+                child: Text(
+                  item.nome,
+                  style: whiteSemiBold18,
+                ),
               ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(13.0),
-              child: Text('Enable\nDownload Movies', style: whiteSemiBold18),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget addvertise1() {
-    return Padding(
-      padding: const EdgeInsets.only(right: 10),
-      child: Stack(
-        children: [
-          Container(
-            height: 100,
-            width: 280,
-            decoration: BoxDecoration(
-              color: color22,
-              borderRadius: BorderRadius.circular(5),
-              image: const DecorationImage(
-                image: AssetImage('assets/image/add1.png'),
-              ),
-            ),
-          ),
-          Container(
-            height: 100,
-            width: 280,
-            decoration: BoxDecoration(
-                color: color22,
-                borderRadius: BorderRadius.circular(5),
-                gradient: LinearGradient(colors: [
-                  black.withOpacity(.40),
-                  black.withOpacity(.40),
-                ])),
-            child: Padding(
-              padding: const EdgeInsets.all(13.0),
-              child: Text('Get Access to\nAll Full HD\nContents',
-                  style: whiteSemiBold18),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

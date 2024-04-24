@@ -36,11 +36,15 @@ void main() async {
         ChangeNotifierProvider(
           create: (context) => UsuarioProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => UsuarioProvider(),
+        ),
         Provider<NotificationService>(
           create: (context) => NotificationService(),
         ),
         Provider<FirebaseMessagingService>(
-          create: (context) => FirebaseMessagingService(context.read<NotificationService>()),
+          create: (context) =>
+              FirebaseMessagingService(context.read<NotificationService>()),
         ),
       ],
       child: const MyApp(),

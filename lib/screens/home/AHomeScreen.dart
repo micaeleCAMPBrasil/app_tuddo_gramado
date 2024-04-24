@@ -1,5 +1,9 @@
 // ignore_for_file: library_private_types_in_public_api, file_names, deprecated_member_use
-import 'package:app_tuddo_gramado/screens/notifications/NotificationScreen.dart';
+import 'package:app_tuddo_gramado/data/models/patrocinadores.dart';
+import 'package:app_tuddo_gramado/data/php/functions.dart';
+import 'package:app_tuddo_gramado/data/php/http_client.dart';
+import 'package:app_tuddo_gramado/screens/patrocinadores/patrocinadores_page.dart';
+import 'package:app_tuddo_gramado/screens/rede_social/SVHomeFragment.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -22,6 +26,12 @@ class AHomeScreen extends StatefulWidget {
 class _AHomeScreenState extends State<AHomeScreen> {
   GlobalKey<FormState> mykey = GlobalKey<FormState>();
 
+  final PatrocinadoresStore controller = PatrocinadoresStore(
+    repository: IFuncoesPHP(
+      client: HttpClient(),
+    ),
+  );
+
   @override
   void initState() {
     super.initState();
@@ -40,7 +50,7 @@ class _AHomeScreenState extends State<AHomeScreen> {
             color: color00,
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
                   padding: EdgeInsets.only(
@@ -72,22 +82,14 @@ class _AHomeScreenState extends State<AHomeScreen> {
                   padding: EdgeInsets.only(
                     bottom: 10,
                     top: MediaQuery.of(context).viewPadding.top,
-                    left: MediaQuery.of(context).size.width * 0.16,
+                    left: MediaQuery.of(context).size.width * 0.1,
                   ),
                   child: Row(
                     children: [
                       Image.asset(
-                        'assets/image/Tuddo nome branca.png',
-                        fit: BoxFit.fill,
-                        width: 80,
-                        height: 40,
-                      ),
-                      widthSpace20,
-                      Image.asset(
-                        'assets/image/Tuddo favicon.png',
-                        fit: BoxFit.fill,
-                        width: 40,
-                        height: 40,
+                        'assets/image/Tuddo logo branca.png',
+                        fit: BoxFit.cover,
+                        width: MediaQuery.of(context).size.width * 0.4,
                       ),
                     ],
                   ),
@@ -102,31 +104,21 @@ class _AHomeScreenState extends State<AHomeScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, '/NotificationPage');
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WebViewScreen(
+                                index: 0,
+                                url: "https://www.google.com/",
+                              ),
+                            ),
+                          );
                         },
                         child: SvgPicture.asset(
                           'assets/icones/heart.svg',
                           color: primaryColor,
                           width: 27,
                           height: 27,
-                        ),
-                      ),
-                      widthSpace5,
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => NotificationScreen(),
-                            ),
-                          );
-                        },
-                        child: Image.asset(
-                          'assets/icones/bell.png',
-                          fit: BoxFit.fill,
-                          width: 25,
-                          height: 27,
-                          color: primaryColor,
                         ),
                       ),
                     ],
@@ -145,7 +137,12 @@ class _AHomeScreenState extends State<AHomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     heightSpace25,
-                    carouselMethod(context, heightDisponivel),
+                    ValueListenableBuilder(
+                      valueListenable: controller.listPatrocinadores,
+                      builder: (context, value, child) {
+                        return carouselMethod(context, heightDisponivel, value);
+                      },
+                    ),
                     heightSpace25,
                     categoryMethod(heightDisponivel),
                     heightSpace30,
@@ -159,15 +156,16 @@ class _AHomeScreenState extends State<AHomeScreen> {
     );
   }
 
-  CarouselSlider carouselMethod(BuildContext context, double heightDisponivel) {
+  CarouselSlider carouselMethod(BuildContext context, double heightDisponivel,
+      List<Patrocinadores> list) {
     return CarouselSlider(
       options: CarouselOptions(
         height: heightDisponivel * 0.6,
-        viewportFraction: 0.62,
+        viewportFraction: 0.75,
         enlargeCenterPage: true,
         autoPlay: true,
       ),
-      items: PatrocinadoresStore.getPatrocinadores.map((i) {
+      items: list.map((i) {
         return GestureDetector(
           onTap: () {
             Navigator.pushReplacement(
@@ -182,7 +180,6 @@ class _AHomeScreenState extends State<AHomeScreen> {
           child: Container(
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-              color: Colors.red,
               image: DecorationImage(
                 image: AssetImage(i.imagemBG),
                 fit: BoxFit.fill,
@@ -199,7 +196,7 @@ class _AHomeScreenState extends State<AHomeScreen> {
     // ignore: avoid_unnecessary_containers
     return Container(
       child: SizedBox(
-        height: heightDisponivel * 0.07,
+        height: heightDisponivel * 0.1,
         child: ListView.builder(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -209,10 +206,66 @@ class _AHomeScreenState extends State<AHomeScreen> {
             var item = CategoriasButoonStore.getbuttons[index];
             return GestureDetector(
               onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  item.route,
-                );
+                if (item.route == 1) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PatrocinadoresScreen(),
+                    ),
+                  );
+                } else if (item.route == 2) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WebViewScreen(
+                        url: "https://www.google.com/",
+                      ),
+                    ),
+                  );
+                } else if (item.route == 3) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WebViewScreen(
+                        url: "https://www.google.com/",
+                      ),
+                    ),
+                  );
+                } else if (item.route == 4) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WebViewScreen(
+                        url: "https://www.google.com/",
+                      ),
+                    ),
+                  );
+                } else if (item.route == 5) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SVHomeFragment(),
+                    ),
+                  );
+                } else if (item.route == 6) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WebViewScreen(
+                        url: "https://www.google.com/",
+                      ),
+                    ),
+                  );
+                } else if (item.route == 7) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WebViewScreen(
+                        url: "https://www.google.com/",
+                      ),
+                    ),
+                  );
+                }
               },
               child: Stack(
                 children: [
@@ -220,12 +273,13 @@ class _AHomeScreenState extends State<AHomeScreen> {
                     alignment: Alignment.center,
                     margin: index == 0
                         ? const EdgeInsets.only(right: 5)
-                        : index ==
-                                PatrocinadoresStore.getPatrocinadores.length - 1
+                        : index == CategoriasButoonStore.getbuttons.length - 1
                             ? const EdgeInsets.only(left: 5)
-                            : const EdgeInsets.symmetric(horizontal: 5),
+                            : const EdgeInsets.symmetric(
+                                horizontal: 5,
+                              ),
                     width: 120,
-                    height: 80,
+                    height: 100,
                     decoration: BoxDecoration(
                       color: primaryColor,
                       borderRadius: BorderRadius.circular(5),
@@ -237,6 +291,56 @@ class _AHomeScreenState extends State<AHomeScreen> {
                         style: whiteMedium14,
                         textAlign: TextAlign.center,
                       ),
+                    ),
+                  ),
+                  Container(
+                    margin: index == 0
+                        ? const EdgeInsets.only(right: 5)
+                        : index == CategoriasButoonStore.getbuttons.length - 1
+                            ? const EdgeInsets.only(left: 5)
+                            : const EdgeInsets.symmetric(horizontal: 5),
+                    width: 120,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            black,
+                            black,
+                          ]),
+                      borderRadius: BorderRadius.circular(5),
+                      image: DecorationImage(
+                        image: AssetImage(
+                          item.backgroundImage,
+                        ),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    margin: index == 0
+                        ? const EdgeInsets.only(right: 5)
+                        : index == CategoriasButoonStore.getbuttons.length - 1
+                            ? const EdgeInsets.only(left: 5)
+                            : const EdgeInsets.symmetric(horizontal: 5),
+                    width: 120,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            black.withOpacity(.65),
+                            black.withOpacity(.65),
+                          ]),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Text(
+                      item.name,
+                      style: whiteMedium14,
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ],

@@ -7,6 +7,7 @@ import 'package:app_tuddo_gramado/data/models/patrocinadores.dart';
 import 'package:app_tuddo_gramado/utils/bottom_navigation.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:app_tuddo_gramado/utils/widgets.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
@@ -30,6 +31,13 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
     if (!await launchUrl(url)) {
       debugPrint('Could not launch $url');
     }
+  }
+
+  void shareMensagem() {
+    String mensagem = "Olha que lugar legal ${widget.patrocinador.linkWebSite}";
+    Share.share(
+      mensagem,
+    );
   }
 
   @override
@@ -94,6 +102,7 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
                     physics: const BouncingScrollPhysics(),
                     controller: scrollController,
                     children: [
+                      heightSpace20,
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
@@ -110,52 +119,6 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        setState(() {
-                                          widget.patrocinador.isFavorite =
-                                              !widget.patrocinador.isFavorite;
-                                        });
-                                        if (widget.patrocinador.isFavorite ==
-                                            true) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              backgroundColor: primaryColor,
-                                              duration:
-                                                  const Duration(seconds: 1),
-                                              content: Text(
-                                                'Adicionado aos Favoritos',
-                                                style: whiteRegular16,
-                                              ),
-                                            ),
-                                          );
-                                        } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              backgroundColor: primaryColor,
-                                              duration:
-                                                  const Duration(seconds: 1),
-                                              content: Text(
-                                                'Removido aos Favoritos',
-                                                style: whiteRegular16,
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      child: widget.patrocinador.isFavorite
-                                          ? SvgPicture.asset(
-                                              'assets/icones/heart-2.svg',
-                                              color: primaryColor,
-                                            )
-                                          : SvgPicture.asset(
-                                              'assets/icones/heart.svg',
-                                              color: primaryColor,
-                                            ),
-                                    ),
-                                    widthSpace10,
-                                    GestureDetector(
-                                      onTap: () {
                                         _launchUrl(
                                           Uri.parse(
                                             widget.patrocinador.linkInstagram,
@@ -167,6 +130,14 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
                                         color: primaryColor,
                                         width: 20,
                                         height: 20,
+                                      ),
+                                    ),
+                                    widthSpace10,
+                                    GestureDetector(
+                                      onTap: shareMensagem,
+                                      child: Icon(
+                                        Icons.share_outlined,
+                                        color: primaryColor,
                                       ),
                                     ),
                                   ],
@@ -192,27 +163,57 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
                               style: whiteRegular15,
                             ),
                             heightSpace20,
-                            GestureDetector(
-                              onTap: () {
-                                _launchUrl(
-                                  Uri.parse(widget.patrocinador.linkEndereco),
-                                );
-                              },
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/icones/address.svg',
-                                    color: primaryColor,
-                                    width: 40,
-                                    height: 40,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    _launchUrl(
+                                      Uri.parse(
+                                          widget.patrocinador.linkEndereco),
+                                    );
+                                  },
+                                  child: Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/icones/address.svg',
+                                        color: primaryColor,
+                                        width: 40,
+                                        height: 40,
+                                      ),
+                                      widthSpace5,
+                                      Text(
+                                        'Nos encontre',
+                                        style: whiteRegular14,
+                                      ),
+                                    ],
                                   ),
-                                  widthSpace5,
-                                  Text(
-                                    'Nos encontre',
-                                    style: whiteRegular14,
+                                ),
+                                /*GestureDetector(
+                                  onTap: () {
+                                    _launchUrl(
+                                      Uri.parse(
+                                        widget.patrocinador.linkWebSite,
+                                      ),
+                                    );
+                                  },
+                                  child: Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/icones/internet.svg',
+                                        color: primaryColor,
+                                        width: 30,
+                                        height: 25,
+                                      ),
+                                      widthSpace5,
+                                      Text(
+                                        'Web Site',
+                                        style: whiteRegular14,
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
+                                ),*/
+                              ],
                             ),
                           ],
                         ),

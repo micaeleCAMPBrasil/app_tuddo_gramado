@@ -46,7 +46,15 @@ class _WebViewScreenState extends State<WebViewScreen> {
     return _loading
         ? WillPopScope(
             onWillPop: () async {
-              return false;
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BottomNavigation(
+                    selectedIndex: widget.index,
+                  ),
+                ),
+              );
+              return true;
             },
             child: Scaffold(
               appBar: PreferredSize(

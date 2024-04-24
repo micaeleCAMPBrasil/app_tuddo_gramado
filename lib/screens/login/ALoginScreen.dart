@@ -61,12 +61,12 @@ class _ALoginScreenState extends State<ALoginScreen> {
             top: MediaQuery.of(context).viewPadding.top,
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
-          /*decoration: const BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage("assets/image/login_register_bg.png"),
               fit: BoxFit.fill,
             ),
-          ),*/
+          ),
           child: Stack(
             alignment: Alignment.bottomCenter,
             children: [

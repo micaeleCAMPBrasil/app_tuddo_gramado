@@ -25,15 +25,24 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
           children: [
             Row(
               children: [
-                Image.asset(widget.comment.profileImage.validate(),
-                        height: 48, width: 48, fit: BoxFit.cover)
-                    .cornerRadiusWithClipRRect(8),
-                16.width,
-                Text(widget.comment.name.validate(),
-                    style: boldTextStyle(size: 14)),
-                4.width,
-                Image.asset('assets/social/ic_TickSquare.png',
-                    height: 14, width: 14, fit: BoxFit.cover),
+                Image.asset(
+                  widget.comment.profileImage.validate(),
+                  height: 48,
+                  width: 48,
+                  fit: BoxFit.cover,
+                ).cornerRadiusWithClipRRect(8),
+                widthSpace15,
+                Text(
+                  widget.comment.name.validate(),
+                  style: whiteSemiBold20,
+                ),
+                widthSpace5,
+                Image.asset(
+                  'assets/social/ic_TickSquare.png',
+                  height: 14,
+                  width: 14,
+                  fit: BoxFit.cover,
+                ),
               ],
             ),
             Row(
@@ -52,54 +61,56 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
             )
           ],
         ),
-        16.height,
+        heightSpace15,
         Text(
           widget.comment.comment.validate(),
           style: color94SemiBold16,
         ),
-        16.height,
+        heightSpace15,
         Row(
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration:
-                  BoxDecoration(borderRadius: radius(4), color: scaffoldColor),
+              decoration: BoxDecoration(
+                borderRadius: radius(4),
+                color: primaryColor,
+              ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   widget.comment.like.validate()
-                      ? Image.asset('assets/social/ic_HeartFilled.png',
-                          height: 14, width: 14, fit: BoxFit.fill)
+                      ? Image.asset(
+                          'assets/social/ic_HeartFilled.png',
+                          height: 14,
+                          width: 14,
+                          fit: BoxFit.fill,
+                        )
                       : Image.asset(
                           'assets/social/ic_Heart.png',
                           height: 14,
                           width: 14,
                           fit: BoxFit.cover,
-                          color: scaffoldColor,
+                          color: whiteColor,
                         ),
                   2.width,
-                  Text(widget.comment.likeCount.toString(),
-                      style: secondaryTextStyle(size: 12)),
+                  Text(
+                    widget.comment.likeCount.toString(),
+                    style: whiteRegular12,
+                  ),
                 ],
               ),
             ).onTap(() {
               widget.comment.like = !widget.comment.like.validate();
               setState(() {});
             }, borderRadius: radius(4)),
-            16.width,
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration:
-                  BoxDecoration(borderRadius: radius(4), color: scaffoldColor),
-              child: Text('Reply', style: secondaryTextStyle(size: 12)),
-            )
           ],
         )
       ],
     ).paddingOnly(
-        top: 16,
-        left: widget.comment.isCommentReply.validate() ? 70 : 16,
-        right: 16,
-        bottom: 16);
+      top: 16,
+      left: widget.comment.isCommentReply.validate() ? 70 : 16,
+      right: 16,
+      bottom: 16,
+    );
   }
 }
