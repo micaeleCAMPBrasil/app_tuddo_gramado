@@ -4,6 +4,7 @@ import 'package:app_tuddo_gramado/data/php/functions.dart';
 import 'package:app_tuddo_gramado/data/php/http_client.dart';
 import 'package:app_tuddo_gramado/screens/patrocinadores/patrocinadores_page.dart';
 import 'package:app_tuddo_gramado/screens/rede_social/SVHomeFragment.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -62,8 +63,7 @@ class _AHomeScreenState extends State<AHomeScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => WebViewScreen(
-                            url:
-                                "https://www.accuweather.com/pt/br/gramado/40979/weather-forecast/40979",
+                            url: "https://tuddogramado.com.br/clima/",
                             index: 0,
                           ),
                         ),
@@ -109,7 +109,8 @@ class _AHomeScreenState extends State<AHomeScreen> {
                             MaterialPageRoute(
                               builder: (context) => WebViewScreen(
                                 index: 0,
-                                url: "https://www.google.com/",
+                                url:
+                                    "https://tuddogramado.com.br/my-favorites/",
                               ),
                             ),
                           );
@@ -138,9 +139,9 @@ class _AHomeScreenState extends State<AHomeScreen> {
                   children: [
                     heightSpace25,
                     ValueListenableBuilder(
-                      valueListenable: controller.listPatrocinadores,
+                      valueListenable: controller.listBannerInicial,
                       builder: (context, value, child) {
-                        return carouselMethod(context, heightDisponivel, value);
+                        return banner(context, heightDisponivel, value);
                       },
                     ),
                     heightSpace25,
@@ -156,7 +157,7 @@ class _AHomeScreenState extends State<AHomeScreen> {
     );
   }
 
-  CarouselSlider carouselMethod(BuildContext context, double heightDisponivel,
+  CarouselSlider banner(BuildContext context, double heightDisponivel,
       List<Patrocinadores> list) {
     return CarouselSlider(
       options: CarouselOptions(
@@ -177,16 +178,20 @@ class _AHomeScreenState extends State<AHomeScreen> {
               ),
             );
           },
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(i.imagemBG),
-                fit: BoxFit.fill,
+          child: CachedNetworkImage(
+            imageUrl: i.imagemBG,
+            imageBuilder: (context, imageProvider) => Container(
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.fill,
+                ),
+                borderRadius: BorderRadius.circular(5),
               ),
-              borderRadius: BorderRadius.circular(5),
             ),
           ),
+          /*child: ,*/
         );
       }).toList(),
     );
@@ -214,33 +219,38 @@ class _AHomeScreenState extends State<AHomeScreen> {
                     ),
                   );
                 } else if (item.route == 2) {
+                  //Tuddo em Dobro
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => WebViewScreen(
-                        url: "https://www.google.com/",
+                        url: "https://dobro.tuddogramado.com.br/",
                       ),
                     ),
                   );
                 } else if (item.route == 3) {
+                  // Transfer
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => WebViewScreen(
-                        url: "https://www.google.com/",
+                        url:
+                            "https://tuddogramado.com.br/transfer-aeroporto-x-gramado/",
                       ),
                     ),
                   );
                 } else if (item.route == 4) {
+                  // Hospedagem
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => WebViewScreen(
-                        url: "https://www.google.com/",
+                        url: "http://tuddogramado.com.br/",
                       ),
                     ),
                   );
                 } else if (item.route == 5) {
+                  // Dicas e Roteiros
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -248,6 +258,7 @@ class _AHomeScreenState extends State<AHomeScreen> {
                     ),
                   );
                 } else if (item.route == 6) {
+                  // Assine
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -257,6 +268,7 @@ class _AHomeScreenState extends State<AHomeScreen> {
                     ),
                   );
                 } else if (item.route == 7) {
+                  // Faça Parte
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(

@@ -1,6 +1,8 @@
 // ignore_for_file: file_names
 
 class SVCommentModel {
+  int id, idPost;
+  String uid;
   String? name;
   String? profileImage;
   String? time;
@@ -10,6 +12,9 @@ class SVCommentModel {
   bool? like;
 
   SVCommentModel({
+    required this.id,
+    required this.idPost,
+    required this.uid,
     this.name,
     this.profileImage,
     this.time,
@@ -18,67 +23,4 @@ class SVCommentModel {
     this.isCommentReply,
     this.like,
   });
-}
-
-List<SVCommentModel> getComments() {
-  List<SVCommentModel> list = [];
-
-  list.add(SVCommentModel(
-    name: 'Iana',
-    profileImage: 'assets/social/face_1.png',
-    time: '4m',
-    likeCount: 4,
-    comment:
-        'Loving😍 your work and profile👨. Top Marks. Once you are confident enough to develop @ira_membrit',
-    isCommentReply: false,
-    like: false,
-  ));
-  list.add(SVCommentModel(
-    name: 'Allie',
-    profileImage: 'assets/social/face_2.png',
-    time: '4m',
-    likeCount: 4,
-    comment: 'Nice 👌Work, love your content',
-    isCommentReply: false,
-    like: false,
-  ));
-  list.add(SVCommentModel(
-    name: 'Manny',
-    profileImage: 'assets/social/face_3.png',
-    time: '4m',
-    likeCount: 4,
-    comment: 'Thanks 🤟@wad-warren. Follow us for more update',
-    isCommentReply: true,
-    like: false,
-  ));
-  list.add(SVCommentModel(
-    name: 'Isabelle',
-    profileImage: 'assets/social/face_4.png',
-    time: '4m',
-    likeCount: 4,
-    comment: 'Really Cool 👍 which filter are you using 🎞@con_trariweis',
-    isCommentReply: true,
-    like: false,
-  ));
-  list.add(SVCommentModel(
-    name: 'Jenny Wilson',
-    profileImage: 'assets/social/face_5.png',
-    time: '4m',
-    likeCount: 4,
-    comment:
-        'Hey Guys✋, I recommend you to try this smart pluginfor design System @Jane_Cooper',
-    isCommentReply: false,
-    like: false,
-  ));
-  list.add(SVCommentModel(
-    name: 'Iana',
-    profileImage: 'assets/social/face_1.png',
-    time: '4m',
-    likeCount: 4,
-    comment: 'Great,that awesome work @Jane_Cooper.',
-    isCommentReply: false,
-    like: false,
-  ));
-
-  return list;
 }

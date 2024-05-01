@@ -3,7 +3,7 @@ import 'package:app_tuddo_gramado/data/models/categoriasButton.dart';
 class CategoriasButoonStore {
   static List<CategoriasButoon> getbuttons = [
     CategoriasButoon(
-      name: 'Patrocinadores',
+      name: 'Top Offers',
       backgroundImage: 'assets/image/a1.png',
       route: 1,
     ),

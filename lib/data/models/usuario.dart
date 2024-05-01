@@ -30,14 +30,15 @@ class Usuario {
 
 class UsuarioProvider extends ChangeNotifier {
   Usuario usuario = Usuario(
-      uid: '',
-      nome: '',
-      username: '',
-      tokenAlert: '',
-      email: '',
-      telefone: '',
-      photo: '',
-      data: '');
+    uid: '',
+    nome: '',
+    username: '',
+    tokenAlert: '',
+    email: '',
+    telefone: '',
+    photo: '',
+    data: '',
+  );
 
   Usuario get getUsuario => usuario;
 

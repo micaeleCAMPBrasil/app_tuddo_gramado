@@ -1,8 +1,10 @@
 // ignore_for_file: deprecated_member_use, must_be_immutable
 
+import 'package:app_tuddo_gramado/screens/rede_social/SVHomeFragment.dart';
 import 'package:app_tuddo_gramado/services/firebase_messaging_service.dart';
 import 'package:app_tuddo_gramado/services/notification_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/screens/home/AHomeScreen.dart';
@@ -54,14 +56,12 @@ class _BottomNavigationState extends State<BottomNavigation> {
       ),
       // tuddo em dobro
       WebViewScreen(
-        url: "https://www.google.com/",
+        url: "https://tuddo.clps.pro/",
       ),
       // patrocinadores
       PatrocinadoresScreen(),
-      // transfer (link)
-      WebViewScreen(
-        url: "https://www.google.com/",
-      ),
+      // rede social
+      const SVHomeFragment(),
       // profile
       ProfilePage(
         usuario: usuario,
@@ -84,10 +84,12 @@ class _BottomNavigationState extends State<BottomNavigation> {
             elevation: 20,
             items: [
               BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.home,
-                  color: widget.selectedIndex == 0 ? primaryColor : color94,
-                  size: 35,
+                icon: SizedBox(
+                  height: 35,
+                  child: SvgPicture.asset(
+                    'assets/icones/home.svg',
+                    color: widget.selectedIndex == 0 ? primaryColor : white,
+                  ),
                 ),
                 label: '',
               ),
@@ -96,32 +98,34 @@ class _BottomNavigationState extends State<BottomNavigation> {
                   "assets/icones/cup.png",
                   width: 35,
                   height: 35,
-                  color: widget.selectedIndex == 1 ? primaryColor : color94,
+                  color: widget.selectedIndex == 1 ? primaryColor : white,
                 ),
                 label: '',
               ),
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.search,
-                  color: widget.selectedIndex == 2 ? primaryColor : color94,
+                  color: widget.selectedIndex == 2 ? primaryColor : white,
                   size: 35,
                 ),
                 label: '',
               ),
               BottomNavigationBarItem(
                 icon: Image.asset(
-                  "assets/icones/map.png",
-                  width: 35,
-                  height: 35,
-                  color: widget.selectedIndex == 3 ? primaryColor : color94,
+                  "assets/icones/direcao.png",
+                  width: 33,
+                  height: 33,
+                  color: widget.selectedIndex == 3 ? primaryColor : white,
                 ),
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.people,
-                  color: widget.selectedIndex == 4 ? primaryColor : color94,
-                  size: 35,
+                icon: SizedBox(
+                  height: 35,
+                  child: SvgPicture.asset(
+                    'assets/icones/profile.svg',
+                    color: widget.selectedIndex == 4 ? primaryColor : white,
+                  ),
                 ),
                 label: '',
               ),

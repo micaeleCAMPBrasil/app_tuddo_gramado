@@ -3,6 +3,7 @@
 import 'package:app_tuddo_gramado/data/models/patrocinadores.dart';
 import 'package:app_tuddo_gramado/data/php/functions.dart';
 import 'package:app_tuddo_gramado/data/php/http_client.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -35,6 +36,11 @@ class _PatrocinadoresScreenState extends State<PatrocinadoresScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool checksize = MediaQuery.of(context).size.width <= 320 ||
+            MediaQuery.of(context).size.height <= 320
+        ? true
+        : false;
+
     return WillPopScope(
       onWillPop: () async {
         Navigator.pushReplacement(
@@ -75,7 +81,7 @@ class _PatrocinadoresScreenState extends State<PatrocinadoresScreen> {
                               child: SingleChildScrollView(
                                 child: Wrap(
                                   runSpacing: 12,
-                                  spacing: 16,
+                                  spacing: checksize ? 3 : 16,
                                   children: List.generate(
                                     list.length,
                                     (index) {
@@ -92,28 +98,52 @@ class _PatrocinadoresScreenState extends State<PatrocinadoresScreen> {
                                             ),
                                           );
                                         },
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Image.asset(list[index].imagemBG,
-                                                    height: 250,
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.43,
-                                                    fit: BoxFit.cover)
-                                                .cornerRadiusWithClipRRect(16),
-                                            10.height,
-                                            Text(
-                                              list[index].nome,
-                                              style: whiteRegular16,
-                                            ).paddingLeft(8),
-                                            /*Text(PatrocinadoresStore.getPatrocinadores[index].nome,
-                                        style: secondaryTextStyle())
-                                    .paddingLeft(8),*/
-                                          ],
+                                        child: CachedNetworkImage(
+                                          imageUrl: list[index].imagemBG,
+                                          /*progressIndicatorBuilder: (context,
+                                                  url, downloadProgress) =>
+                                              SizedBox(
+                                            width: 50,
+                                            height: 50,
+                                            child: Center(
+                                              child: CircularProgressIndicator(
+                                                value:
+                                                    downloadProgress.progress,
+                                                color: primaryColor,
+                                              ),
+                                            ),
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              Icon(
+                                            Icons.error,
+                                            color: primaryColor,
+                                          ),*/
+                                          imageBuilder:
+                                              (context, imageProvider) =>
+                                                  Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                height: 250,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.43,
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                    image: imageProvider,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ).cornerRadiusWithClipRRect(16),
+                                              10.height,
+                                              Text(
+                                                list[index].nome,
+                                                style: whiteRegular16,
+                                              ).paddingLeft(8),
+                                            ],
+                                          ),
                                         ),
                                       );
                                     },

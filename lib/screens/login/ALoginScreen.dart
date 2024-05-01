@@ -64,7 +64,7 @@ class _ALoginScreenState extends State<ALoginScreen> {
           ),
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/image/login_register_bg.png"),
+              image: AssetImage("assets/icones/fundo-login2.png"),
               fit: BoxFit.fill,
             ),
           ),

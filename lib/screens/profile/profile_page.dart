@@ -127,7 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             )
                           : Image.network(
                               user.photo,
-                              fit: BoxFit.fill,
+                              fit: BoxFit.cover,
                             )),
                 ),
                 widthSpace20,
@@ -171,16 +171,6 @@ class _ProfilePageState extends State<ProfilePage> {
         'navigate': '/FavoritesListPage'
       },
       {
-        'icon': 'assets/icones/profile4.png',
-        'title': 'Configurações',
-        'navigate': '/SettingsPage'
-      },
-      {
-        'icon': 'assets/icones/profile5.png',
-        'title': 'Termos & Condições',
-        'navigate': '/TermsAndConditionPage'
-      },
-      {
         'icon': 'assets/icones/profile6.png',
         'title': 'Suporte',
         'navigate': '/SupportPage',
@@ -191,27 +181,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ...tapableItems.map(
         (e) => ListTile(
           onTap: () {
-            if (e['navigate'] == "/TermsAndConditionPage") {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => WebViewScreen(
-                    url: "https://www.google.com/",
-                    index: 4,
-                  ),
-                ),
-              );
-            } else if (e['navigate'] == "/SupportPage") {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => WebViewScreen(
-                    url: "https://www.google.com/",
-                    index: 4,
-                  ),
-                ),
-              );
-            } else if (e['navigate'] == "/SettingsPage") {
+            if (e['navigate'] == "/SupportPage") {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
@@ -226,7 +196,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => WebViewScreen(
-                    url: "https://www.google.com/",
+                    url: "https://tuddogramado.com.br/my-favorites/",
                     index: 4,
                   ),
                 ),

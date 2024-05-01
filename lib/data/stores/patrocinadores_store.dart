@@ -13,10 +13,16 @@ class PatrocinadoresStore {
   ValueNotifier<List<Patrocinadores>> listPatrocinadores =
       ValueNotifier<List<Patrocinadores>>([]);
 
+  ValueNotifier<List<Patrocinadores>> listBannerInicial =
+      ValueNotifier<List<Patrocinadores>>([]);
+
   List<Patrocinadores>? _chachedPatrocinadores;
 
   fetch() async {
     listPatrocinadores.value = await repository.getListPatrocinadores();
+    listBannerInicial.value = listPatrocinadores.value
+        .where((element) => element.isBannerInicial)
+        .toList();
     _chachedPatrocinadores = listPatrocinadores.value;
   }
 

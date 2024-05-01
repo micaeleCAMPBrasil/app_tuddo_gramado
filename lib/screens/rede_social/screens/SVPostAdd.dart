@@ -6,7 +6,7 @@ import 'package:app_tuddo_gramado/data/models/imgbbResponseModel.dart';
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/data/php/functions.dart';
 import 'package:app_tuddo_gramado/data/php/http_client.dart';
-import 'package:app_tuddo_gramado/data/stores/post_store.dart';
+import 'package:app_tuddo_gramado/data/stores/publicacao_store.dart';
 import 'package:app_tuddo_gramado/screens/rede_social/SVHomeFragment.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:app_tuddo_gramado/utils/widgets.dart';
@@ -38,6 +38,7 @@ class _SVPostAddState extends State<SVPostAdd> {
       setState(() {
         _image = File(pickedFile.path);
       });
+      uploadImageFile();
     } else {}
   }
 
@@ -49,6 +50,20 @@ class _SVPostAddState extends State<SVPostAdd> {
       setState(() {
         _image = File(pickedFile.path);
       });
+      uploadImageFile();
+    } else {}
+  }
+
+  postPost(String imagem, String texto) async {
+    await storePost.addPost(widget.usuario, texto, imagem);
+    bool check = storePost.addCheck.value;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const SVHomeFragment(),
+        ),
+      );
+    if (check) {
     } else {}
   }
 
@@ -56,9 +71,9 @@ class _SVPostAddState extends State<SVPostAdd> {
   final TextEditingController _descriptionTextController =
       TextEditingController();
 
-  String txt = '';
+  String imgURL = '';
 
-  final PostStore storePost = PostStore(
+  final PublicacaoStore storePost = PublicacaoStore(
     repository: IFuncoesPHP(
       client: HttpClient(),
     ),
@@ -69,67 +84,32 @@ class _SVPostAddState extends State<SVPostAdd> {
   Dio dio = Dio();
   late ImgbbResponseModel imgbbResponse;
 
-  void uploadImageFile(File image, String text) async {
-    setState(() {
-      loading = true;
-    });
+  void uploadImageFile() async {
     try {
-      await storePost.addPost(
-          widget.usuario, _descriptionTextController.text, image);
+      String fileName = _image!.path.split('/').last;
+
+      FormData data = FormData.fromMap({
+        "key": imgBBkey,
+        "image": await MultipartFile.fromFile(
+          _image!.path,
+          filename: fileName,
+        ),
+      });
+
+      Dio dio = Dio();
+      dio.post("https://api.imgbb.com/1/upload", data: data).then((response) {
+        var data = response.data;
+
+        debugPrint('Função - ${data['data']['url']}');
+
+        setState(() {
+          imgURL = data['data']['url'];
+        });
+
+        // ignore: invalid_return_type_for_catch_error
+      }).catchError((error) => debugPrint(error.toString()));
       // ignore: empty_catches
     } catch (e) {}
-    /*
-    FormData formData = FormData.fromMap({"key": imgBBkey, "image": m});
-
-    Response response = await dio.post(
-      "https://api.imgbb.com/1/upload",
-      data: formData,
-    );
-    if (response.statusCode != 400) {
-      imgbbResponse = ImgbbResponseModel.fromJson(response.data);
-
-      String url = imgbbResponse.data.displayUrl;
-      await storePost.addPost(
-          widget.usuario, _descriptionTextController.text, url);
-      bool sucess = storePost.addCheck.value;
-
-      debugPrint('status - $sucess');
-
-      if (sucess) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const SVHomeFragment(),
-          ),
-        );
-      } else {
-        txt = 'Erro ao Salvar';
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              txt,
-              style: const TextStyle(
-                color: Colors.white,
-              ),
-            ),
-            backgroundColor: primaryColor,
-          ),
-        );
-      }
-    } else {
-      txt = 'Erro Upload';
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            txt,
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          backgroundColor: primaryColor,
-        ),
-      );
-    }*/
   }
 
   @override
@@ -155,7 +135,7 @@ class _SVPostAddState extends State<SVPostAdd> {
           backgroundColor: color00,
           iconTheme: IconThemeData(color: color94),
           title: Text(
-            'Comentários',
+            '',
             style: whiteBold18,
           ),
           elevation: 0,
@@ -274,21 +254,16 @@ class _SVPostAddState extends State<SVPostAdd> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          /*widthSpace15,
-                          widget.usuario.photo == ''
-                              ? Image.asset(
-                                  'assets/image/nopicture.png',
-                                  height: 48,
-                                  width: 48,
-                                  fit: BoxFit.cover,
-                                ).cornerRadiusWithClipRRect(8)
-                              : Image.network(
-                                  widget.usuario.photo,
-                                  height: 48,
-                                  width: 48,
-                                  fit: BoxFit.cover,
-                                ).cornerRadiusWithClipRRect(8),
-                          */
+                          widthSpace15,
+                          Container(
+                            height: 48,
+                            width: 48,
+                            color: primaryColor,
+                            child: const Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                            ),
+                          ).cornerRadiusWithClipRRect(8),
                           widthSpace5,
                           SizedBox(
                             width: context.width() * 0.5,
@@ -318,8 +293,10 @@ class _SVPostAddState extends State<SVPostAdd> {
                           TextButton(
                             onPressed: () {
                               if (mykey.currentState!.validate()) {
-                                uploadImageFile(
-                                    _image!, _descriptionTextController.text);
+                                postPost(
+                                  imgURL,
+                                  _descriptionTextController.text,
+                                );
                               }
                             },
                             child: Text(

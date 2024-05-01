@@ -62,6 +62,7 @@ class MyApp extends StatelessWidget {
       builder: (_) => MaterialApp(
         debugShowCheckedModeBanner: false,
         home: const ASplashScreen(),
+        //home: const SVHomeFragment(),
         theme: ThemeData(
           primarySwatch: Colors.blue,
           scaffoldBackgroundColor: scaffoldColor,

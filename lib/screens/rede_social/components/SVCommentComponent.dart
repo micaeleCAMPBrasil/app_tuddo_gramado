@@ -1,7 +1,11 @@
 // ignore_for_file: file_names
 
 import 'package:app_tuddo_gramado/data/models/SVCommentModel.dart';
+import 'package:app_tuddo_gramado/data/php/functions.dart';
+import 'package:app_tuddo_gramado/data/php/http_client.dart';
+import 'package:app_tuddo_gramado/data/stores/publicacao_store.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
+import 'package:app_tuddo_gramado/utils/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -15,6 +19,11 @@ class SVCommentComponent extends StatefulWidget {
 }
 
 class _SVCommentComponentState extends State<SVCommentComponent> {
+  final PublicacaoStore storePost = PublicacaoStore(
+    repository: IFuncoesPHP(
+      client: HttpClient(),
+    ),
+  );
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -25,15 +34,22 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
           children: [
             Row(
               children: [
-                Image.asset(
-                  widget.comment.profileImage.validate(),
-                  height: 48,
-                  width: 48,
-                  fit: BoxFit.cover,
-                ).cornerRadiusWithClipRRect(8),
+                widget.comment.profileImage == ''
+                    ? Image.asset(
+                        'assets/image/nopicture.png',
+                        height: 56,
+                        width: 56,
+                        fit: BoxFit.cover,
+                      ).cornerRadiusWithClipRRect(12)
+                    : Image.network(
+                        widget.comment.profileImage.validate(),
+                        height: 56,
+                        width: 56,
+                        fit: BoxFit.cover,
+                      ).cornerRadiusWithClipRRect(12),
                 widthSpace15,
                 Text(
-                  widget.comment.name.validate(),
+                  formatarNome(widget.comment.name.validate()),
                   style: whiteSemiBold20,
                 ),
                 widthSpace5,
@@ -55,8 +71,7 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
                   color: context.iconColor,
                 ),
                 4.width,
-                Text('${widget.comment.time.validate()} ago',
-                    style: color94SemiBold16),
+                Text(widget.comment.time.validate(), style: color94SemiBold16),
               ],
             )
           ],
@@ -99,9 +114,13 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
                   ),
                 ],
               ),
-            ).onTap(() {
-              widget.comment.like = !widget.comment.like.validate();
-              setState(() {});
+            ).onTap(() async {
+              setState(() {
+                widget.comment.like = !widget.comment.like.validate();
+              });
+              String idComentario = widget.comment.id.toString();
+              await storePost.addLikeComentario(
+                  widget.comment.uid, idComentario);
             }, borderRadius: radius(4)),
           ],
         )

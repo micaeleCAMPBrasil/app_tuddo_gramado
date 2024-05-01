@@ -1,11 +1,9 @@
 import 'dart:io';
 
-import 'package:app_tuddo_gramado/screens/rede_social/addPost/components/SVSharePostBottomSheetComponent.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:nb_utils/nb_utils.dart';
 
 class PrimaryButton extends StatelessWidget {
   final VoidCallback? onTap;
@@ -257,21 +255,6 @@ class PrimaryTextfield extends StatelessWidget {
       ),
     );
   }
-}
-
-void svShowShareBottomSheet(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    enableDrag: true,
-    isDismissible: true,
-    backgroundColor: primaryColor,
-    shape: RoundedRectangleBorder(
-        borderRadius: radiusOnly(topLeft: 30, topRight: 30)),
-    builder: (context) {
-      return const SVSharePostBottomSheetComponent();
-    },
-  );
 }
 
 Future<File> svGetImageSource() async {

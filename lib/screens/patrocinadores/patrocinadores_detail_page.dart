@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:app_tuddo_gramado/data/models/patrocinadores.dart';
@@ -27,6 +28,21 @@ class PatrocinadoresDetailPage extends StatefulWidget {
 }
 
 class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
+  bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(
+      const Duration(seconds: 2),
+      () {
+        setState(() {
+          _loading = true;
+        });
+      },
+    );
+  }
+
   Future<void> _launchUrl(Uri url) async {
     if (!await launchUrl(url)) {
       debugPrint('Could not launch $url');
@@ -54,183 +70,206 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
         );
         return true;
       },
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: const PreferredSize(
-          preferredSize: Size.fromHeight(56),
-          child: MyAppBar(),
-        ),
-        body: Stack(
-          children: [
-            Column(
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.6,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(widget.patrocinador.imagemBG),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                const Spacer()
-              ],
-            ),
-            DraggableScrollableSheet(
-              initialChildSize: .51,
-              maxChildSize: .51,
-              minChildSize: .51,
-              builder:
-                  (BuildContext context, ScrollController scrollController) {
-                return ShaderMask(
-                  shaderCallback: (Rect rect) {
-                    return LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        scaffoldColor,
-                        transparent.withOpacity(.10),
-                        transparent,
-                        transparent,
-                      ],
-                    ).createShader(rect);
-                  },
-                  blendMode: BlendMode.dstOut,
-                  child: ListView(
-                    physics: const BouncingScrollPhysics(),
-                    controller: scrollController,
+      child: _loading
+          ? Scaffold(
+              extendBodyBehindAppBar: true,
+              appBar: const PreferredSize(
+                preferredSize: Size.fromHeight(56),
+                child: MyAppBar(),
+              ),
+              body: Stack(
+                children: [
+                  Column(
                     children: [
-                      heightSpace20,
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      CachedNetworkImage(
+                        imageUrl: widget.patrocinador.logo,
+                        /*progressIndicatorBuilder:
+                            (context, url, downloadProgress) => Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  widget.patrocinador.nome,
-                                  style: whiteSemiBold20,
-                                ),
-                                Row(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        _launchUrl(
-                                          Uri.parse(
-                                            widget.patrocinador.linkInstagram,
-                                          ),
-                                        );
-                                      },
-                                      child: SvgPicture.asset(
-                                        'assets/icones/instagram.svg',
-                                        color: primaryColor,
-                                        width: 20,
-                                        height: 20,
-                                      ),
-                                    ),
-                                    widthSpace10,
-                                    GestureDetector(
-                                      onTap: shareMensagem,
-                                      child: Icon(
-                                        Icons.share_outlined,
-                                        color: primaryColor,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                            heightSpace5,
-                            Row(
-                              children: List.generate(
-                                5,
-                                (index) => Padding(
-                                  padding: const EdgeInsets.only(right: 5),
-                                  child: SvgPicture.asset(
-                                    'assets/icones/rating_star.svg',
-                                    color: starColor,
-                                  ),
+                            SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  value: downloadProgress.progress,
+                                  color: primaryColor,
                                 ),
                               ),
                             ),
-                            heightSpace5,
-                            AutoSizeText(
-                              widget.patrocinador.descricao,
-                              style: whiteRegular15,
-                            ),
-                            heightSpace20,
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    _launchUrl(
-                                      Uri.parse(
-                                          widget.patrocinador.linkEndereco),
-                                    );
-                                  },
-                                  child: Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/icones/address.svg',
-                                        color: primaryColor,
-                                        width: 40,
-                                        height: 40,
-                                      ),
-                                      widthSpace5,
-                                      Text(
-                                        'Nos encontre',
-                                        style: whiteRegular14,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                /*GestureDetector(
-                                  onTap: () {
-                                    _launchUrl(
-                                      Uri.parse(
-                                        widget.patrocinador.linkWebSite,
-                                      ),
-                                    );
-                                  },
-                                  child: Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/icones/internet.svg',
-                                        color: primaryColor,
-                                        width: 30,
-                                        height: 25,
-                                      ),
-                                      widthSpace5,
-                                      Text(
-                                        'Web Site',
-                                        style: whiteRegular14,
-                                      ),
-                                    ],
-                                  ),
-                                ),*/
-                              ],
-                            ),
                           ],
                         ),
+                        errorWidget: (context, url, error) => Icon(
+                          Icons.error,
+                          color: primaryColor,
+                        ),*/
+                        imageBuilder: (context, imageProvider) => Container(
+                          alignment: Alignment.center,
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.6,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
                       ),
-                      heightSpace10,
-                      widget.patrocinador.galeria == []
-                          ? Container()
-                          : galeria(),
-                      heightSpace30,
+                      const Spacer()
                     ],
                   ),
-                );
-              },
+                  DraggableScrollableSheet(
+                    initialChildSize: .51,
+                    maxChildSize: .51,
+                    minChildSize: .51,
+                    builder: (BuildContext context,
+                        ScrollController scrollController) {
+                      return ShaderMask(
+                        shaderCallback: (Rect rect) {
+                          return LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              scaffoldColor,
+                              transparent.withOpacity(.10),
+                              transparent,
+                              transparent,
+                            ],
+                          ).createShader(rect);
+                        },
+                        blendMode: BlendMode.dstOut,
+                        child: ListView(
+                          physics: const BouncingScrollPhysics(),
+                          controller: scrollController,
+                          children: [
+                            heightSpace20,
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        widget.patrocinador.nome,
+                                        style: whiteSemiBold20,
+                                      ),
+                                      Row(
+                                        children: [
+                                          widget.patrocinador.linkInstagram ==
+                                                  ''
+                                              ? widthSpace10
+                                              : GestureDetector(
+                                                  onTap: () {
+                                                    _launchUrl(
+                                                      Uri.parse(
+                                                        widget.patrocinador
+                                                            .linkInstagram,
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: SvgPicture.asset(
+                                                    'assets/icones/instagram.svg',
+                                                    color: primaryColor,
+                                                    width: 20,
+                                                    height: 20,
+                                                  ),
+                                                ),
+                                          widthSpace10,
+                                          GestureDetector(
+                                            onTap: shareMensagem,
+                                            child: Icon(
+                                              Icons.share_outlined,
+                                              color: primaryColor,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  heightSpace5,
+                                  Row(
+                                    children: List.generate(
+                                      5,
+                                      (index) => Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 5),
+                                        child: SvgPicture.asset(
+                                          'assets/icones/rating_star.svg',
+                                          color: starColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  heightSpace5,
+                                  AutoSizeText(
+                                    widget.patrocinador.descricao,
+                                    style: whiteRegular15,
+                                  ),
+                                  widget.patrocinador.isMostrarSite
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            _launchUrl(
+                                              Uri.parse(widget
+                                                  .patrocinador.linkWebSite),
+                                            );
+                                          },
+                                          child: Text(
+                                            widget.patrocinador.linkWebSite,
+                                            style: whiteRegular14,
+                                          ),
+                                        )
+                                      : heightSpace20,
+                                  widget.patrocinador.linkEndereco == ''
+                                      ? heightSpace5
+                                      : GestureDetector(
+                                          onTap: () {
+                                            _launchUrl(
+                                              Uri.parse(widget
+                                                  .patrocinador.linkEndereco),
+                                            );
+                                          },
+                                          child: Row(
+                                            children: [
+                                              SvgPicture.asset(
+                                                'assets/icones/address.svg',
+                                                color: primaryColor,
+                                                width: 40,
+                                                height: 40,
+                                              ),
+                                              widthSpace5,
+                                              Text(
+                                                'Nos encontre',
+                                                style: whiteRegular14,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                ],
+                              ),
+                            ),
+                            heightSpace10,
+                            widget.patrocinador.galeria == []
+                                ? Container()
+                                : galeria(),
+                            heightSpace30,
+                          ],
+                        ),
+                      );
+                    },
+                  )
+                ],
+              ),
             )
-          ],
-        ),
-      ),
+          : const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
     );
   }
 
@@ -262,20 +301,35 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
                           ),
                         );
                       },
-                      child: Container(
-                        height: 90,
-                        width: 150,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(
-                              item.img,
+                      child: CachedNetworkImage(
+                        imageUrl: item.img,
+                        /*progressIndicatorBuilder:
+                            (context, url, downloadProgress) => SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              value: downloadProgress.progress,
+                              color: primaryColor,
                             ),
-                            fit: BoxFit.fill,
                           ),
-                          color: color22,
-                          borderRadius: BorderRadius.circular(5),
                         ),
-                        // child: Image.asset(item['image']),
+                        errorWidget: (context, url, error) => Icon(
+                          Icons.error,
+                          color: primaryColor,
+                        ),*/
+                        imageBuilder: (context, imageProvider) => Container(
+                          height: 90,
+                          width: 150,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.fill,
+                            ),
+                            borderRadius: BorderRadius.circular(5),
+                            color: color22,
+                          ),
+                        ),
                       ),
                     ),
                     // Text(item['title'], style: whiteRegular15)

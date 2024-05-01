@@ -11,7 +11,7 @@ class Patrocinadores {
       linkInstagram,
       linkFacebook,
       linkEndereco;
-  bool isFavorite;
+  bool isFavorite, isBannerInicial, isMostrarSite;
 
   List<GaleriaPatrocinador> galeria;
 
@@ -21,12 +21,14 @@ class Patrocinadores {
     required this.logo,
     required this.imagemBG,
     required this.galeria,
+    required this.isFavorite,
+    required this.isBannerInicial,
+    required this.isMostrarSite,
     this.descricao = '',
     this.linkWebSite = '',
     this.linkInstagram = '',
     this.linkFacebook = '',
     this.linkEndereco = '',
-    this.isFavorite = false,
   });
 
   @override
@@ -75,6 +77,8 @@ class Patrocinadores {
     String? linkFacebook,
     String? linkEndereco,
     bool? isFavorite,
+    bool? isMostrarSite,
+    bool? isBannerInicial,
     List<GaleriaPatrocinador>? galeria,
   }) {
     return Patrocinadores(
@@ -88,6 +92,8 @@ class Patrocinadores {
       linkFacebook: linkFacebook ?? this.linkFacebook,
       linkEndereco: linkEndereco ?? this.linkEndereco,
       isFavorite: isFavorite ?? this.isFavorite,
+      isBannerInicial: isBannerInicial ?? this.isBannerInicial,
+      isMostrarSite: isMostrarSite ?? this.isMostrarSite,
       galeria: galeria ?? this.galeria,
     );
   }
