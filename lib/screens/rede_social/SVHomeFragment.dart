@@ -1,7 +1,6 @@
 // ignore_for_file: file_names, deprecated_member_use
 
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
-import 'package:app_tuddo_gramado/screens/rede_social/components/SVHomeDrawerComponent.dart';
 import 'package:app_tuddo_gramado/screens/rede_social/components/SVPostComponent.dart';
 import 'package:app_tuddo_gramado/screens/rede_social/screens/SVPostAdd.dart';
 import 'package:app_tuddo_gramado/utils/bottom_navigation.dart';
@@ -48,18 +47,6 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
         appBar: AppBar(
           backgroundColor: color00,
           elevation: 0,
-          /*leading: IconButton(
-            icon: Image.asset(
-              'assets/icones/ic_More.png',
-              width: 18,
-              height: 18,
-              fit: BoxFit.cover,
-              color: color94,
-            ),
-            onPressed: () {
-              //scaffoldKey.currentState?.openDrawer();
-            },
-          ),*/
           title: Text(
             'Dicas e Roteiros',
             style: whiteBold18,
@@ -91,10 +78,6 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
             ),
             widthSpace10,
           ],
-        ),
-        drawer: Drawer(
-          backgroundColor: context.cardColor,
-          child: const SVHomeDrawerComponent(),
         ),
         body: SingleChildScrollView(
           child: Column(

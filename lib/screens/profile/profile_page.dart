@@ -6,6 +6,7 @@ import 'package:app_tuddo_gramado/data/php/http_client.dart';
 import 'package:app_tuddo_gramado/data/stores/patrocinadores_store.dart';
 import 'package:app_tuddo_gramado/screens/patrocinadores/patrocinadores_detail_page.dart';
 import 'package:app_tuddo_gramado/screens/profile/edit_profile/edit_profile_page.dart';
+import 'package:app_tuddo_gramado/screens/profile/subscribe_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -272,8 +273,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => WebViewScreen(
-                    url: "https://www.google.com/",
+                  builder: (context) => SubscribePage(
                     index: 4,
                   ),
                 ),
@@ -298,7 +298,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   widthSpace10,
                   Text(
-                    'Seja Assinante',
+                    'Faça Parte',
                     style: whiteBold18,
                   ),
                 ],
@@ -334,7 +334,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 color: color22,
                 borderRadius: BorderRadius.circular(5),
                 image: DecorationImage(
-                  image: AssetImage(item.imagemBG),
+                  image: NetworkImage(item.imagemBG),
                   fit: BoxFit.cover,
                 ),
               ),

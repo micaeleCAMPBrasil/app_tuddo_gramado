@@ -396,8 +396,9 @@ class IFuncoesPHP implements IFuncoes {
   Future<bool> deletePost(String idPost) async {
     final response = await client.get(
       url:
-          "https://campbrasil.com/tuddo_gramado/php/posts/deletePost=$idPost",
+          "https://campbrasil.com/tuddo_gramado/php/posts/deletePost.php=$idPost",
     );
+    debugPrint('chamando a função - $idPost');
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);

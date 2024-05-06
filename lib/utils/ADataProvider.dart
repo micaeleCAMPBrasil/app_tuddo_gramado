@@ -22,22 +22,25 @@ final List<AWalkThroughModel> modal = [
   AWalkThroughModel(
     heading: 'Tuddo Gramado',
     title: 'Tuddo em Dobro',
-    subtitle: 'Garanta as melhores experiências pagando menos! ',
-    image: 'assets/image/p1.jpeg',
+    subtitle:
+        'Compre um prato, uma diária, um ingresso ou uma experiência e ganhe outra na hora.',
+    image: 'assets/image/3.png',
     progress: 0.33,
   ),
   AWalkThroughModel(
     heading: 'Tuddo Gramado',
     title: 'Transfer',
-    subtitle: ' ',
-    image: 'assets/image/p3.png',
+    subtitle:
+        'Aeroporto x Gramado \nEscolha apenas um trecho ou garanta sua reserva para ida e volta com antecedência para Gramado, Canela ou cidades vizinhas.',
+    image: 'assets/image/2.png',
     progress: 0.66,
   ),
   AWalkThroughModel(
     heading: 'Tuddo Gramado',
     title: 'Aluguel por Temporada',
-    subtitle: 'Hospede em Gramado e Canela! ',
-    image: 'assets/image/p2.jpeg',
+    subtitle:
+        'Garanta sua hospedagem com os melhores preços direto com os anfitriões.',
+    image: 'assets/image/1.png',
     progress: 1,
   ),
 ];

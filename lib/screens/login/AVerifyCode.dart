@@ -78,7 +78,7 @@ class _AVerifyCodeState extends State<AVerifyCode> {
         width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/icones/fundo-login2.png"),
+            image: AssetImage("assets/image/login_register_bg.png"),
             fit: BoxFit.fill,
           ),
         ),

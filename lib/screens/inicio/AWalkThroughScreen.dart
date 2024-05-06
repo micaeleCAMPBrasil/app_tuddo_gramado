@@ -125,6 +125,7 @@ class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
                             Text(
                               e.subtitle.toString(),
                               style: whiteMedium16,
+                              textAlign: TextAlign.start,
                             ),
                             const SizedBox(height: 80),
                           ],

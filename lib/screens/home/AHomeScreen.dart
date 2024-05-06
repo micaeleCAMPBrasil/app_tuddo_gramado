@@ -245,7 +245,7 @@ class _AHomeScreenState extends State<AHomeScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => WebViewScreen(
-                        url: "http://tuddogramado.com.br/",
+                        url: "https://tuddogramado.com.br/",
                       ),
                     ),
                   );
@@ -263,7 +263,7 @@ class _AHomeScreenState extends State<AHomeScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => WebViewScreen(
-                        url: "https://www.google.com/",
+                        url: "https://dobro.tuddogramado.com.br/planos/",
                       ),
                     ),
                   );
@@ -273,7 +273,8 @@ class _AHomeScreenState extends State<AHomeScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => WebViewScreen(
-                        url: "https://www.google.com/",
+                        url:
+                            "https://tuddogramado.com.br/venda-mais-com-tuddo-em-dobro/",
                       ),
                     ),
                   );

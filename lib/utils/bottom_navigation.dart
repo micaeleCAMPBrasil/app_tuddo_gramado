@@ -56,7 +56,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
       ),
       // tuddo em dobro
       WebViewScreen(
-        url: "https://tuddo.clps.pro/",
+        url: "https://dobro.tuddogramado.com.br/",
       ),
       // patrocinadores
       PatrocinadoresScreen(),

@@ -182,6 +182,11 @@ TextStyle whiteBold18 = TextStyle(
   color: white,
   fontFamily: 'B',
 );
+TextStyle whiteBold16 = TextStyle(
+  fontSize: 16,
+  color: white,
+  fontFamily: 'B',
+);
 TextStyle primaryBold18 = TextStyle(
   fontSize: 18,
   color: primaryColor,
