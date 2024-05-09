@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 
 class SVCommentModel {
-  int id, idPost;
+  String id, idPost;
   String uid;
   String? name;
   String? profileImage;

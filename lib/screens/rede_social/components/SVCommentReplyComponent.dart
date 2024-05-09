@@ -5,7 +5,9 @@ import 'package:app_tuddo_gramado/data/php/functions.dart';
 import 'package:app_tuddo_gramado/data/php/http_client.dart';
 import 'package:app_tuddo_gramado/data/stores/publicacao_store.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 // ignore: must_be_immutable
@@ -78,11 +80,45 @@ class _SVCommentReplyComponentState extends State<SVCommentReplyComponent> {
               ),
               TextButton(
                 onPressed: () async {
-                  await storePost.addComentario(
+                  DateTime now = DateTime.now();
+                  String formattedDate = DateFormat('dd/MM/yyyy').format(now);
+                  String formattedTime = DateFormat('kk:mm').format(now);
+
+                  FirebaseFirestore.instance
+                      .collection("User Post")
+                      .doc(widget.idPost)
+                      .collection("Comments")
+                      .add({
+                    'idUsuario': widget.usuario.uid,
+                    'idPulicacao': widget.idPost,
+                    'comentario': _comentariosTextController.text,
+                    'TimeStamp': Timestamp.now(),
+                    'data': formattedDate,
+                    'time': formattedTime,
+                    'likes': [],
+                  });
+
+                  DocumentReference postRef = FirebaseFirestore.instance
+                      .collection('User Post')
+                      .doc(widget.idPost);
+                  DocumentSnapshot snapshot = await postRef.get();
+                  final data = snapshot.data() as Map<String, dynamic>;
+
+                  int totalComentario =
+                      int.parse(data['totalComentario'].toString());
+
+                  postRef.update({
+                    'totalComentario': totalComentario + 1,
+                  });
+
+                  _comentariosTextController.clear();
+
+                  /*await storePost.addComentario(
                     widget.usuario,
                     _comentariosTextController.text,
                     widget.idPost,
-                  );
+                  );*/
+
                   /*Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(

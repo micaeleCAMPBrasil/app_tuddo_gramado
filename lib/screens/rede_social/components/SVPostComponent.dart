@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, use_build_context_synchronously
 
 import 'dart:async';
 
@@ -7,11 +7,15 @@ import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/data/php/functions.dart';
 import 'package:app_tuddo_gramado/data/php/http_client.dart';
 import 'package:app_tuddo_gramado/data/stores/publicacao_store.dart';
+import 'package:app_tuddo_gramado/data/stores/user_store.dart';
 import 'package:app_tuddo_gramado/screens/rede_social/screens/SVCommentScreen.dart';
+import 'package:app_tuddo_gramado/screens/rede_social/screens/SVPostUpdate.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:app_tuddo_gramado/utils/widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:popover/popover.dart';
 
 // ignore: must_be_immutable
 class SVPostComponent extends StatefulWidget {
@@ -29,24 +33,17 @@ class _SVPostComponentState extends State<SVPostComponent> {
     ),
   );
 
-  List<SVPostModel> postList = [];
+  final UsuarioStore storeUsuario = UsuarioStore(
+    repository: IFuncoesPHP(
+      client: HttpClient(),
+    ),
+  );
 
-  bool _loading = false;
+  List<SVPostModel> postList = [];
 
   @override
   void initState() {
     super.initState();
-    //getListsData();
-    checkPost();
-
-    Future.delayed(
-      const Duration(seconds: 3),
-      () {
-        setState(() {
-          _loading = true;
-        });
-      },
-    );
   }
 
   bool checkNovo = false;
@@ -68,228 +65,404 @@ class _SVPostComponentState extends State<SVPostComponent> {
   }
 
   getListsData() async {
-    await storePost.getAllPost(widget.usuario.uid, '');
+    /*await storePost.getAllPost(widget.usuario.uid, '');
     if (mounted) {
       setState(() {
         postList = storePost.list.value;
       });
-    }
+    }*/
     //pause ? null : checkUserName();
   }
 
-  gerarListUsuario(String idPost) async {}
+  Future<Usuario> gerarUsuario(String uid) async {
+    await storeUsuario.getUID(uid);
+    return storeUsuario.state.value;
+  }
 
   @override
   void dispose() {
     super.dispose();
   }
 
+  alterar(bool fecharModal) {
+    debugPrint("fechar modal $fecharModal");
+
+    if (fecharModal) {
+      storePost.fecharModal(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return _loading
-        ? postList.isEmpty
-            ? Center(
-                child: Text(
-                  'Nenhum Post',
-                  style: color94SemiBold16,
-                ),
-              )
-            : ListView.builder(
-                itemCount: postList.length,
-                itemBuilder: (context, index) {
-                  List<Usuario> listUsersQCurte =
-                      postList[index].usuarioQCurtiram.validate();
-                  return GestureDetector(
-                    onDoubleTap: () async {
-                      setState(() {
-                        postList[index].like = !postList[index].like.validate();
-                      });
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection('User Post')
+          .orderBy('TimeStamp', descending: false)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              final post = snapshot.data!.docs[index];
 
-                      String idPost =
-                          postList[index].idPost.validate().toString();
-                      await storePost.addLike(widget.usuario.uid, idPost);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      margin: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: radius(12),
-                        color: color00,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(left: 10),
-                                child: Row(
-                                  children: [
-                                    postList[index].profileImage.validate() ==
-                                            ''
-                                        ? Image.asset(
-                                            'assets/image/nopicture.png',
-                                            height: 56,
-                                            width: 56,
-                                            fit: BoxFit.cover,
-                                          ).cornerRadiusWithClipRRect(12)
-                                        : Image.network(
-                                            postList[index]
-                                                .profileImage
-                                                .validate(),
-                                            height: 56,
-                                            width: 56,
-                                            fit: BoxFit.cover,
-                                          ).cornerRadiusWithClipRRect(12),
-                                    widthSpace10,
-                                    Text(
-                                      formatarNome(
-                                          postList[index].name.validate()),
-                                      style: whiteSemiBold20,
-                                    ),
-                                    widthSpace5,
-                                    Image.asset(
-                                      'assets/social/ic_TickSquare.png',
-                                      height: 14,
-                                      width: 14,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(right: 15),
-                                child: Text(
-                                  postList[index].time.validate(),
-                                  style: color94SemiBold16,
-                                ),
-                              ),
-                              postList[index].idUsuario.validate() ==
-                                      widget.usuario.uid
-                                  ? Container(
-                                      margin: const EdgeInsets.only(right: 15),
-                                      child: IconButton(
-                                        onPressed: () async {
-                                          await storePost.deletePost(
-                                              postList[index]
-                                                  .idPost
-                                                  .toString()
-                                                  .validate());
-                                        },
-                                        icon: Icon(
-                                          Icons.delete,
-                                          color: color94,
-                                        ),
+              List<String> listUIDUser = List<String>.from(post['likes'] ?? []);
+
+              bool isLiked = listUIDUser.contains(widget.usuario.uid);
+
+              return GestureDetector(
+                onDoubleTap: () async {
+                  setState(() {
+                    isLiked = !isLiked;
+                  });
+                  await storePost.addLike(isLiked, widget.usuario.uid, post.id);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  margin: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: radius(12),
+                    color: color00,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FutureBuilder(
+                        future: gerarUsuario(post['idUsuario']),
+                        builder: (context, dadosUsuario) {
+                          Usuario? usuarioQPublicou = dadosUsuario.data;
+                          if (dadosUsuario.hasData) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(left: 10),
+                                  child: Row(
+                                    children: [
+                                      usuarioQPublicou!.photo == ''
+                                          ? Image.asset(
+                                              'assets/image/nopicture.png',
+                                              height: 56,
+                                              width: 56,
+                                              fit: BoxFit.cover,
+                                            ).cornerRadiusWithClipRRect(12)
+                                          : Image.network(
+                                              usuarioQPublicou.photo,
+                                              height: 56,
+                                              width: 56,
+                                              fit: BoxFit.cover,
+                                            ).cornerRadiusWithClipRRect(12),
+                                      widthSpace10,
+                                      Text(
+                                        formatarNome(usuarioQPublicou.nome),
+                                        style: whiteSemiBold20,
                                       ),
-                                    )
-                                  : Container(),
-                            ],
-                          ),
-                          heightSpace15,
-                          postList[index].description.validate().isNotEmpty
-                              ? Text(
-                                  postList[index].description.validate(),
-                                  textAlign: TextAlign.start,
-                                  style: color94SemiBold16,
-                                ).paddingSymmetric(horizontal: 16)
-                              : const Offstage(),
-                          postList[index].description.validate().isNotEmpty
-                              ? heightSpace15
-                              : const Offstage(),
-                          postList[index].postImage.validate() != ''
-                              ? Image.network(
-                                  postList[index].postImage.validate(),
-                                  height: 300,
-                                  width: context.width() - 32,
-                                  fit: BoxFit.cover,
-                                ).cornerRadiusWithClipRRect(12).center()
-                              : heightSpace10,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  IconButton(
-                                    icon: postList[index].like.validate()
-                                        ? Image.asset(
-                                            'assets/social/ic_HeartFilled.png',
-                                            height: 20,
-                                            width: 22,
-                                            fit: BoxFit.fill,
-                                            color: primaryColor,
-                                          )
-                                        : Image.asset(
-                                            'assets/social/ic_Heart.png',
-                                            height: 22,
-                                            width: 22,
-                                            fit: BoxFit.cover,
+                                      widthSpace5,
+                                      Image.asset(
+                                        'assets/social/ic_TickSquare.png',
+                                        height: 14,
+                                        width: 14,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(right: 15),
+                                  child: Text(
+                                    post['data'],
+                                    style: color94SemiBold16,
+                                  ),
+                                ),
+                                usuarioQPublicou.uid == widget.usuario.uid
+                                    ? Container(
+                                        alignment: Alignment.centerLeft,
+                                        margin:
+                                            const EdgeInsets.only(right: 15),
+                                        child: GestureDetector(
+                                          onTap: () => showPopover(
+                                            context: context,
+                                            arrowHeight: 15,
+                                            arrowWidth: 30,
+                                            bodyBuilder: (context) {
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 8),
+                                                child: ListView(
+                                                  padding:
+                                                      const EdgeInsets.all(8),
+                                                  children: [
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.of(context)
+                                                          ..pop() // Dismiss the current screen (popover)
+                                                          ..pushReplacement(
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      SVPostEdit(
+                                                                usuario: widget
+                                                                    .usuario,
+                                                                post:
+                                                                    SVPostModel(
+                                                                  idPost:
+                                                                      post.id,
+                                                                  idUsuario:
+                                                                      usuarioQPublicou
+                                                                          .uid,
+                                                                  description: post[
+                                                                      'description'],
+                                                                  postImage: post[
+                                                                      'postImage'],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          );
+                                                      },
+                                                      child: Container(
+                                                        height: 50,
+                                                        color: color22,
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Icon(
+                                                              Icons.edit,
+                                                              color: color94,
+                                                            ),
+                                                            widthSpace10,
+                                                            Text(
+                                                              'Editar',
+                                                              style:
+                                                                  color94SemiBold16,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const Divider(),
+                                                    InkWell(
+                                                      onTap: () async {
+                                                        bool fecharModal =
+                                                            false;
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (context) =>
+                                                              AlertDialog(
+                                                            backgroundColor:
+                                                                color28,
+                                                            title: Text(
+                                                              'Apagar Post',
+                                                              style:
+                                                                  whiteBold16,
+                                                            ),
+                                                            content: Text(
+                                                              'Você tem certeza que quer apagar esse post?',
+                                                              style:
+                                                                  whiteRegular16,
+                                                            ),
+                                                            actions: [
+                                                              // Cancel button
+                                                              TextButton(
+                                                                onPressed: () {
+                                                                  alterar(
+                                                                      !fecharModal);
+
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                child: Text(
+                                                                  'Voltar',
+                                                                  style:
+                                                                      whiteBold16,
+                                                                ),
+                                                              ),
+                                                              // Delete button
+                                                              TextButton(
+                                                                onPressed:
+                                                                    () async {
+                                                                  await storePost
+                                                                      .deletePost(
+                                                                    post.id,
+                                                                  );
+                                                                  
+                                                                  alterar(
+                                                                      !fecharModal);
+
+                                                                  storePost
+                                                                      .fecharModal(
+                                                                          context);
+                                                                },
+                                                                child: Text(
+                                                                  'Sim',
+                                                                  style:
+                                                                      whiteBold16,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                      },
+                                                      child: Container(
+                                                        height: 50,
+                                                        color: color22,
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Icon(
+                                                              Icons.delete,
+                                                              color: color94,
+                                                            ),
+                                                            widthSpace10,
+                                                            Text(
+                                                              'Excluir',
+                                                              style:
+                                                                  color94SemiBold16,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.9,
+                                            height: 150,
+                                            backgroundColor: scaffoldColor,
+                                            direction: PopoverDirection.bottom,
+                                          ),
+                                          child: Icon(
+                                            Icons.more_vert_rounded,
                                             color: color94,
                                           ),
-                                    onPressed: () async {
-                                      setState(() {
-                                        postList[index].like =
-                                            !postList[index].like.validate();
-                                      });
-
-                                      String idPost = postList[index]
-                                          .idPost
-                                          .validate()
-                                          .toString();
-                                      await storePost.addLike(
-                                          widget.usuario.uid, idPost);
-                                    },
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => SVCommentScreen(
-                                            usuario: widget.usuario,
-                                            idPost: postList[index]
-                                                .idPost
-                                                .validate()
-                                                .toString(),
-                                          ),
                                         ),
-                                      );
-                                    },
-                                    child: Image.asset(
-                                      'assets/social/ic_Chat.png',
-                                      height: 22,
-                                      width: 22,
-                                      fit: BoxFit.cover,
-                                      color: color94,
-                                    ),
-                                  ),
-                                  widthSpace10,
-                                  Image.asset(
-                                    'assets/social/ic_Send.png',
-                                    height: 22,
-                                    width: 22,
-                                    fit: BoxFit.cover,
-                                    color: color94,
-                                  ).onTap(
-                                    () {
-                                      //svShowShareBottomSheet(context);
-                                    },
-                                    splashColor: Colors.transparent,
-                                    highlightColor: Colors.transparent,
-                                  ),
-                                ],
+                                      )
+                                    : Container(),
+                              ],
+                            );
+                          } else if (snapshot.hasError) {
+                            return Center(
+                              child: Text('Error: ${snapshot.error}'),
+                            );
+                          } else {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        },
+                      ),
+                      heightSpace15,
+                      post['description'].isNotEmpty
+                          ? Text(
+                              post['description'],
+                              textAlign: TextAlign.start,
+                              style: color94SemiBold16,
+                            ).paddingSymmetric(horizontal: 16)
+                          : const Offstage(),
+                      post['description'].isNotEmpty
+                          ? heightSpace15
+                          : const Offstage(),
+                      post['postImage'] != ''
+                          ? Image.network(
+                              post['postImage'],
+                              height: 300,
+                              width: context.width() - 32,
+                              fit: BoxFit.cover,
+                            ).cornerRadiusWithClipRRect(12).center()
+                          : heightSpace10,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: isLiked
+                                    ? Image.asset(
+                                        'assets/social/ic_HeartFilled.png',
+                                        height: 20,
+                                        width: 22,
+                                        fit: BoxFit.fill,
+                                        color: primaryColor,
+                                      )
+                                    : Image.asset(
+                                        'assets/social/ic_Heart.png',
+                                        height: 22,
+                                        width: 22,
+                                        fit: BoxFit.cover,
+                                        color: color94,
+                                      ),
+                                onPressed: () async {
+                                  setState(() {
+                                    isLiked = !isLiked;
+                                  });
+                                  await storePost.addLike(
+                                      isLiked, widget.usuario.uid, post.id);
+                                },
                               ),
-                              Text(
-                                '${postList[index].commentCount.validate()} comentários',
-                                style: whiteMedium14,
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SVCommentScreen(
+                                        usuario: widget.usuario,
+                                        idPost: post.id.toString(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Image.asset(
+                                  'assets/social/ic_Chat.png',
+                                  height: 22,
+                                  width: 22,
+                                  fit: BoxFit.cover,
+                                  color: color94,
+                                ),
+                              ),
+                              widthSpace10,
+                              Image.asset(
+                                'assets/social/ic_Send.png',
+                                height: 22,
+                                width: 22,
+                                fit: BoxFit.cover,
+                                color: color94,
+                              ).onTap(
+                                () {
+                                  //svShowShareBottomSheet(context);
+                                },
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
                               ),
                             ],
-                          ).paddingSymmetric(horizontal: 16),
-                          const Divider(indent: 16, endIndent: 16, height: 20),
-                          listUsersQCurte.isEmpty
-                              ? heightSpace5
-                              : listUsersQCurte.length == 1
-                                  ? Row(
+                          ),
+                          Text(
+                            '${post['totalComentario'] ?? 0} comentários',
+                            style: whiteMedium14,
+                          ),
+                        ],
+                      ).paddingSymmetric(horizontal: 16),
+                      const Divider(indent: 16, endIndent: 16, height: 20),
+                      listUIDUser.isEmpty
+                          ? heightSpace10
+                          : FutureBuilder(
+                              future: storePost.getListUsersLikes(
+                                  listUIDUser, widget.usuario.uid),
+                              builder: (context, listUsersQCurte) {
+                                if (listUsersQCurte.hasData) {
+                                  int total = listUsersQCurte.data!.length;
+                                  final userdata = listUsersQCurte.data;
+                                  if (total == 0) {
+                                    return heightSpace5;
+                                  } else if (total == 1) {
+                                    return Row(
                                       children: [
                                         widthSpace20,
                                         SizedBox(
@@ -302,8 +475,7 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                     width: 2),
                                                 borderRadius: radius(100),
                                               ),
-                                              child: listUsersQCurte[0].photo ==
-                                                      ''
+                                              child: userdata[0].photo == ''
                                                   ? Image.asset(
                                                       'assets/image/nopicture.png',
                                                       height: 24,
@@ -312,7 +484,7 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                     ).cornerRadiusWithClipRRect(
                                                       100)
                                                   : Image.network(
-                                                      listUsersQCurte[0].photo,
+                                                      userdata[0].photo,
                                                       height: 24,
                                                       width: 24,
                                                       fit: BoxFit.cover,
@@ -328,26 +500,31 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                             style: whiteMedium14,
                                             children: <TextSpan>[
                                               TextSpan(
-                                                text: listUsersQCurte[0].nome ==
+                                                text: userdata[0].nome ==
                                                         widget.usuario.nome
                                                     ? 'você'
                                                     : formatarNome(
-                                                        listUsersQCurte[0]
-                                                            .nome),
+                                                        userdata[0].nome,
+                                                      ),
                                                 style: whiteMedium14,
                                               ),
                                             ],
                                           ),
                                         ),
                                       ],
-                                    )
-                                  : listUsersQCurte.length == 2
-                                      ? Row(
-                                          children: [
-                                            widthSpace20,
-                                            SizedBox(
-                                              child: Positioned(
-                                                right: 0,
+                                    );
+                                  } else if (total == 2) {
+                                    return Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: 56,
+                                          child: Stack(
+                                            alignment: Alignment.centerLeft,
+                                            children: [
+                                              Positioned(
+                                                right: 14,
                                                 child: Container(
                                                   decoration: BoxDecoration(
                                                     border: Border.all(
@@ -355,9 +532,7 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                         width: 2),
                                                     borderRadius: radius(100),
                                                   ),
-                                                  child: listUsersQCurte[0]
-                                                              .photo ==
-                                                          ''
+                                                  child: userdata[0].photo == ''
                                                       ? Image.asset(
                                                           'assets/image/nopicture.png',
                                                           height: 24,
@@ -366,8 +541,7 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                         ).cornerRadiusWithClipRRect(
                                                           100)
                                                       : Image.network(
-                                                          listUsersQCurte[0]
-                                                              .photo,
+                                                          userdata[0].photo,
                                                           height: 24,
                                                           width: 24,
                                                           fit: BoxFit.cover,
@@ -375,407 +549,222 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                           100),
                                                 ),
                                               ),
-                                            ),
-                                            widthSpace10,
-                                            RichText(
-                                              text: TextSpan(
-                                                text: 'Curtido por ',
+                                              Positioned(
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        color: Colors.white,
+                                                        width: 2),
+                                                    borderRadius: radius(100),
+                                                  ),
+                                                  child: userdata[1].photo == ''
+                                                      ? Image.asset(
+                                                          'assets/image/nopicture.png',
+                                                          height: 24,
+                                                          width: 24,
+                                                          fit: BoxFit.cover,
+                                                        ).cornerRadiusWithClipRRect(
+                                                          100)
+                                                      : Image.network(
+                                                          userdata[1].photo,
+                                                          height: 24,
+                                                          width: 24,
+                                                          fit: BoxFit.cover,
+                                                        ).cornerRadiusWithClipRRect(
+                                                          100),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        widthSpace10,
+                                        RichText(
+                                          text: TextSpan(
+                                            text: 'Curtido por ',
+                                            style: whiteMedium14,
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                text: userdata[0].nome ==
+                                                        widget.usuario.nome
+                                                    ? userdata[1].nome ==
+                                                            widget.usuario.nome
+                                                        ? ''
+                                                        : formatarNome(
+                                                            userdata[1].nome,
+                                                          )
+                                                    : formatarNome(
+                                                        userdata[0].nome,
+                                                      ),
                                                 style: whiteMedium14,
-                                                children: <TextSpan>[
-                                                  TextSpan(
-                                                    text: listUsersQCurte[0]
-                                                                .nome ==
-                                                            postList[index]
-                                                                .name
-                                                                .validate()
-                                                        ? listUsersQCurte[1]
-                                                                    .nome ==
+                                              ),
+                                              TextSpan(
+                                                text: ' e ',
+                                                style: whiteMedium14,
+                                              ),
+                                              TextSpan(
+                                                text: '1 Outro',
+                                                style: whiteMedium14,
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    );
+                                  } else if (total == 3) {
+                                    return Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: 56,
+                                          child: Stack(
+                                            alignment: Alignment.centerLeft,
+                                            children: [
+                                              Positioned(
+                                                right: 0,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        color: Colors.white,
+                                                        width: 2),
+                                                    borderRadius: radius(100),
+                                                  ),
+                                                  child: userdata[0].photo == ''
+                                                      ? Image.asset(
+                                                          'assets/image/nopicture.png',
+                                                          height: 24,
+                                                          width: 24,
+                                                          fit: BoxFit.cover,
+                                                        ).cornerRadiusWithClipRRect(
+                                                          100)
+                                                      : Image.network(
+                                                          userdata[0].photo,
+                                                          height: 24,
+                                                          width: 24,
+                                                          fit: BoxFit.cover,
+                                                        ).cornerRadiusWithClipRRect(
+                                                          100),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                left: 14,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        color: Colors.white,
+                                                        width: 2),
+                                                    borderRadius: radius(100),
+                                                  ),
+                                                  child: userdata[1].photo == ''
+                                                      ? Image.asset(
+                                                          'assets/image/nopicture.png',
+                                                          height: 24,
+                                                          width: 24,
+                                                          fit: BoxFit.cover,
+                                                        ).cornerRadiusWithClipRRect(
+                                                          100)
+                                                      : Image.network(
+                                                          userdata[1].photo,
+                                                          height: 24,
+                                                          width: 24,
+                                                          fit: BoxFit.cover,
+                                                        ).cornerRadiusWithClipRRect(
+                                                          100),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        color: Colors.white,
+                                                        width: 2),
+                                                    borderRadius: radius(100),
+                                                  ),
+                                                  child: userdata[2].photo == ''
+                                                      ? Image.asset(
+                                                          'assets/image/nopicture.png',
+                                                          height: 24,
+                                                          width: 24,
+                                                          fit: BoxFit.cover,
+                                                        ).cornerRadiusWithClipRRect(
+                                                          100)
+                                                      : Image.network(
+                                                          userdata[2].photo,
+                                                          height: 24,
+                                                          width: 24,
+                                                          fit: BoxFit.cover,
+                                                        ).cornerRadiusWithClipRRect(
+                                                          100),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        widthSpace10,
+                                        RichText(
+                                          text: TextSpan(
+                                            text: 'Curtido por ',
+                                            style: whiteMedium14,
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                text: userdata[0].nome ==
+                                                        widget.usuario.nome
+                                                    ? userdata[1].nome ==
+                                                            widget.usuario.nome
+                                                        ? userdata[2].nome ==
                                                                 postList[index]
                                                                     .name
-                                                                    .validate()
                                                             ? ''
                                                             : formatarNome(
-                                                                listUsersQCurte[
-                                                                        1]
+                                                                userdata[2]
                                                                     .nome,
                                                               )
                                                         : formatarNome(
-                                                            listUsersQCurte[0]
-                                                                .nome,
-                                                          ),
-                                                    style: whiteMedium14,
-                                                  ),
-                                                  TextSpan(
-                                                    text: ' e ',
-                                                    style: whiteMedium14,
-                                                  ),
-                                                  TextSpan(
-                                                    text: '1 Outro ',
-                                                    style: whiteMedium14,
-                                                  ),
-                                                ],
+                                                            userdata[1].nome,
+                                                          )
+                                                    : formatarNome(
+                                                        userdata[0].nome,
+                                                      ),
+                                                style: whiteMedium14,
                                               ),
-                                            ),
-                                          ],
+                                              TextSpan(
+                                                text: ' e ',
+                                                style: whiteMedium14,
+                                              ),
+                                              TextSpan(
+                                                text: '2 Outros ',
+                                                style: whiteMedium14,
+                                              ),
+                                            ],
+                                          ),
                                         )
-                                      : listUsersQCurte.length == 3
-                                          ? Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                SizedBox(
-                                                  width: 56,
-                                                  child: Stack(
-                                                    alignment:
-                                                        Alignment.centerLeft,
-                                                    children: [
-                                                      Positioned(
-                                                        right: 0,
-                                                        child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
-                                                                color: Colors
-                                                                    .white,
-                                                                width: 2),
-                                                            borderRadius:
-                                                                radius(100),
-                                                          ),
-                                                          child: listUsersQCurte[
-                                                                          0]
-                                                                      .photo ==
-                                                                  ''
-                                                              ? Image.asset(
-                                                                  'assets/image/nopicture.png',
-                                                                  height: 24,
-                                                                  width: 24,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                ).cornerRadiusWithClipRRect(
-                                                                  100)
-                                                              : Image.network(
-                                                                  listUsersQCurte[
-                                                                          0]
-                                                                      .photo,
-                                                                  height: 24,
-                                                                  width: 24,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                ).cornerRadiusWithClipRRect(
-                                                                  100),
-                                                        ),
-                                                      ),
-                                                      Positioned(
-                                                        left: 14,
-                                                        child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
-                                                                color: Colors
-                                                                    .white,
-                                                                width: 2),
-                                                            borderRadius:
-                                                                radius(100),
-                                                          ),
-                                                          child: listUsersQCurte[
-                                                                          1]
-                                                                      .photo ==
-                                                                  ''
-                                                              ? Image.asset(
-                                                                  'assets/image/nopicture.png',
-                                                                  height: 24,
-                                                                  width: 24,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                ).cornerRadiusWithClipRRect(
-                                                                  100)
-                                                              : Image.network(
-                                                                  listUsersQCurte[
-                                                                          1]
-                                                                      .photo,
-                                                                  height: 24,
-                                                                  width: 24,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                ).cornerRadiusWithClipRRect(
-                                                                  100),
-                                                        ),
-                                                      ),
-                                                      Positioned(
-                                                        child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
-                                                                color: Colors
-                                                                    .white,
-                                                                width: 2),
-                                                            borderRadius:
-                                                                radius(100),
-                                                          ),
-                                                          child: listUsersQCurte[
-                                                                          2]
-                                                                      .photo ==
-                                                                  ''
-                                                              ? Image.asset(
-                                                                  'assets/image/nopicture.png',
-                                                                  height: 24,
-                                                                  width: 24,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                ).cornerRadiusWithClipRRect(
-                                                                  100)
-                                                              : Image.network(
-                                                                  listUsersQCurte[
-                                                                          2]
-                                                                      .photo,
-                                                                  height: 24,
-                                                                  width: 24,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                ).cornerRadiusWithClipRRect(
-                                                                  100),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                widthSpace10,
-                                                RichText(
-                                                  text: TextSpan(
-                                                    text: 'Curtido por ',
-                                                    style: whiteMedium14,
-                                                    children: <TextSpan>[
-                                                      TextSpan(
-                                                        text: listUsersQCurte[0]
-                                                                    .nome ==
-                                                                postList[index]
-                                                                    .name
-                                                                    .validate()
-                                                            ? listUsersQCurte[1]
-                                                                        .nome ==
-                                                                    postList[
-                                                                            index]
-                                                                        .name
-                                                                        .validate()
-                                                                ? listUsersQCurte[1]
-                                                                            .nome ==
-                                                                        postList[index]
-                                                                            .name
-                                                                            .validate()
-                                                                    ? ''
-                                                                    : formatarNome(
-                                                                        listUsersQCurte[2]
-                                                                            .nome,
-                                                                      )
-                                                                : formatarNome(
-                                                                    listUsersQCurte[
-                                                                            1]
-                                                                        .nome,
-                                                                  )
-                                                            : formatarNome(
-                                                                listUsersQCurte[
-                                                                        0]
-                                                                    .nome,
-                                                              ),
-                                                        style: whiteMedium14,
-                                                      ),
-                                                      TextSpan(
-                                                        text: ' e ',
-                                                        style: whiteMedium14,
-                                                      ),
-                                                      TextSpan(
-                                                        text: '2 Outros ',
-                                                        style: whiteMedium14,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
-                                            )
-                                          : heightSpace10 /*: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                SizedBox(
-                                                  width: 56,
-                                                  child: Stack(
-                                                    alignment:
-                                                        Alignment.centerLeft,
-                                                    children: [
-                                                      Positioned(
-                                                        right: 0,
-                                                        child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
-                                                                color:
-                                                                    Colors.white,
-                                                                width: 2),
-                                                            borderRadius:
-                                                                radius(100),
-                                                          ),
-                                                          child: listUsersQCurte[
-                                                                          0]
-                                                                      .photo ==
-                                                                  ''
-                                                              ? Image.asset(
-                                                                  'assets/image/nopicture.png',
-                                                                  height: 24,
-                                                                  width: 24,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                ).cornerRadiusWithClipRRect(
-                                                                  100)
-                                                              : Image.network(
-                                                                  listUsersQCurte[
-                                                                          0]
-                                                                      .photo,
-                                                                  height: 24,
-                                                                  width: 24,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                ).cornerRadiusWithClipRRect(
-                                                                  100),
-                                                        ),
-                                                      ),
-                                                      Positioned(
-                                                        left: 14,
-                                                        child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
-                                                                color:
-                                                                    Colors.white,
-                                                                width: 2),
-                                                            borderRadius:
-                                                                radius(100),
-                                                          ),
-                                                          child: listUsersQCurte[
-                                                                          1]
-                                                                      .photo ==
-                                                                  ''
-                                                              ? Image.asset(
-                                                                  'assets/image/nopicture.png',
-                                                                  height: 24,
-                                                                  width: 24,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                ).cornerRadiusWithClipRRect(
-                                                                  100)
-                                                              : Image.network(
-                                                                  listUsersQCurte[
-                                                                          1]
-                                                                      .photo,
-                                                                  height: 24,
-                                                                  width: 24,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                ).cornerRadiusWithClipRRect(
-                                                                  100),
-                                                        ),
-                                                      ),
-                                                      Positioned(
-                                                        child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
-                                                                color:
-                                                                    Colors.white,
-                                                                width: 2),
-                                                            borderRadius:
-                                                                radius(100),
-                                                          ),
-                                                          child: listUsersQCurte[
-                                                                          2]
-                                                                      .photo ==
-                                                                  ''
-                                                              ? Image.asset(
-                                                                  'assets/image/nopicture.png',
-                                                                  height: 24,
-                                                                  width: 24,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                ).cornerRadiusWithClipRRect(
-                                                                  100)
-                                                              : Image.network(
-                                                                  listUsersQCurte[
-                                                                          2]
-                                                                      .photo,
-                                                                  height: 24,
-                                                                  width: 24,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                ).cornerRadiusWithClipRRect(
-                                                                  100),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                widthSpace10,
-                                                RichText(
-                                                  text: TextSpan(
-                                                    text: 'Curtido por ',
-                                                    style: whiteMedium14,
-                                                    children: <TextSpan>[
-                                                      TextSpan(
-                                                        text: listUsersQCurte[0]
-                                                                    .nome ==
-                                                                postList[index]
-                                                                    .name
-                                                                    .validate()
-                                                            ? listUsersQCurte[1]
-                                                                        .nome ==
-                                                                    postList[
-                                                                            index]
-                                                                        .name
-                                                                        .validate()
-                                                                ? listUsersQCurte[
-                                                                                1]
-                                                                            .nome ==
-                                                                        postList[
-                                                                                index]
-                                                                            .name
-                                                                            .validate()
-                                                                    ? ''
-                                                                    : formatarNome(
-                                                                        listUsersQCurte[
-                                                                                2]
-                                                                            .nome,
-                                                                      )
-                                                                : formatarNome(
-                                                                    listUsersQCurte[
-                                                                            1]
-                                                                        .nome,
-                                                                  )
-                                                            : formatarNome(
-                                                                listUsersQCurte[0]
-                                                                    .nome,
-                                                              ),
-                                                        style: whiteMedium14,
-                                                      ),
-                                                      TextSpan(
-                                                        text: 'And ',
-                                                        style: whiteMedium14,
-                                                      ),
-                                                      TextSpan(
-                                                        text:
-                                                            '${postList[index].likeCount.validate()} Outros ',
-                                                        style: whiteMedium14,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
-                                            )*/
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-              )
-        : Container();
+                                      ],
+                                    );
+                                  }
+                                  return const Text('oi');
+                                } else {
+                                  return heightSpace5;
+                                }
+                              },
+                            ),
+                    ],
+                  ),
+                ),
+              );
+            },
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
   }
 }

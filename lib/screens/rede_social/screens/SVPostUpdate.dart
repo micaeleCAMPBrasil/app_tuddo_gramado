@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:app_tuddo_gramado/data/models/SVPostModel.dart';
 import 'package:app_tuddo_gramado/data/models/imgbbResponseModel.dart';
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/data/php/functions.dart';
@@ -19,15 +20,16 @@ import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 // ignore: must_be_immutable
-class SVPostAdd extends StatefulWidget {
+class SVPostEdit extends StatefulWidget {
+  SVPostModel post;
   Usuario usuario;
-  SVPostAdd({super.key, required this.usuario});
+  SVPostEdit({super.key, required this.usuario, required this.post});
 
   @override
-  State<SVPostAdd> createState() => _SVPostAddState();
+  State<SVPostEdit> createState() => _SVPostEditState();
 }
 
-class _SVPostAddState extends State<SVPostAdd> {
+class _SVPostEditState extends State<SVPostEdit> {
   bool delay = true;
   bool loading = false;
 
@@ -40,9 +42,14 @@ class _SVPostAddState extends State<SVPostAdd> {
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
+        editarImagem = true;
       });
       uploadImageFile();
-    } else {}
+    } else {
+      setState(() {
+        editarImagem = false;
+      });
+    }
   }
 
   Future getImageGaleria() async {
@@ -52,9 +59,14 @@ class _SVPostAddState extends State<SVPostAdd> {
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
+        editarImagem = true;
       });
       uploadImageFile();
-    } else {}
+    } else {
+      setState(() {
+        editarImagem = false;
+      });
+    }
   }
 
   postPost(String imagem, String texto) async {
@@ -62,24 +74,22 @@ class _SVPostAddState extends State<SVPostAdd> {
     String formattedDate = DateFormat('dd/MM/yyyy').format(now);
     String formattedTime = DateFormat('kk:mm').format(now);
 
-    FirebaseFirestore.instance.collection("User Post").add({
-      'idUsuario': widget.usuario.uid,
+    DocumentReference postRef = FirebaseFirestore.instance
+        .collection('User Post')
+        .doc(widget.post.idPost);
+
+    postRef.update({
       'postImage': imagem,
       'description': texto,
       'TimeStamp': Timestamp.now(),
       'data': formattedDate,
       'time': formattedTime,
-      'likes': [],
-      'totalComentario': 0,
     });
 
-    //await storePost.addPost(widget.usuario, texto, imagem);
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => BottomNavigation(
-          selectedIndex: 3,
-        ),
+        builder: (context) => const SVHomeFragment(),
       ),
     );
   }
@@ -100,6 +110,8 @@ class _SVPostAddState extends State<SVPostAdd> {
 
   Dio dio = Dio();
   late ImgbbResponseModel imgbbResponse;
+
+  bool editarImagem = false;
 
   void uploadImageFile() async {
     try {
@@ -132,6 +144,9 @@ class _SVPostAddState extends State<SVPostAdd> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      _descriptionTextController.text = widget.post.description!;
+    });
   }
 
   @override
@@ -141,7 +156,9 @@ class _SVPostAddState extends State<SVPostAdd> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const SVHomeFragment(),
+            builder: (context) => BottomNavigation(
+              selectedIndex: 3,
+            ),
           ),
         );
         return true;
@@ -219,19 +236,33 @@ class _SVPostAddState extends State<SVPostAdd> {
                       ],
                     ),
                     heightSpace15,
-                    _image == null
-                        ? Image.asset(
-                            'assets/social/no-camera.png',
-                            height: 300,
-                            width: context.width() - 32,
-                            color: whiteColor,
-                          ).cornerRadiusWithClipRRect(12).center()
-                        : Image.file(
-                            _image!,
-                            height: 300,
-                            width: context.width() - 32,
-                            fit: BoxFit.cover,
-                          ).cornerRadiusWithClipRRect(12).center(),
+                    !editarImagem
+                        ? widget.post.postImage == ''
+                            ? Image.asset(
+                                'assets/social/no-camera.png',
+                                height: 300,
+                                width: context.width() - 32,
+                                color: whiteColor,
+                              ).cornerRadiusWithClipRRect(12).center()
+                            : Image.network(
+                                widget.post.postImage!,
+                                height: 300,
+                                width: context.width() - 32,
+                                fit: BoxFit.cover,
+                              ).cornerRadiusWithClipRRect(12).center()
+                        : _image == null
+                            ? Image.asset(
+                                'assets/social/no-camera.png',
+                                height: 300,
+                                width: context.width() - 32,
+                                color: whiteColor,
+                              ).cornerRadiusWithClipRRect(12).center()
+                            : Image.file(
+                                _image!,
+                                height: 300,
+                                width: context.width() - 32,
+                                fit: BoxFit.cover,
+                              ).cornerRadiusWithClipRRect(12).center(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -317,7 +348,7 @@ class _SVPostAddState extends State<SVPostAdd> {
                               }
                             },
                             child: Text(
-                              'Postar',
+                              'Editar',
                               style: whiteRegular12,
                             ),
                           ),
@@ -327,84 +358,6 @@ class _SVPostAddState extends State<SVPostAdd> {
                   ],
                 ),
               ),
-              /*Container(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                margin: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: radius(12),
-                ),
-                child: Column(
-                  children: [
-                    Image.file(
-                      width: context.width() - 32,
-                      height: 300,
-                      widget.image,
-                      fit: BoxFit.fill,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      color: color00,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          widthSpace15,
-                          widget.usuario.photo == ''
-                              ? Image.asset(
-                                  'assets/image/nopicture.png',
-                                  height: 48,
-                                  width: 48,
-                                  fit: BoxFit.cover,
-                                ).cornerRadiusWithClipRRect(8)
-                              : Image.network(
-                                  widget.usuario.photo,
-                                  height: 48,
-                                  width: 48,
-                                  fit: BoxFit.cover,
-                                ).cornerRadiusWithClipRRect(8),
-                          widthSpace5,
-                          SizedBox(
-                            width: context.width() * 0.5,
-                            child: Form(
-                              key: mykey,
-                              child: AppTextField(
-                                controller: _descriptionTextController,
-                                textFieldType: TextFieldType.MULTILINE,
-                                textStyle: whiteRegular14,
-                                decoration: InputDecoration(
-                                  hintText: 'Digite...',
-                                  hintStyle: whiteRegular14,
-                                  border: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                ),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Você não digitou nada!';
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                              ),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              if (mykey.currentState!.validate()) {
-                                uploadImageFile(widget.image,
-                                    _descriptionTextController.text);
-                              }
-                            },
-                            child: Text(
-                              'Postar',
-                              style: whiteRegular12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),*/
             ],
           ),
         ),

@@ -1,18 +1,22 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, use_build_context_synchronously
 
 import 'package:app_tuddo_gramado/data/models/SVCommentModel.dart';
+import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/data/php/functions.dart';
 import 'package:app_tuddo_gramado/data/php/http_client.dart';
 import 'package:app_tuddo_gramado/data/stores/publicacao_store.dart';
+import 'package:app_tuddo_gramado/data/stores/user_store.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:app_tuddo_gramado/utils/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+// ignore: must_be_immutable
 class SVCommentComponent extends StatefulWidget {
+  bool check;
   final SVCommentModel comment;
 
-  const SVCommentComponent({super.key, required this.comment});
+  SVCommentComponent({super.key, required this.comment, required this.check});
 
   @override
   State<SVCommentComponent> createState() => _SVCommentComponentState();
@@ -24,6 +28,18 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
       client: HttpClient(),
     ),
   );
+
+  final UsuarioStore storeUsuario = UsuarioStore(
+    repository: IFuncoesPHP(
+      client: HttpClient(),
+    ),
+  );
+
+  Future<Usuario> gerarUsuario(String uid) async {
+    await storeUsuario.getUID(uid);
+    return storeUsuario.state.value;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -32,48 +48,114 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                widget.comment.profileImage == ''
-                    ? Image.asset(
-                        'assets/image/nopicture.png',
-                        height: 56,
-                        width: 56,
+            FutureBuilder(
+              future: gerarUsuario(widget.comment.uid),
+              builder: (context, dadosUsuario) {
+                Usuario? usuarioQPublicou = dadosUsuario.data;
+                if (dadosUsuario.hasData) {
+                  return Row(
+                    children: [
+                      usuarioQPublicou!.photo == ''
+                          ? Image.asset(
+                              'assets/image/nopicture.png',
+                              height: 56,
+                              width: 56,
+                              fit: BoxFit.cover,
+                            ).cornerRadiusWithClipRRect(12)
+                          : Image.network(
+                              usuarioQPublicou.photo.validate(),
+                              height: 56,
+                              width: 56,
+                              fit: BoxFit.cover,
+                            ).cornerRadiusWithClipRRect(12),
+                      widthSpace15,
+                      Text(
+                        formatarNome(usuarioQPublicou.nome.validate()),
+                        style: whiteSemiBold18,
+                      ),
+                      Image.asset(
+                        'assets/social/ic_TickSquare.png',
+                        height: 14,
+                        width: 14,
                         fit: BoxFit.cover,
-                      ).cornerRadiusWithClipRRect(12)
-                    : Image.network(
-                        widget.comment.profileImage.validate(),
-                        height: 56,
-                        width: 56,
-                        fit: BoxFit.cover,
-                      ).cornerRadiusWithClipRRect(12),
-                widthSpace15,
-                Text(
-                  formatarNome(widget.comment.name.validate()),
-                  style: whiteSemiBold20,
-                ),
-                widthSpace5,
-                Image.asset(
-                  'assets/social/ic_TickSquare.png',
-                  height: 14,
-                  width: 14,
-                  fit: BoxFit.cover,
-                ),
-              ],
+                      ),
+                      Row(
+                        children: [
+                          Image.asset(
+                            'assets/social/ic_TimeSquare.png',
+                            height: 14,
+                            width: 14,
+                            fit: BoxFit.cover,
+                            color: context.iconColor,
+                          ),
+                          Text(widget.comment.time.validate(),
+                              style: color94SemiBold16),
+                          4.width,
+                          widget.check
+                              ? GestureDetector(
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: color94,
+                                  ),
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        backgroundColor: color28,
+                                        title: Text(
+                                          'Apagar Comentário',
+                                          style: whiteBold16,
+                                        ),
+                                        content: Text(
+                                          'Você tem certeza que quer apagar esse comentário?',
+                                          style: whiteRegular16,
+                                        ),
+                                        actions: [
+                                          // Cancel button
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: Text(
+                                              'Voltar',
+                                              style: whiteBold16,
+                                            ),
+                                          ),
+                                          // Delete button
+                                          TextButton(
+                                            onPressed: () async {
+                                              await storePost.deleteComentario(
+                                                widget.comment.idPost,
+                                                widget.comment.id,
+                                              );
+
+                                              storePost.fecharModal(context);
+                                            },
+                                            child: Text(
+                                              'Sim',
+                                              style: whiteBold16,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                )
+                              : Container()
+                        ],
+                      ),
+                    ],
+                  );
+                } else if (dadosUsuario.hasError) {
+                  return Center(
+                    child: Text('Error: ${dadosUsuario.error}'),
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
             ),
-            Row(
-              children: [
-                Image.asset(
-                  'assets/social/ic_TimeSquare.png',
-                  height: 14,
-                  width: 14,
-                  fit: BoxFit.cover,
-                  color: context.iconColor,
-                ),
-                4.width,
-                Text(widget.comment.time.validate(), style: color94SemiBold16),
-              ],
-            )
           ],
         ),
         heightSpace15,
@@ -119,8 +201,10 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
                 widget.comment.like = !widget.comment.like.validate();
               });
               String idComentario = widget.comment.id.toString();
+              bool idLiked = widget.comment.like ?? false;
+
               await storePost.addLikeComentario(
-                  widget.comment.uid, idComentario);
+                  idLiked, widget.comment.uid, idComentario);
             }, borderRadius: radius(4)),
           ],
         )

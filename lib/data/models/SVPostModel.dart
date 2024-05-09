@@ -2,7 +2,7 @@
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
 
 class SVPostModel {
-  int idPost;
+  String idPost;
   String idUsuario;
   String? name;
   String? profileImage;

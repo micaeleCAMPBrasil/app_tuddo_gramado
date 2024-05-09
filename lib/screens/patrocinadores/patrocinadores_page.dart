@@ -177,7 +177,8 @@ class _PatrocinadoresScreenState extends State<PatrocinadoresScreen> {
                                   MaterialPageRoute(
                                     builder: (context) => WebViewScreen(
                                       index: 2,
-                                      url: "https://www.google.com/",
+                                      url:
+                                          "https://tuddogramado.com.br/venda-mais-com-tuddo-em-dobro/",
                                     ),
                                   ),
                                 );

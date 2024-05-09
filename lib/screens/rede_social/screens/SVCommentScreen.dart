@@ -11,6 +11,7 @@ import 'package:app_tuddo_gramado/screens/rede_social/SVHomeFragment.dart';
 import 'package:app_tuddo_gramado/screens/rede_social/components/SVCommentComponent.dart';
 import 'package:app_tuddo_gramado/screens/rede_social/components/SVCommentReplyComponent.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -35,7 +36,6 @@ class _SVCommentScreenState extends State<SVCommentScreen> {
   @override
   void initState() {
     super.initState();
-    checkComentario();
     afterBuildCreated(() {
       setStatusBarColor(context.cardColor);
     });
@@ -58,12 +58,12 @@ class _SVCommentScreenState extends State<SVCommentScreen> {
   }
 
   getListsData() async {
-    await storePost.getComentarios(widget.usuario.uid, widget.idPost);
+    /*await storePost.getComentarios(widget.usuario.uid, widget.idPost);
     if (mounted) {
       setState(() {
         commentList = storePost.comentarios.value;
       });
-    }
+    }*/
     //pause ? null : checkUserName();
   }
 
@@ -114,12 +114,61 @@ class _SVCommentScreenState extends State<SVCommentScreen> {
               height: MediaQuery.of(context).size.height * 0.9,
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).size.height * 0.1),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: commentList.map((e) {
-                    return SVCommentComponent(comment: e);
-                  }).toList(),
-                ),
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection("User Post")
+                    .doc(widget.idPost)
+                    .collection("Comments")
+                    .orderBy('TimeStamp', descending: true)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        final comentarios = snapshot.data!.docs[index];
+
+                        String uidUser = comentarios['idUsuario'];
+                        String idPulicacao = comentarios['idPulicacao'];
+
+                        if (idPulicacao == widget.idPost) {
+                          List<String> listUIDUser =
+                              List<String>.from(comentarios['likes'] ?? []);
+
+                          bool isLiked =
+                              listUIDUser.contains(widget.usuario.uid);
+
+                          SVCommentModel e = SVCommentModel(
+                            id: comentarios.id,
+                            idPost: widget.idPost,
+                            uid: uidUser,
+                            time: comentarios['data'],
+                            comment: comentarios['comentario'],
+                            like: isLiked,
+                            likeCount: listUIDUser.length,
+                            isCommentReply:
+                                widget.usuario.uid == uidUser ? true : false,
+                          );
+
+                          return SVCommentComponent(
+                            comment: e,
+                            check: uidUser == widget.usuario.uid ? true : false,
+                          );
+                        } else {
+                          return heightSpace5;
+                        }
+                      },
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
               ),
             ),
             SVCommentReplyComponent(

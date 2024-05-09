@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'package:app_tuddo_gramado/data/models/SVCommentModel.dart';
-import 'package:app_tuddo_gramado/data/models/SVPostModel.dart';
 import 'package:app_tuddo_gramado/data/models/patrocinadores.dart';
 import 'package:flutter/material.dart';
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
@@ -14,14 +12,16 @@ abstract class IFuncoes {
 
   Future<List<Patrocinadores>> getListPatrocinadores();
 
-  Future<List<SVPostModel>> getListAllPost(String uid, String idPost);
-  Future<bool> addPost(Usuario usuario, String description, String imageUrl);
-  Future<bool> addLike(String uid, String idPost);
-  Future<List<SVCommentModel>> getComentarioPost(String uid, String idPost);
-  Future<bool> addLikeComentario(String uid, String idComentario);
-  Future<bool> addComentario(Usuario usuario, String comentario, String idPost);
+  Future<List<Usuario>> getListUsersLikes(List<String> uidUsers, String uid);
+  //Future<List<SVPostModel>> getListAllPost(String uid, String idPost);
+  //Future<bool> addPost(Usuario usuario, String description, String imageUrl);
+  //Future<bool> addLike(String uid, String idPost);
+  //Future<List<SVCommentModel>> getComentarioPost(String uid, String idPost);
+  //Future<bool> addLikeComentario(String uid, String idComentario);
+  //Future<bool> addComentario(Usuario usuario, String comentario, String idPost);
 
-  Future<bool> deletePost(String idPost);
+  //Future<bool> deleteComentario(String idComentario);
+  //Future<bool> deletePost(String idPost);
 }
 
 class IFuncoesPHP implements IFuncoes {
@@ -259,7 +259,7 @@ class IFuncoesPHP implements IFuncoes {
     }
   }
 
-  @override
+  /*@override
   Future<List<SVPostModel>> getListAllPost(String uid, String idPost) async {
     final response = await client.get(
       url:
@@ -274,7 +274,7 @@ class IFuncoesPHP implements IFuncoes {
       } else {
         int i = 0;
         for (var v in body['dados_publicacao']) {
-          int idPub = int.parse(v['id'].toString());
+          String idPub = v['id'].toString();
           String uidUser = v['idUsuario'];
           String dataTime = v['data'];
           String description = v['description'];
@@ -361,9 +361,45 @@ class IFuncoesPHP implements IFuncoes {
       debugPrint('outro erro');
       throw Exception("Não foi possível carregar os post.");
     }
-  }
+  }*/
 
   @override
+  Future<List<Usuario>> getListUsersLikes(
+      List<String> uidUsers, String uid) async {
+    List<Usuario> users = [];
+
+    for (var element in uidUsers) {
+      final response = await client.get(
+        url:
+            "https://campbrasil.com/tuddo_gramado/php/getUsuarioUID.php?uid=$element",
+      );
+
+      if (response.statusCode == 200) {
+        var bodys = jsonDecode(response.body);
+
+        if (bodys == 'Database erro') {
+        } else {
+          bodys.map((usuario) {
+            Usuario userConvertido = Usuario.fromMap(usuario);
+
+            /*if (userConvertido.uid == uid) {
+            } else {*/
+            users.add(userConvertido);
+            //}
+          }).toList();
+        }
+      } else if (response.statusCode == 404) {
+        debugPrint('erro 404');
+        throw NotFoundException("A url informada não é válida.");
+      } else {
+        debugPrint('outro erro');
+        throw Exception("Não foi possível carregar os post.");
+      }
+    }
+    return users;
+  }
+
+  /*@override
   Future<bool> addPost(
       Usuario usuario, String description, String imageURL) async {
     String uid = usuario.uid;
@@ -390,13 +426,13 @@ class IFuncoesPHP implements IFuncoes {
       debugPrint('outro erro');
       throw Exception("Não foi possível carregar os post.");
     }
-  }
+  }*/
 
-  @override
+  /*@override
   Future<bool> deletePost(String idPost) async {
     final response = await client.get(
       url:
-          "https://campbrasil.com/tuddo_gramado/php/posts/deletePost.php=$idPost",
+          "https://campbrasil.com/tuddo_gramado/php/posts/deletePost.php?idPost=$idPost",
     );
     debugPrint('chamando a função - $idPost');
 
@@ -417,9 +453,34 @@ class IFuncoesPHP implements IFuncoes {
       debugPrint('outro erro');
       throw Exception("Não foi possível carregar os post.");
     }
-  }
+  }*/
 
-  @override
+  /*@override
+  Future<bool> deleteComentario(String idComentario) async {
+    final response = await client.get(
+      url:
+          "https://campbrasil.com/tuddo_gramado/php/posts/deleteComentario.php?idComentario=$idComentario",
+    );
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+
+      if (body == 'false') {
+        return false;
+      } else if (body == 'ja_tem') {
+        return false;
+      } else {
+        return true;
+      }
+    } else if (response.statusCode == 404) {
+      debugPrint('erro 404');
+      throw NotFoundException("A url informada não é válida.");
+    } else {
+      debugPrint('outro erro');
+      throw Exception("Não foi possível carregar os post.");
+    }
+  }*/
+
+  /*@override
   Future<bool> addLike(String uid, String idPost) async {
     final response = await client.get(
       url:
@@ -441,9 +502,9 @@ class IFuncoesPHP implements IFuncoes {
       debugPrint('outro erro');
       throw Exception("Não foi possível carregar os post.");
     }
-  }
+  }*/
 
-  @override
+  /*@override
   Future<List<SVCommentModel>> getComentarioPost(
       String uid, String idPost) async {
     final response = await client.get(
@@ -460,7 +521,7 @@ class IFuncoesPHP implements IFuncoes {
         int i = 0;
 
         for (var v in body['dados_comentarios']) {
-          int idComentario = int.parse(v['id'].toString());
+          String idComentario = v['id'].toString();
           String uidUser = v['idUsuario'];
           String dataTime = v['data'];
           String comentario = v['comentario'];
@@ -496,7 +557,7 @@ class IFuncoesPHP implements IFuncoes {
 
           SVCommentModel comentarioBD = SVCommentModel(
             id: idComentario,
-            idPost: int.parse(idPost),
+            idPost: idPost,
             uid: uidUser,
             name: usuarioQComentou[0].nome,
             profileImage: usuarioQComentou[0].photo,
@@ -519,9 +580,9 @@ class IFuncoesPHP implements IFuncoes {
       debugPrint('outro erro');
       throw Exception("Não foi possível carregar os post.");
     }
-  }
+  }*/
 
-  @override
+  /*@override
   Future<bool> addComentario(
       Usuario usuario, String comentario, String idPost) async {
     String uid = usuario.uid;
@@ -548,9 +609,9 @@ class IFuncoesPHP implements IFuncoes {
       debugPrint('outro erro');
       throw Exception("Não foi possível adicionar o comentário.");
     }
-  }
+  }*/
 
-  @override
+  /*@override
   Future<bool> addLikeComentario(String uid, String idComentario) async {
     debugPrint('id comentário - $idComentario');
     final response = await client.get(
@@ -573,5 +634,5 @@ class IFuncoesPHP implements IFuncoes {
       debugPrint('outro erro');
       throw Exception("Não foi possível carregar os post.");
     }
-  }
+  }*/
 }
