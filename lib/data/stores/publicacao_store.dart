@@ -108,9 +108,11 @@ class PublicacaoStore {
   }
 
   Future addLikeComentario(
-      bool idLiked, String uid, String idComentario) async {
+      bool idLiked, String uid, String idPost, String idComentario) async {
     DocumentReference postRef = FirebaseFirestore.instance
-        .collection('Comments Post')
+        .collection("User Post")
+        .doc(idPost)
+        .collection("Comments")
         .doc(idComentario);
 
     if (idLiked) {

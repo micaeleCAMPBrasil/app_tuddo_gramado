@@ -383,11 +383,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 )
                               : Image.network(
                                   usuario.photo,
-                                  fit: BoxFit.fill,
+                                  fit: BoxFit.cover,
                                 )
                           : Image.file(
                               File(images!.path),
-                              fit: BoxFit.fill,
+                              fit: BoxFit.cover,
                             ),
                     ),
                   ),

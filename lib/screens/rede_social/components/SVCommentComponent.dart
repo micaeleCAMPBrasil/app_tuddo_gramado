@@ -204,7 +204,7 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
               bool idLiked = widget.comment.like ?? false;
 
               await storePost.addLikeComentario(
-                  idLiked, widget.comment.uid, idComentario);
+                  idLiked, widget.comment.uid, widget.comment.idPost, idComentario);
             }, borderRadius: radius(4)),
           ],
         )
