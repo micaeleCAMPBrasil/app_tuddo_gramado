@@ -77,6 +77,11 @@ TextStyle whiteMedium16 = TextStyle(
   color: white,
   fontFamily: 'M',
 );
+TextStyle whiteMedium12 = TextStyle(
+  fontSize: 12,
+  color: white,
+  fontFamily: 'M',
+);
 TextStyle whiteMedium14 = TextStyle(
   fontSize: 14,
   color: white,

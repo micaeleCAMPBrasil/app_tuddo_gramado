@@ -81,7 +81,33 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
                 children: [
                   Column(
                     children: [
-                      CachedNetworkImage(
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.6,
+                        child: Image(
+                          image: CachedNetworkImageProvider(
+                            widget.patrocinador.logo,
+                          ),
+                          fit: BoxFit.fill,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            }
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.grey[400],
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                      /*CachedNetworkImage(
                         imageUrl: widget.patrocinador.logo,
                         /*progressIndicatorBuilder:
                             (context, url, downloadProgress) => Column(
@@ -115,7 +141,7 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
                             ),
                           ),
                         ),
-                      ),
+                      ),*/
                       const Spacer()
                     ],
                   ),
@@ -301,7 +327,31 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
                           ),
                         );
                       },
-                      child: CachedNetworkImage(
+                      child: SizedBox(
+                        height: 90,
+                        width: 150,
+                        child: Image(
+                          image: CachedNetworkImageProvider(
+                            item.img,
+                          ),
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            }
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.grey[400],
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ), /*CachedNetworkImage(
                         imageUrl: item.img,
                         /*progressIndicatorBuilder:
                             (context, url, downloadProgress) => SizedBox(
@@ -330,7 +380,7 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
                             color: color22,
                           ),
                         ),
-                      ),
+                      ),*/
                     ),
                     // Text(item['title'], style: whiteRegular15)
                   ],

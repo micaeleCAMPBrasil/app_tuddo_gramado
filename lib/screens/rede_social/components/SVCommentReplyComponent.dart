@@ -36,6 +36,10 @@ class _SVCommentReplyComponentState extends State<SVCommentReplyComponent> {
 
   @override
   Widget build(BuildContext context) {
+    bool checksize = MediaQuery.of(context).size.width <= 320 ||
+            MediaQuery.of(context).size.height <= 320
+        ? true
+        : false;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
       margin: EdgeInsets.only(
@@ -64,7 +68,7 @@ class _SVCommentReplyComponentState extends State<SVCommentReplyComponent> {
                     ).cornerRadiusWithClipRRect(8),
               10.width,
               SizedBox(
-                width: context.width() * 0.6,
+                width: checksize ? context.width() * 0.5 : context.width() * 0.6,
                 child: AppTextField(
                   textFieldType: TextFieldType.OTHER,
                   textStyle: whiteRegular12,

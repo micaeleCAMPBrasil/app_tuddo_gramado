@@ -80,8 +80,8 @@ class _PatrocinadoresScreenState extends State<PatrocinadoresScreen> {
                               ),
                               child: SingleChildScrollView(
                                 child: Wrap(
-                                  runSpacing: 12,
-                                  spacing: checksize ? 3 : 16,
+                                  runSpacing: checksize ? 1 : 12,
+                                  spacing: checksize ? 4 : 16,
                                   children: List.generate(
                                     list.length,
                                     (index) {
@@ -98,7 +98,38 @@ class _PatrocinadoresScreenState extends State<PatrocinadoresScreen> {
                                             ),
                                           );
                                         },
-                                        child: CachedNetworkImage(
+                                        child: SizedBox(
+                                          height: 250,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.43,
+                                          child: Image(
+                                            image: CachedNetworkImageProvider(
+                                              list[index].imagemBG,
+                                            ),
+                                            loadingBuilder: (context, child,
+                                                loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return child;
+                                              }
+                                              return Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      color: Colors.grey[400],
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ),
+                                        ), /*CachedNetworkImage(
                                           imageUrl: list[index].imagemBG,
                                           /*progressIndicatorBuilder: (context,
                                                   url, downloadProgress) =>
@@ -144,7 +175,7 @@ class _PatrocinadoresScreenState extends State<PatrocinadoresScreen> {
                                               ).paddingLeft(8),
                                             ],
                                           ),
-                                        ),
+                                        ),*/
                                       );
                                     },
                                   ),

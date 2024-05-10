@@ -42,6 +42,10 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
 
   @override
   Widget build(BuildContext context) {
+    bool checksize = MediaQuery.of(context).size.width <= 320 ||
+            MediaQuery.of(context).size.height <= 320
+        ? true
+        : false;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -69,80 +73,80 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
                               fit: BoxFit.cover,
                             ).cornerRadiusWithClipRRect(12),
                       widthSpace15,
-                      Text(
-                        formatarNome(usuarioQPublicou.nome.validate()),
-                        style: whiteSemiBold18,
-                      ),
-                      Image.asset(
-                        'assets/social/ic_TickSquare.png',
-                        height: 14,
-                        width: 14,
-                        fit: BoxFit.cover,
-                      ),
-                      Row(
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset(
-                            'assets/social/ic_TimeSquare.png',
-                            height: 14,
-                            width: 14,
-                            fit: BoxFit.cover,
-                            color: context.iconColor,
+                          Row(
+                            children: [
+                              Text(
+                                formatarNome(usuarioQPublicou.nome.validate()),
+                                style: whiteSemiBold18,
+                              ),
+                              Image.asset(
+                                'assets/social/ic_TickSquare.png',
+                                height: 14,
+                                width: 14,
+                                fit: BoxFit.cover,
+                              ),
+                            ],
                           ),
-                          Text(widget.comment.time.validate(),
-                              style: color94SemiBold16),
-                          4.width,
-                          widget.check
-                              ? GestureDetector(
-                                  child: Icon(
-                                    Icons.delete,
-                                    color: color94,
-                                  ),
-                                  onTap: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                        backgroundColor: color28,
-                                        title: Text(
-                                          'Apagar Comentário',
-                                          style: whiteBold16,
-                                        ),
-                                        content: Text(
-                                          'Você tem certeza que quer apagar esse comentário?',
-                                          style: whiteRegular16,
-                                        ),
-                                        actions: [
-                                          // Cancel button
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context),
-                                            child: Text(
-                                              'Voltar',
-                                              style: whiteBold16,
-                                            ),
-                                          ),
-                                          // Delete button
-                                          TextButton(
-                                            onPressed: () async {
-                                              await storePost.deleteComentario(
-                                                widget.comment.idPost,
-                                                widget.comment.id,
-                                              );
-
-                                              storePost.fecharModal(context);
-                                            },
-                                            child: Text(
-                                              'Sim',
-                                              style: whiteBold16,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                )
-                              : Container()
+                          Text(
+                            widget.comment.time.validate(),
+                            style: color94SemiBold16,
+                          ),
                         ],
                       ),
+                      widthSpace20,
+                      widget.check
+                          ? GestureDetector(
+                              child: Icon(
+                                Icons.delete,
+                                color: color94,
+                              ),
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    backgroundColor: color28,
+                                    title: Text(
+                                      'Apagar Comentário',
+                                      style: whiteBold16,
+                                    ),
+                                    content: Text(
+                                      'Você tem certeza que quer apagar esse comentário?',
+                                      style: whiteRegular16,
+                                    ),
+                                    actions: [
+                                      // Cancel button
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text(
+                                          'Voltar',
+                                          style: whiteBold16,
+                                        ),
+                                      ),
+                                      // Delete button
+                                      TextButton(
+                                        onPressed: () async {
+                                          await storePost.deleteComentario(
+                                            widget.comment.idPost,
+                                            widget.comment.id,
+                                          );
+
+                                          storePost.fecharModal(context);
+                                        },
+                                        child: Text(
+                                          'Sim',
+                                          style: whiteBold16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            )
+                          : Container()
                     ],
                   );
                 } else if (dadosUsuario.hasError) {
@@ -203,15 +207,19 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
               String idComentario = widget.comment.id.toString();
               bool idLiked = widget.comment.like ?? false;
 
-              await storePost.addLikeComentario(
-                  idLiked, widget.comment.uid, widget.comment.idPost, idComentario);
+              await storePost.addLikeComentario(idLiked, widget.comment.uid,
+                  widget.comment.idPost, idComentario);
             }, borderRadius: radius(4)),
           ],
         )
       ],
     ).paddingOnly(
       top: 16,
-      left: widget.comment.isCommentReply.validate() ? 70 : 16,
+      left: widget.comment.isCommentReply.validate()
+          ? checksize
+              ? 40
+              : 70
+          : 16,
       right: 16,
       bottom: 16,
     );

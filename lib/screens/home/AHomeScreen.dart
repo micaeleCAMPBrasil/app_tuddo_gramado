@@ -178,7 +178,27 @@ class _AHomeScreenState extends State<AHomeScreen> {
               ),
             );
           },
-          child: CachedNetworkImage(
+          child: Image(
+            image: CachedNetworkImageProvider(
+              i.imagemBG,
+            ),
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) {
+                return child;
+              }
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.grey[400],
+                    ),
+                  ),
+                ],
+              );
+            },
+          ), /*CachedNetworkImage(
             imageUrl: i.imagemBG,
             imageBuilder: (context, imageProvider) => Container(
               width: MediaQuery.of(context).size.width,
@@ -190,7 +210,7 @@ class _AHomeScreenState extends State<AHomeScreen> {
                 borderRadius: BorderRadius.circular(5),
               ),
             ),
-          ),
+          ),*/
           /*child: ,*/
         );
       }).toList(),

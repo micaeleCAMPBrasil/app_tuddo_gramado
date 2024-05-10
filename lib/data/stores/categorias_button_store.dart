@@ -22,11 +22,11 @@ class CategoriasButoonStore {
       backgroundImage: 'assets/image/a4.png',
       route: 4,
     ),
-    /*CategoriasButoon(
+    CategoriasButoon(
       name: 'Dicas e Roteiros',
       backgroundImage: 'assets/image/a5.png',
       route: 5,
-    ),*/
+    ),
     CategoriasButoon(
       name: 'Assine',
       backgroundImage: 'assets/image/a6.png',
