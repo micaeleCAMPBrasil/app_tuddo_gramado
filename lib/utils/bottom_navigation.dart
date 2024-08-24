@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use, must_be_immutable
 
 import 'package:app_tuddo_gramado/screens/rede_social/SVHomeFragment.dart';
+import 'package:app_tuddo_gramado/screens/tuddo_em_dobro/tuddo_em_dobro_page.dart';
 import 'package:app_tuddo_gramado/services/firebase_messaging_service.dart';
 import 'package:app_tuddo_gramado/services/notification_service.dart';
 import 'package:flutter/material.dart';
@@ -55,9 +56,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         usuario: usuario,
       ),
       // tuddo em dobro
-      WebViewScreen(
-        url: "https://dobro.tuddogramado.com.br/",
-      ),
+      TuddoemDobroScreen(),
       // patrocinadores
       PatrocinadoresScreen(),
       // rede social

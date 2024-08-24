@@ -36,9 +36,6 @@ void main() async {
         ChangeNotifierProvider(
           create: (context) => UsuarioProvider(),
         ),
-        ChangeNotifierProvider(
-          create: (context) => UsuarioProvider(),
-        ),
         Provider<NotificationService>(
           create: (context) => NotificationService(),
         ),

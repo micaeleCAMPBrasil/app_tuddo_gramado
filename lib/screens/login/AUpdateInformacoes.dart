@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:app_tuddo_gramado/data/php/api_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +43,11 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController telefoneController = TextEditingController();
 
+  late APIService apiService;
+  late CustomerModel model;
+
+  bool isApiCallProcess = false;
+
   final UsuarioStore storeUser = UsuarioStore(
     repository: IFuncoesPHP(
       client: HttpClient(),
@@ -57,6 +63,10 @@ class _RegisterPageState extends State<RegisterPage> {
     super.initState();
 
     getToken();
+
+    apiService = APIService();
+    model = CustomerModel();
+
     Future.delayed(
       const Duration(seconds: 3),
       () {
@@ -114,6 +124,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
     setState(() {
       check = usernamesbase.isEmpty ? false : true;
+
+      model.firstName = primeiroNome;
+      model.lastName = segundoNome;
     });
 
     gerandoUserName(userName);
@@ -237,6 +250,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                     widget.usuario.telefone =
                                         telefoneController.text;
                                     widget.usuario.tokenAlert = tokenAlert;
+
+                                    // wordpress
+                                    model.email = emailController.text;
+                                    model.password = widget.uid;
                                   });
 
                                   storeUser.update(widget.usuario);
@@ -247,22 +264,58 @@ class _RegisterPageState extends State<RegisterPage> {
 
                                   bool resposta = storeUser.isEditable.value;
                                   if (resposta) {
-                                    UiHelper.showLoadingDialog(
-                                        context, 'Aguarde...');
-                                    Timer(
-                                      const Duration(seconds: 1),
-                                      () {
-                                        Navigator.pushReplacement(
+                                    debugPrint('model ${model.toJson()}');
+
+                                    setState(() {
+                                      isApiCallProcess = true;
+                                    });
+
+                                    apiService
+                                        .createCustomer(model)
+                                        .then((ret) {
+                                      setState(() {
+                                        isApiCallProcess = false;
+                                      });
+
+                                      if (ret) {
+                                        UiHelper.showLoadingDialog(
                                           context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                BottomNavigation(
-                                              selectedIndex: 0,
-                                            ),
-                                          ),
+                                          'Sucesso...',
                                         );
-                                      },
-                                    );
+                                        Timer(
+                                          const Duration(seconds: 1),
+                                          () {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BottomNavigation(
+                                                  selectedIndex: 0,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        debugPrint( 'Erro Cadastro WordPress');
+                                        Timer(
+                                          const Duration(seconds: 1),
+                                          () {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BottomNavigation(
+                                                  selectedIndex: 0,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
+                                    });
+                                    /*UiHelper.showLoadingDialog(
+                                        context, 'Aguarde...');*/
                                   } else {
                                     debugPrint(
                                         'Erro Update Informações - ${storeUser.erro.value}');

@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:app_tuddo_gramado/data/php/api_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
@@ -31,11 +32,20 @@ class _ALoginScreenState extends State<ALoginScreen> {
   GlobalKey<FormState> mykey = GlobalKey<FormState>();
   final TextEditingController _phoneTextController = TextEditingController();
 
+  bool isApiCallProcess = false;
+  late APIService apiService;
+
   final UsuarioStore storeUser = UsuarioStore(
     repository: IFuncoesPHP(
       client: HttpClient(),
     ),
   );
+
+  @override
+  void initState() {
+    apiService = APIService();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -173,9 +183,6 @@ class _ALoginScreenState extends State<ALoginScreen> {
                                 Usuario usuarioBase = storeUser.state.value;
 
                                 if (value == "Sucess") {
-                                  UiHelper.showLoadingDialog(
-                                      context, 'Aguarde...');
-
                                   if (usuarioBase.nome == '' ||
                                       usuarioBase.email == '' ||
                                       usuarioBase.telefone == '') {
@@ -196,22 +203,52 @@ class _ALoginScreenState extends State<ALoginScreen> {
                                       },
                                     );
                                   } else {
-                                    Provider.of<UsuarioProvider>(context,
-                                            listen: false)
-                                        .updateUsuario(usuarioBase);
+                                    setState(() {
+                                      isApiCallProcess = true;
+                                    });
 
-                                    Timer(
-                                      const Duration(seconds: 1),
-                                      () {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                BottomNavigation(),
+                                    apiService
+                                        .loginCustomer(emailEscolhido!, uid)
+                                        .then((ret) {
+                                      if (ret.data != null) {
+                                        setState(() {
+                                          isApiCallProcess = false;
+                                        });
+
+                                        debugPrint(
+                                            'User WordPress: ${ret.data?.toJson()}');
+
+                                        Provider.of<UsuarioProvider>(context,
+                                                listen: false)
+                                            .updateUsuario(usuarioBase);
+
+                                        Timer(
+                                          const Duration(seconds: 1),
+                                          () {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BottomNavigation(),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: const Text(
+                                              'Erro',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            backgroundColor: primaryColor,
                                           ),
                                         );
-                                      },
-                                    );
+                                      }
+                                    });
                                   }
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
