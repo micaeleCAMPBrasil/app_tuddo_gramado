@@ -14,6 +14,8 @@ class UsuarioStore {
     Usuario(
       uid: '',
       tokenAlert: '',
+      tokenTG: '',
+      tokenTD: '',
       nome: '',
       username: '',
       email: '',

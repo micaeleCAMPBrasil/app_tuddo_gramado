@@ -1,9 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:app_tuddo_gramado/screens/webscreens/WebViewScreen.dart';
-import 'package:app_tuddo_gramado/utils/bottom_navigation.dart';
+import 'package:app_tuddo_gramado/data/models/usuario.dart';
+import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../utils/constant.dart';
 import '../../utils/widgets.dart';
@@ -19,116 +20,112 @@ class SubscribePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Usuario usuario = Provider.of<UsuarioProvider>(context).getUsuario;
+
     List allowsList = [
       'Você ganha em dobro',
       'Vende mais',
       'Aumenta seu faturamento',
       'É visto por milhares de pessoas todos os dias',
     ];
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BottomNavigation(
-              selectedIndex: index,
-            ),
-          ),
-        );
-        return true;
-      },
-      child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
-          child: MyAppBar(
-            backgroundColor: color00,
-            title: 'Faça Parte',
-            leading: GestureDetector(
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BottomNavigation(
-                      selectedIndex: index,
-                    ),
-                  ),
-                );
-              },
-              child: const Icon(Icons.arrow_back_ios),
-            ),
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(56),
+        child: MyAppBar(
+          backgroundColor: color00,
+          title: 'Faça Parte',
+          leading: GestureDetector(
+            onTap: () {
+              Provider.of<ControlNav>(context, listen: false).updateIndex(4, 0);
+
+              /*Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BottomNavigation(
+                      //selectedIndex: index,
+                      ),
+                ),
+              );*/
+            },
+            child: const Icon(Icons.arrow_back_ios),
           ),
         ),
-        body: ListView(
-          shrinkWrap: true,
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          physics: const BouncingScrollPhysics(),
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                heightSpace15,
-                Links(
-                  link: 'https://dobro.tuddogramado.com.br/planos/',
-                  title: 'Assine',
-                  subtitle: '12 meses',
-                  description: 'R\$ 197,00',
-                ),
-                heightSpace10,
-                Links(
-                  link: 'https://tuddogramado.com.br/affiliate-area/',
-                  title: 'Seja Afiliado',
-                  subtitle: 'Venda para sua audiência',
-                  description: 'Faça Parte',
-                ),
-                heightSpace10,
-                Links(
-                  link:
-                      'https://tuddogramado.com.br/venda-mais-com-tuddo-em-dobro/',
-                  title: 'Tuddo em Dobro',
-                  subtitle: 'Venda Mais',
-                  description: 'Faça Parte',
-                ),
-                heightSpace10,
-                Links(
-                  link:
-                      'https://tuddogramado.com.br/seja-motorista-parceiro-da-tuddo-gramado/',
-                  title: 'Seja Motorista',
-                  subtitle: 'Parceiro de Transfer',
-                  description: 'Faça Parte',
-                ),
-                heightSpace10,
-                Links(
-                  link: 'https://tuddogramado.com.br/account/new-post/',
-                  title: 'Aluguel por Temporada',
-                  subtitle: 'Cadastre seu Imovél',
-                  description: 'Faça Parte',
-                ),
-                heightSpace20,
-                Text('Na Tuddo Gramado', style: whiteSemiBold20),
-                heightSpace10,
-                ...allowsList.map(
-                  (e) => Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          height: 30,
-                          child: Image.asset('assets/icones/checkCircle.png'),
-                        ),
-                        widthSpace15,
-                        AutoSizeText(
-                          e,
-                          maxLines: 2,
-                          style: color94Regular16,
-                        )
-                      ],
-                    ),
+      ),
+      body: ListView(
+        shrinkWrap: true,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        physics: const BouncingScrollPhysics(),
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              heightSpace15,
+              Links(
+                link: 'https://d.tuddogramado.com.br/',
+                title: 'Assine',
+                subtitle: '12 meses',
+                description: 'R\$ 197,00',
+                usuario: usuario,
+              ),
+              heightSpace10,
+              Links(
+                link: 'https://tuddogramado.com.br/affiliate-area/',
+                title: 'Seja Afiliado',
+                subtitle: 'Venda para sua audiência',
+                description: 'Faça Parte',
+                usuario: usuario,
+              ),
+              heightSpace10,
+              Links(
+                link:
+                    'https://tuddogramado.com.br/venda-mais-com-tuddo-em-dobro/',
+                title: 'Tuddo em Dobro',
+                subtitle: 'Venda Mais',
+                description: 'Faça Parte',
+                usuario: usuario,
+              ),
+              heightSpace10,
+              Links(
+                link:
+                    'https://tuddogramado.com.br/seja-motorista-parceiro-da-tuddo-gramado/',
+                title: 'Seja Motorista',
+                subtitle: 'Parceiro de Transfer',
+                description: 'Faça Parte',
+                usuario: usuario,
+              ),
+              heightSpace10,
+              Links(
+                link: 'https://tuddogramado.com.br/account/new-post/',
+                title: 'Aluguel por Temporada',
+                subtitle: 'Cadastre seu Imovél',
+                description: 'Faça Parte',
+                usuario: usuario,
+              ),
+              heightSpace20,
+              Text('Na Tuddo Gramado', style: whiteSemiBold20),
+              heightSpace10,
+              ...allowsList.map(
+                (e) => Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        height: 30,
+                        child: Image.asset('assets/icones/checkCircle.png'),
+                      ),
+                      widthSpace15,
+                      AutoSizeText(
+                        e,
+                        maxLines: 2,
+                        style: color94Regular16,
+                      )
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -137,27 +134,44 @@ class SubscribePage extends StatelessWidget {
 // ignore: must_be_immutable
 class Links extends StatelessWidget {
   String link, title, subtitle, description;
+  Usuario usuario;
+
   Links({
     super.key,
     required this.link,
     required this.title,
     required this.subtitle,
     required this.description,
+    required this.usuario,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushReplacement(
+        Provider.of<ControlNav>(context, listen: false).updateurllinks(link);
+        Provider.of<ControlNav>(context, listen: false).updateIndex(4, 6);
+
+        /*Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => WebViewScreen(
+            builder: (context) => InAppView(
               url: link,
-              index: 4,
+              page: 4,
+              index: 0,
+              data: {
+                "token": usuario.token,
+                "usuario": usuario.email,
+                "senha": usuario.uid,
+              },
+              /*routa: MaterialPageRoute(
+                builder: (context) => BottomNavigation(
+                    //selectedIndex: 4,
+                    ),
+              ),*/
             ),
           ),
-        );
+        );*/
       },
       child: Stack(
         children: [

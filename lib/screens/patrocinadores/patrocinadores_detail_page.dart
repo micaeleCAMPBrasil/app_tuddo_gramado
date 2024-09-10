@@ -1,25 +1,24 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:app_tuddo_gramado/data/models/patrocinadores.dart';
-import 'package:app_tuddo_gramado/utils/bottom_navigation.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:app_tuddo_gramado/utils/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
 class PatrocinadoresDetailPage extends StatefulWidget {
-  int index;
   Patrocinadores patrocinador;
 
   PatrocinadoresDetailPage({
     super.key,
     required this.patrocinador,
-    this.index = 0,
   });
 
   @override
@@ -36,9 +35,11 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
     Future.delayed(
       const Duration(seconds: 2),
       () {
-        setState(() {
-          _loading = true;
-        });
+        if (mounted) {
+          setState(() {
+            _loading = true;
+          });
+        }
       },
     );
   }
@@ -60,22 +61,33 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pushReplacement(
+        /*Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => BottomNavigation(
-              selectedIndex: widget.index,
-            ),
-          ),
-        );
-        return true;
+          widget.routa,
+        );*/
+        return false;
       },
       child: _loading
           ? Scaffold(
               extendBodyBehindAppBar: true,
-              appBar: const PreferredSize(
-                preferredSize: Size.fromHeight(56),
-                child: MyAppBar(),
+              appBar: PreferredSize(
+                preferredSize: const Size.fromHeight(56),
+                child: MyAppBar(
+                  leading: Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      onPressed: () {
+                        Provider.of<ControlNav>(context, listen: false)
+                            .updateIndex(2, 0);
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ),
               ),
               body: Stack(
                 children: [
@@ -323,7 +335,9 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
                       onTap: () {
                         _launchUrl(
                           Uri.parse(
-                            widget.patrocinador.linkWebSite,
+                            item.link == ''
+                                ? widget.patrocinador.linkWebSite
+                                : item.link,
                           ),
                         );
                       },

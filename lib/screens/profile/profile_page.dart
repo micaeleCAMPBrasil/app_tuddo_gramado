@@ -3,16 +3,14 @@
 import 'package:app_tuddo_gramado/data/models/patrocinadores.dart';
 import 'package:app_tuddo_gramado/data/php/functions.dart';
 import 'package:app_tuddo_gramado/data/php/http_client.dart';
+import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
 import 'package:app_tuddo_gramado/data/stores/patrocinadores_store.dart';
-import 'package:app_tuddo_gramado/screens/patrocinadores/patrocinadores_detail_page.dart';
-import 'package:app_tuddo_gramado/screens/profile/edit_profile/edit_profile_page.dart';
-import 'package:app_tuddo_gramado/screens/profile/subscribe_page.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/helper/ui_helper.dart';
-import 'package:app_tuddo_gramado/screens/webscreens/WebViewScreen.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 
 // ignore: must_be_immutable
@@ -176,6 +174,11 @@ class _ProfilePageState extends State<ProfilePage> {
         'title': 'Suporte',
         'navigate': '/SupportPage',
       },
+      {
+        'icon': 'assets/icones/tickets-icon.svg',
+        'title': 'Meus Pedidos',
+        'navigate': '/MeusPedidosTuddoEmDobro',
+      },
     ];
 
     return [
@@ -183,27 +186,52 @@ class _ProfilePageState extends State<ProfilePage> {
         (e) => ListTile(
           onTap: () {
             if (e['navigate'] == "/SupportPage") {
-              Navigator.pushReplacement(
+              Provider.of<ControlNav>(context, listen: false).updateIndex(4, 1);
+
+              /*Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => WebViewScreen(
+                  builder: (context) => InAppView(
                     url: "https://www.google.com/",
                     index: 4,
+                    data: {
+                      "token": widget.usuario.token,
+                      "usuario": widget.usuario.email,
+                      "senha": widget.usuario.uid,
+                    },
+                    routa: MaterialPageRoute(
+                      builder: (context) => BottomNavigation(
+                        selectedIndex: 4,
+                      ),
+                    ),
                   ),
                 ),
-              );
+              );*/
             } else if (e['navigate'] == "/FavoritesListPage") {
-              Navigator.pushReplacement(
+              Provider.of<ControlNav>(context, listen: false).updateIndex(4, 2);
+              /*Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => WebViewScreen(
-                    url: "https://tuddogramado.com.br/my-favorites/",
+                  builder: (context) => InAppView(
+                    url:
+                        "https://d.tuddogramado.com.br/member-account/?vendor=wishlist",
                     index: 4,
+                    data: {
+                      "token": widget.usuario.token,
+                      "usuario": widget.usuario.email,
+                      "senha": widget.usuario.uid,
+                    },
+                    routa: MaterialPageRoute(
+                      builder: (context) => BottomNavigation(
+                        selectedIndex: 4,
+                      ),
+                    ),
                   ),
                 ),
-              );
+              );*/
             } else if (e['navigate'] == "/EditProfilePage") {
-              Navigator.pushReplacement(
+              Provider.of<ControlNav>(context, listen: false).updateIndex(4, 4);
+              /*Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => EditProfilePage(
@@ -211,14 +239,38 @@ class _ProfilePageState extends State<ProfilePage> {
                     usuario: usuario,
                   ),
                 ),
-              );
+              );*/
+            } else if (e['navigate'] == "/MeusPedidosTuddoEmDobro") {
+              Provider.of<ControlNav>(context, listen: false).updateIndex(4, 3);
+              /*Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => InAppView(
+                    url:
+                        "https://d.tuddogramado.com.br/member-account/?vendor=mybookings",
+                    index: 4,
+                    data: {
+                      "token": widget.usuario.token,
+                      "usuario": widget.usuario.email,
+                      "senha": widget.usuario.uid,
+                    },
+                    routa: MaterialPageRoute(
+                      builder: (context) => BottomNavigation(
+                        selectedIndex: 4,
+                      ),
+                    ),
+                  ),
+                ),
+              );*/
             }
           },
           leading: SizedBox(
-            child: e['title'] == 'Favoritos'
+            child: e['title'] == 'Favoritos' || e['title'] == 'Meus Pedidos'
                 ? SvgPicture.asset(
                     e['icon'],
                     color: color94,
+                    width: 30,
+                    height: 30,
                   )
                 : Image.asset(
                     e['icon'],
@@ -270,14 +322,15 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.pushReplacement(
+              Provider.of<ControlNav>(context, listen: false).updateIndex(4, 5);
+              /*Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => SubscribePage(
                     index: 4,
                   ),
                 ),
-              );
+              );*/
             },
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -291,7 +344,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   SizedBox(
                     child: Image.asset(
-                      'assets/icones/premiumCrown.png',
+                      "assets/icones/crown.png",
                       width: 20,
                       height: 20,
                     ),
@@ -299,7 +352,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   widthSpace10,
                   Text(
                     'Faça Parte',
-                    style: whiteBold18,
+                    style: blackBold18,
                   ),
                 ],
               ),
@@ -313,15 +366,22 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget addvertise(Patrocinadores item) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushReplacement(
+        Provider.of<ControlNav>(context, listen: false).updatepatrocinador(item);
+        Provider.of<ControlNav>(context, listen: false).updateIndex(2, 2);
+        /*Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => PatrocinadoresDetailPage(
               patrocinador: item,
-              index: 4,
+              //index: 4,
+              /*routa: MaterialPageRoute(
+                builder: (context) => ProfilePage(
+                  usuario: widget.usuario,
+                ),
+              ),*/
             ),
           ),
-        );
+        );*/
       },
       child: Padding(
         padding: const EdgeInsets.only(right: 10),
@@ -333,10 +393,32 @@ class _ProfilePageState extends State<ProfilePage> {
               decoration: BoxDecoration(
                 color: color22,
                 borderRadius: BorderRadius.circular(5),
-                image: DecorationImage(
+                /*image: DecorationImage(
                   image: NetworkImage(item.imagemBG),
                   fit: BoxFit.cover,
+                ),*/
+              ),
+              child: Image(
+                image: CachedNetworkImageProvider(
+                  item.imagemBG,
                 ),
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child;
+                  }
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
             Container(

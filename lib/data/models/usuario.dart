@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 
 class Usuario {
-  String uid, tokenAlert, nome, username, email, telefone, photo, data;
+  String uid,
+      tokenTG,
+      tokenTD,
+      tokenAlert,
+      nome,
+      username,
+      email,
+      telefone,
+      photo,
+      data;
 
   Usuario({
     required this.uid,
+    required this.tokenTG,
+    required this.tokenTD,
     required this.tokenAlert,
     required this.nome,
     required this.username,
@@ -17,6 +28,8 @@ class Usuario {
   factory Usuario.fromMap(Map<String, dynamic> map) {
     return Usuario(
       uid: map['uid'],
+      tokenTG: map['tokenTG'],
+      tokenTD: map['tokenTD'],
       tokenAlert: map['token_alert'],
       nome: map['name'],
       username: map['username'],
@@ -29,23 +42,28 @@ class Usuario {
 }
 
 class CustomerModel {
-  String? firstName, lastName, password, email;
+  String? displayName, firstName, lastName, password, email;
+  List<String>? roles;
 
   CustomerModel({
+    this.displayName,
     this.firstName,
     this.lastName,
     this.password,
     this.email,
+    this.roles,
   });
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {};
     map.addAll({
       'email': email,
+      'display_name': displayName,
       'first_name': firstName,
       'last_name': lastName,
       'password': password,
       'username': email,
+      'roles': roles,
     });
 
     return map;
@@ -83,7 +101,7 @@ class LoginResponseModel {
     dados['message'] = message;
 
     dados['data'] = data?.toJson();
-    
+
     /*if (data != null) {}*/
 
     return dados;
@@ -133,6 +151,8 @@ class UsuarioProvider extends ChangeNotifier {
     uid: '',
     nome: '',
     username: '',
+    tokenTG: '',
+    tokenTD: '',
     tokenAlert: '',
     email: '',
     telefone: '',
@@ -140,10 +160,18 @@ class UsuarioProvider extends ChangeNotifier {
     data: '',
   );
 
+  bool jalogou = false;
+
   Usuario get getUsuario => usuario;
+  bool get checklogin => jalogou;
 
   updateUsuario(Usuario newUser) {
     usuario = newUser;
+    notifyListeners();
+  }
+
+  updateStatus(bool status) {
+    jalogou = status;
     notifyListeners();
   }
 }

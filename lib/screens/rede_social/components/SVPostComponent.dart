@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:app_tuddo_gramado/data/models/SVPostModel.dart';
@@ -10,14 +11,13 @@ import 'package:app_tuddo_gramado/data/php/functions.dart';
 import 'package:app_tuddo_gramado/data/php/http_client.dart';
 import 'package:app_tuddo_gramado/data/stores/publicacao_store.dart';
 import 'package:app_tuddo_gramado/data/stores/user_store.dart';
-import 'package:app_tuddo_gramado/screens/rede_social/screens/SVCommentScreen.dart';
-import 'package:app_tuddo_gramado/screens/rede_social/screens/SVPostUpdate.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:app_tuddo_gramado/utils/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:popover/popover.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 // ignore: must_be_immutable
@@ -190,7 +190,7 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                       formatarNome(
                                                           usuarioQPublicou
                                                               .nome),
-                                                      style: whiteSemiBold20,
+                                                      style: whiteSemiBold18,
                                                     ),
                                                     Image.asset(
                                                       'assets/social/ic_TickSquare.png',
@@ -236,31 +236,32 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                         children: [
                                                           InkWell(
                                                             onTap: () {
-                                                              Navigator.of(
-                                                                  context)
-                                                                ..pop() // Dismiss the current screen (popover)
-                                                                ..pushReplacement(
-                                                                  MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            SVPostEdit(
-                                                                      usuario:
-                                                                          widget
-                                                                              .usuario,
-                                                                      post:
-                                                                          SVPostModel(
-                                                                        idPost:
-                                                                            post.id,
-                                                                        idUsuario:
-                                                                            usuarioQPublicou.uid,
-                                                                        description:
-                                                                            post['description'],
-                                                                        postImage:
-                                                                            post['postImage'],
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                );
+                                                              Provider.of<ControlNav>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .updatepost(
+                                                                SVPostModel(
+                                                                  idPost:
+                                                                      post.id,
+                                                                  idUsuario:
+                                                                      usuarioQPublicou
+                                                                          .uid,
+                                                                  description: post[
+                                                                      'description'],
+                                                                  postImage: post[
+                                                                      'postImage'],
+                                                                ),
+                                                              );
+                                                              Provider.of<ControlNav>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .updateIndex(
+                                                                      3, 3);
+                                                              /*Navigator.of(
+                                                                      context)
+                                                                  .pop();*/
                                                             },
                                                             child: Container(
                                                               height: 50,
@@ -468,31 +469,33 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                         children: [
                                                           InkWell(
                                                             onTap: () {
+                                                              Provider.of<ControlNav>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .updatepost(
+                                                                SVPostModel(
+                                                                  idPost:
+                                                                      post.id,
+                                                                  idUsuario:
+                                                                      usuarioQPublicou
+                                                                          .uid,
+                                                                  description: post[
+                                                                      'description'],
+                                                                  postImage: post[
+                                                                      'postImage'],
+                                                                ),
+                                                              );
                                                               Navigator.of(
-                                                                  context)
-                                                                ..pop() // Dismiss the current screen (popover)
-                                                                ..pushReplacement(
-                                                                  MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            SVPostEdit(
-                                                                      usuario:
-                                                                          widget
-                                                                              .usuario,
-                                                                      post:
-                                                                          SVPostModel(
-                                                                        idPost:
-                                                                            post.id,
-                                                                        idUsuario:
-                                                                            usuarioQPublicou.uid,
-                                                                        description:
-                                                                            post['description'],
-                                                                        postImage:
-                                                                            post['postImage'],
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                );
+                                                                      context)
+                                                                  .pop();
+                                                              Provider.of<ControlNav>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .updateIndex(
+                                                                      3, 3);
+                                                              
                                                             },
                                                             child: Container(
                                                               height: 50,
@@ -696,7 +699,14 @@ class _SVPostComponentState extends State<SVPostComponent> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.pushReplacement(
+                                  Provider.of<ControlNav>(context,
+                                          listen: false)
+                                      .updateidpost(post.id.toString());
+
+                                  Provider.of<ControlNav>(context,
+                                          listen: false)
+                                      .updateIndex(3, 2);
+                                  /*Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => SVCommentScreen(
@@ -704,7 +714,7 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                         idPost: post.id.toString(),
                                       ),
                                     ),
-                                  );
+                                  );*/
                                 },
                                 child: Image.asset(
                                   'assets/social/ic_Chat.png',
@@ -744,8 +754,8 @@ class _SVPostComponentState extends State<SVPostComponent> {
                       listUIDUser.isEmpty
                           ? heightSpace10
                           : SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: FutureBuilder(
+                              width: MediaQuery.of(context).size.width,
+                              child: FutureBuilder(
                                 future: storePost.getListUsersLikes(
                                     listUIDUser, widget.usuario.uid),
                                 builder: (context, listUsersQCurte) {
@@ -825,7 +835,8 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                           width: 2),
                                                       borderRadius: radius(100),
                                                     ),
-                                                    child: userdata[0].photo == ''
+                                                    child: userdata[0].photo ==
+                                                            ''
                                                         ? Image.asset(
                                                             'assets/image/nopicture.png',
                                                             height: 24,
@@ -850,7 +861,8 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                           width: 2),
                                                       borderRadius: radius(100),
                                                     ),
-                                                    child: userdata[1].photo == ''
+                                                    child: userdata[1].photo ==
+                                                            ''
                                                         ? Image.asset(
                                                             'assets/image/nopicture.png',
                                                             height: 24,
@@ -873,13 +885,16 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                           RichText(
                                             text: TextSpan(
                                               text: 'Curtido por ',
-                                              style: checksize ? whiteMedium12 : whiteMedium14,
+                                              style: checksize
+                                                  ? whiteMedium12
+                                                  : whiteMedium14,
                                               children: <TextSpan>[
                                                 TextSpan(
                                                   text: userdata[0].nome ==
                                                           widget.usuario.nome
                                                       ? userdata[1].nome ==
-                                                              widget.usuario.nome
+                                                              widget
+                                                                  .usuario.nome
                                                           ? ''
                                                           : formatarNome(
                                                               userdata[1].nome,
@@ -887,15 +902,21 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                       : formatarNome(
                                                           userdata[0].nome,
                                                         ),
-                                                  style: checksize ? whiteMedium12 : whiteMedium14,
+                                                  style: checksize
+                                                      ? whiteMedium12
+                                                      : whiteMedium14,
                                                 ),
                                                 TextSpan(
                                                   text: ' e ',
-                                                  style: checksize ? whiteMedium12 : whiteMedium14,
+                                                  style: checksize
+                                                      ? whiteMedium12
+                                                      : whiteMedium14,
                                                 ),
                                                 TextSpan(
                                                   text: '1 Outro',
-                                                  style: checksize ? whiteMedium12 : whiteMedium14,
+                                                  style: checksize
+                                                      ? whiteMedium12
+                                                      : whiteMedium14,
                                                 ),
                                               ],
                                             ),
@@ -921,7 +942,8 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                           width: 2),
                                                       borderRadius: radius(100),
                                                     ),
-                                                    child: userdata[0].photo == ''
+                                                    child: userdata[0].photo ==
+                                                            ''
                                                         ? Image.asset(
                                                             'assets/image/nopicture.png',
                                                             height: 24,
@@ -947,7 +969,8 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                           width: 2),
                                                       borderRadius: radius(100),
                                                     ),
-                                                    child: userdata[1].photo == ''
+                                                    child: userdata[1].photo ==
+                                                            ''
                                                         ? Image.asset(
                                                             'assets/image/nopicture.png',
                                                             height: 24,
@@ -972,7 +995,8 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                           width: 2),
                                                       borderRadius: radius(100),
                                                     ),
-                                                    child: userdata[2].photo == ''
+                                                    child: userdata[2].photo ==
+                                                            ''
                                                         ? Image.asset(
                                                             'assets/image/nopicture.png',
                                                             height: 24,
@@ -996,15 +1020,19 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                           RichText(
                                             text: TextSpan(
                                               text: 'Curtido por ',
-                                              style: checksize ? whiteMedium12 : whiteMedium14,
+                                              style: checksize
+                                                  ? whiteMedium12
+                                                  : whiteMedium14,
                                               children: <TextSpan>[
                                                 TextSpan(
                                                   text: userdata[0].nome ==
                                                           widget.usuario.nome
                                                       ? userdata[1].nome ==
-                                                              widget.usuario.nome
+                                                              widget
+                                                                  .usuario.nome
                                                           ? userdata[2].nome ==
-                                                                  postList[index]
+                                                                  postList[
+                                                                          index]
                                                                       .name
                                                               ? ''
                                                               : formatarNome(
@@ -1017,15 +1045,21 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                       : formatarNome(
                                                           userdata[0].nome,
                                                         ),
-                                                  style: checksize ? whiteMedium12 : whiteMedium14,
+                                                  style: checksize
+                                                      ? whiteMedium12
+                                                      : whiteMedium14,
                                                 ),
                                                 TextSpan(
                                                   text: ' e ',
-                                                  style: checksize ? whiteMedium12 : whiteMedium14,
+                                                  style: checksize
+                                                      ? whiteMedium12
+                                                      : whiteMedium14,
                                                 ),
                                                 TextSpan(
                                                   text: '2 Outros ',
-                                                  style: checksize ? whiteMedium12 : whiteMedium14,
+                                                  style: checksize
+                                                      ? whiteMedium12
+                                                      : whiteMedium14,
                                                 ),
                                               ],
                                             ),
@@ -1051,7 +1085,8 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                           width: 2),
                                                       borderRadius: radius(100),
                                                     ),
-                                                    child: userdata[0].photo == ''
+                                                    child: userdata[0].photo ==
+                                                            ''
                                                         ? Image.asset(
                                                             'assets/image/nopicture.png',
                                                             height: 24,
@@ -1077,7 +1112,8 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                           width: 2),
                                                       borderRadius: radius(100),
                                                     ),
-                                                    child: userdata[1].photo == ''
+                                                    child: userdata[1].photo ==
+                                                            ''
                                                         ? Image.asset(
                                                             'assets/image/nopicture.png',
                                                             height: 24,
@@ -1102,7 +1138,8 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                           width: 2),
                                                       borderRadius: radius(100),
                                                     ),
-                                                    child: userdata[2].photo == ''
+                                                    child: userdata[2].photo ==
+                                                            ''
                                                         ? Image.asset(
                                                             'assets/image/nopicture.png',
                                                             height: 24,
@@ -1126,15 +1163,19 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                           RichText(
                                             text: TextSpan(
                                               text: 'Curtido por ',
-                                              style: checksize ? whiteMedium12 : whiteMedium14,
+                                              style: checksize
+                                                  ? whiteMedium12
+                                                  : whiteMedium14,
                                               children: <TextSpan>[
                                                 TextSpan(
                                                   text: userdata[0].nome ==
                                                           widget.usuario.nome
                                                       ? userdata[1].nome ==
-                                                              widget.usuario.nome
+                                                              widget
+                                                                  .usuario.nome
                                                           ? userdata[2].nome ==
-                                                                  postList[index]
+                                                                  postList[
+                                                                          index]
                                                                       .name
                                                               ? ''
                                                               : formatarNome(
@@ -1147,15 +1188,21 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                       : formatarNome(
                                                           userdata[0].nome,
                                                         ),
-                                                  style: checksize ? whiteMedium12 : whiteMedium14,
+                                                  style: checksize
+                                                      ? whiteMedium12
+                                                      : whiteMedium14,
                                                 ),
                                                 TextSpan(
                                                   text: ' e ',
-                                                  style: checksize ? whiteMedium12 : whiteMedium14,
+                                                  style: checksize
+                                                      ? whiteMedium12
+                                                      : whiteMedium14,
                                                 ),
                                                 TextSpan(
                                                   text: '${total - 1} Outros ',
-                                                  style: checksize ? whiteMedium12 : whiteMedium14,
+                                                  style: checksize
+                                                      ? whiteMedium12
+                                                      : whiteMedium14,
                                                 ),
                                               ],
                                             ),
@@ -1168,7 +1215,7 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                   }
                                 },
                               ),
-                          ),
+                            ),
                     ],
                   ),
                 ),

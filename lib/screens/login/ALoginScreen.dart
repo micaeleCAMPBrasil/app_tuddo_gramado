@@ -3,6 +3,8 @@
 import 'dart:async';
 
 import 'package:app_tuddo_gramado/data/php/api_service.dart';
+import 'package:app_tuddo_gramado/services/auth_check.dart';
+import 'package:app_tuddo_gramado/services/logout_wordpress.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
@@ -15,7 +17,6 @@ import 'package:app_tuddo_gramado/screens/login/AVerifyCode.dart';
 import 'package:app_tuddo_gramado/services/auth_service.dart';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:app_tuddo_gramado/utils/bottom_navigation.dart';
 
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:app_tuddo_gramado/utils/widgets.dart';
@@ -66,157 +67,152 @@ class _ALoginScreenState extends State<ALoginScreen> {
             style: whiteBold22,
           ),
         ),
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          padding: EdgeInsets.only(
-            top: MediaQuery.of(context).viewPadding.top,
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/image/login_register_bg.png"),
-              fit: BoxFit.fill,
-            ),
-          ),
-          child: Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              Container(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 25),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    AutoSizeText(
-                      'Digite o número de telefone para continuar',
-                      style: whiteMedium20,
-                      maxLines: 1,
-                    ),
-                    heightSpace10,
-                    Form(
-                      key: mykey,
-                      child: PrimaryTextfieldTelefone(
-                        lableText: 'Digite seu Telefone',
-                        hintText: 'Digite seu Telefone',
-                        keyboardType: TextInputType.number,
-                        prefixText: "+55 ",
-                        controller: _phoneTextController,
-                        textInputAction: TextInputAction.go,
-                      ),
-                    ),
-                    heightSpace40,
-                    PrimaryButton(
-                      text: 'Continue',
-                      onTap: () {
-                        if (mykey.currentState!.validate()) {
-                          UiHelper.showLoadingDialog(context, 'Aguarde...');
-                          AuthService.sendOtp(
-                            phone: _phoneTextController.text,
-                            erroStep: () =>
-                                ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: const Text(
-                                  "Erro ao enviar o número",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                backgroundColor: primaryColor,
-                              ),
-                            ),
-                            nextStep: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AVerifyCode(
-                                    telefone: _phoneTextController.text,
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        }
-                      },
-                    ),
-                    heightSpace20,
-                    Text(
-                      'Ou continue com',
-                      style: whiteRegular15,
-                      textAlign: TextAlign.center,
-                    ),
-                    heightSpace20,
-                    Row(
+        body: Stack(
+          children: [
+            const LogOutWordPress(),
+            Container(
+              height: MediaQuery.of(context).size.height,
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).viewPadding.top,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/image/login_register_bg.png"),
+                  fit: BoxFit.fill,
+                ),
+              ),
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 25),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Expanded(
-                          child: Container(
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: const Color(0xff4267B2),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  'assets/image/appetit/fb.png',
-                                  width: 30,
-                                  height: 30,
-                                ),
-                                widthSpace15,
-                                Text(
-                                  'Facebook',
-                                  style: whiteMedium16,
-                                ),
-                              ],
-                            ),
+                        AutoSizeText(
+                          'Digite o número de telefone para continuar',
+                          style: whiteMedium20,
+                          maxLines: 1,
+                        ),
+                        heightSpace10,
+                        Form(
+                          key: mykey,
+                          child: PrimaryTextfieldTelefone(
+                            lableText: 'Digite seu Telefone',
+                            hintText: 'Digite seu Telefone',
+                            keyboardType: TextInputType.number,
+                            prefixText: "+55 ",
+                            controller: _phoneTextController,
+                            textInputAction: TextInputAction.go,
                           ),
                         ),
-                        widthSpace20,
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () => AuthService.signInWithGoogle().then(
-                              (value) async {
-                                User user = AuthService.gerarUserFirebase();
-                                String uid = user.uid;
-                                String? nome = user.displayName;
-                                String? emailEscolhido = user.email;
+                        heightSpace40,
+                        PrimaryButton(
+                          text: 'Continue',
+                          onTap: () {
+                            if (mykey.currentState!.validate()) {
+                              UiHelper.showLoadingDialog(context, 'Aguarde...');
+                              AuthService.sendOtp(
+                                phone: _phoneTextController.text,
+                                erroStep: () =>
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: const Text(
+                                      "Erro ao enviar o número",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    backgroundColor: primaryColor,
+                                  ),
+                                ),
+                                nextStep: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AVerifyCode(
+                                        telefone: _phoneTextController.text,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+                          },
+                        ),
+                        heightSpace20,
+                        Text(
+                          'Ou continue com',
+                          style: whiteRegular15,
+                          textAlign: TextAlign.center,
+                        ),
+                        heightSpace20,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            /*Expanded(
+                              child: Container(
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff4267B2),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/image/appetit/fb.png',
+                                      width: 30,
+                                      height: 30,
+                                    ),
+                                    widthSpace15,
+                                    Text(
+                                      'Facebook',
+                                      style: whiteMedium16,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            widthSpace20,*/
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () =>
+                                    AuthService.signInWithGoogle().then(
+                                  (value) async {
+                                    User user = AuthService.gerarUserFirebase();
+                                    String uid = user.uid;
+                                    String? nome = user.displayName;
+                                    String? emailEscolhido = user.email;
 
-                                await storeUser.getUID(uid);
+                                    await storeUser.getUID(uid);
 
-                                Usuario usuarioBase = storeUser.state.value;
+                                    Usuario usuarioBase = storeUser.state.value;
 
-                                if (value == "Sucess") {
-                                  if (usuarioBase.nome == '' ||
-                                      usuarioBase.email == '' ||
-                                      usuarioBase.telefone == '') {
-                                    Timer(
-                                      const Duration(seconds: 1),
-                                      () {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => RegisterPage(
-                                              uid: uid,
-                                              nome: nome!,
-                                              email: emailEscolhido!,
-                                              usuario: usuarioBase,
-                                            ),
-                                          ),
+                                    if (value == "Sucess") {
+                                      if (usuarioBase.nome == '' ||
+                                          usuarioBase.email == '' ||
+                                          usuarioBase.telefone == '') {
+                                        Timer(
+                                          const Duration(seconds: 1),
+                                          () {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RegisterPage(
+                                                  uid: uid,
+                                                  nome: nome!,
+                                                  email: emailEscolhido!,
+                                                  usuario: usuarioBase,
+                                                ),
+                                              ),
+                                            );
+                                          },
                                         );
-                                      },
-                                    );
-                                  } else {
-                                    setState(() {
-                                      isApiCallProcess = true;
-                                    });
-
-                                    apiService
-                                        .loginCustomer(emailEscolhido!, uid)
-                                        .then((ret) {
-                                      if (ret.data != null) {
+                                      } else {
                                         setState(() {
-                                          isApiCallProcess = false;
+                                          isApiCallProcess = true;
                                         });
-
-                                        debugPrint(
-                                            'User WordPress: ${ret.data?.toJson()}');
 
                                         Provider.of<UsuarioProvider>(context,
                                                 listen: false)
@@ -225,78 +221,76 @@ class _ALoginScreenState extends State<ALoginScreen> {
                                         Timer(
                                           const Duration(seconds: 1),
                                           () {
+                                            /*Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => LoginWP(
+                                                  usuario: usuarioBase.email,
+                                                  senha: usuarioBase.uid,
+                                                ),
+                                              ),
+                                            );*/
+
                                             Navigator.pushReplacement(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    BottomNavigation(),
+                                                    const CheckUserLoggedInOrNot(),
                                               ),
                                             );
                                           },
                                         );
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: const Text(
-                                              'Erro',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            backgroundColor: primaryColor,
-                                          ),
-                                        );
                                       }
-                                    });
-                                  }
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        value,
-                                        style: const TextStyle(
-                                          color: Colors.white,
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            value,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          backgroundColor: primaryColor,
                                         ),
+                                      );
+                                    }
+                                  },
+                                ),
+                                child: Container(
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: white,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        'assets/image/appetit/google.png',
+                                        width: 45,
+                                        height: 45,
                                       ),
-                                      backgroundColor: primaryColor,
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                            child: Container(
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: white,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    'assets/image/appetit/google.png',
-                                    width: 45,
-                                    height: 45,
+                                      widthSpace15,
+                                      Text(
+                                        'Google',
+                                        style: blackMedium16,
+                                      ),
+                                    ],
                                   ),
-                                  widthSpace15,
-                                  Text(
-                                    'Google',
-                                    style: blackMedium16,
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
+                        heightSpace10,
                       ],
                     ),
-                    heightSpace10,
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

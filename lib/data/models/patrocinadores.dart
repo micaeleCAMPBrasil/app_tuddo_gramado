@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class Patrocinadores {
-  int id;
+  int id, idCategoria;
   String nome,
       descricao,
       logo,
@@ -17,6 +17,7 @@ class Patrocinadores {
 
   Patrocinadores({
     required this.id,
+    required this.idCategoria,
     required this.nome,
     required this.logo,
     required this.imagemBG,
@@ -33,13 +34,14 @@ class Patrocinadores {
 
   @override
   String toString() =>
-      'Patrocinadores(id: $id, nome: $nome, logo: $logo, imagemBG: $imagemBG, descricao: $descricao, linkWebSite: $linkWebSite, linkInstagram: $linkInstagram, linkFacebook: $linkFacebook, linkEndereco: $linkEndereco, isFavorite: $isFavorite, galeria: $galeria)';
+      'Patrocinadores(id: $id, idCategoria: $idCategoria, nome: $nome, logo: $logo, imagemBG: $imagemBG, descricao: $descricao, linkWebSite: $linkWebSite, linkInstagram: $linkInstagram, linkFacebook: $linkFacebook, linkEndereco: $linkEndereco, isFavorite: $isFavorite, galeria: $galeria)';
 
   @override
   bool operator ==(covariant Patrocinadores other) {
     if (identical(this, other)) return true;
 
     return other.id == id &&
+        other.idCategoria == idCategoria &&
         other.nome == nome &&
         other.descricao == descricao &&
         other.logo == logo &&
@@ -55,6 +57,7 @@ class Patrocinadores {
   @override
   int get hashCode =>
       id.hashCode ^
+      idCategoria.hashCode ^
       nome.hashCode ^
       logo.hashCode ^
       imagemBG.hashCode ^
@@ -68,6 +71,7 @@ class Patrocinadores {
 
   Patrocinadores copyWith({
     int? id,
+    int? idCategoria,
     String? nome,
     String? logo,
     String? imagemBG,
@@ -83,6 +87,7 @@ class Patrocinadores {
   }) {
     return Patrocinadores(
       id: id ?? this.id,
+      idCategoria: idCategoria ?? this.idCategoria,
       nome: nome ?? this.nome,
       logo: logo ?? this.logo,
       imagemBG: imagemBG ?? this.imagemBG,
@@ -101,9 +106,10 @@ class Patrocinadores {
 
 class GaleriaPatrocinador {
   int idPatrocinador;
-  String img;
+  String img, link;
   GaleriaPatrocinador({
     required this.idPatrocinador,
     this.img = '',
+    this.link = '',
   });
 }

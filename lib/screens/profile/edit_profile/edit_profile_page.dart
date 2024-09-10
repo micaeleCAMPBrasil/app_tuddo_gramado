@@ -1,9 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:convert';
 import 'dart:io';
 import 'package:app_tuddo_gramado/data/models/imgbbResponseModel.dart';
-import 'package:app_tuddo_gramado/helper/ui_helper.dart';
-import 'package:dio/dio.dart';
+import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,6 @@ import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/data/php/functions.dart';
 import 'package:app_tuddo_gramado/data/php/http_client.dart';
 import 'package:app_tuddo_gramado/data/stores/user_store.dart';
-import 'package:app_tuddo_gramado/utils/bottom_navigation.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:app_tuddo_gramado/utils/widgets.dart';
 
@@ -69,13 +69,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   ImagePicker picker = ImagePicker();
 
+  String? base64Image;
+  File? tmpFile;
+
   File? images;
 
   final imgBBkey = '4cd0e929ee9db86448e68f47e4a33931';
 
   String txt = '';
 
-  Dio dio = Dio();
   late ImgbbResponseModel imgbbResponse;
 
   Future pickGalleryImage() async {
@@ -85,6 +87,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     if (pickedFile != null) {
       setState(() {
         images = File(pickedFile.path);
+        tmpFile = File(pickedFile.path);
+        base64Image = base64Encode(images!.readAsBytesSync());
       });
       uploadImage();
     }
@@ -96,6 +100,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     if (pickedFile != null) {
       setState(() {
         images = File(pickedFile.path);
+        tmpFile = File(pickedFile.path);
+        base64Image = base64Encode(images!.readAsBytesSync());
       });
       uploadImage();
     }
@@ -183,31 +189,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String imgURL = '';
 
   void uploadImage() async {
+    String url = "https://campbrasil.com/tuddo_gramado/upload_img.php";
     try {
-      String fileName = images!.path.split('/').last;
+      //String
 
-      FormData data = FormData.fromMap({
-        "key": imgBBkey,
-        "image": await MultipartFile.fromFile(
-          images!.path,
-          filename: fileName,
-        ),
-      });
+      String fileName = tmpFile!.path.split('/').last;
 
-      Dio dio = Dio();
-      dio.post("https://api.imgbb.com/1/upload", data: data).then((response) {
-        var data = response.data;
-
-        debugPrint('Função - ${data['data']['url']}');
-
+      http.post(Uri.parse(url), body: {
+        "image": base64Image,
+        "name": fileName,
+        "pasta": 'users/',
+      }).then((value) {
+        debugPrint('upload ${value.body}');
         setState(() {
-          imgURL = data['data']['url'];
+          imgURL = value.body.toString();
         });
-
-        // ignore: invalid_return_type_for_catch_error
-      }).catchError((error) => debugPrint(error.toString()));
-      // ignore: empty_catches
-    } catch (e) {}
+      });
+    } catch (e) {
+      debugPrint("Error");
+    }
   }
 
   void editarUsuario(Usuario usuario) {
@@ -218,95 +218,95 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BottomNavigation(
-              selectedIndex: 4,
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
-          ),
-        );
-        return true;
-      },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        bottomNavigationBar: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: PrimaryButton(
-                  text: 'Salvar',
-                  onTap: () {
-                    UiHelper.showLoadingDialog(context, 'Aguarda...');
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: PrimaryButton(
+                text: 'Salvar',
+                onTap: () {
+                  //UiHelper.showLoadingDialog(context, 'Aguarda...');
 
-                    Future.delayed(
-                      const Duration(seconds: 3),
-                      () {
-                        debugPrint("IMG URL $imgURL");
+                  Future.delayed(
+                    const Duration(seconds: 3),
+                    () {
+                      debugPrint("IMG URL $imgURL");
 
-                        setState(() {
-                          widget.usuario.nome = _nameController.text;
-                          widget.usuario.username = _userNameController.text;
-                          widget.usuario.email = _emailController.text;
-                          widget.usuario.telefone = _phoneNumberController.text;
-                          widget.usuario.photo = imgURL;
-                        });
+                      setState(() {
+                        widget.usuario.nome = _nameController.text;
+                        widget.usuario.username = _userNameController.text;
+                        widget.usuario.email = _emailController.text;
+                        widget.usuario.telefone = _phoneNumberController.text;
+                        widget.usuario.photo = imgURL == ''
+                            ? widget.usuario.photo != ''
+                                ? widget.usuario.photo
+                                : ""
+                            : "https://campbrasil.com/tuddo_gramado/$imgURL";
+                      });
 
-                        debugPrint(
-                            "A foto do usuário é ${widget.usuario.photo}");
+                      debugPrint("A foto do usuário é ${widget.usuario.photo}");
 
-                        Provider.of<UsuarioProvider>(context, listen: false)
-                            .updateUsuario(widget.usuario);
+                      Provider.of<UsuarioProvider>(context, listen: false)
+                          .updateUsuario(widget.usuario);
 
-                        editarUsuario(widget.usuario);
+                      editarUsuario(widget.usuario);
 
-                        UiHelper.showLoadingDialog(context, 'Aguarde...');
+                      //UiHelper.showLoadingDialog(context, 'Aguarde...');
 
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BottomNavigation(
-                              selectedIndex: 4,
-                            ),
+                      Provider.of<ControlNav>(context, listen: false)
+                          .updateIndex(
+                        4,
+                        0,
+                      );
+
+                      /*Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BottomNavigation(
+                            //selectedIndex: 4,
                           ),
-                        );
-                      },
-                    );
-                  },
-                ),
+                        ),
+                      );*/
+                    },
+                  );
+                },
               ),
             ),
-          ],
-        ),
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
-          child: MyAppBar(
-            backgroundColor: color00,
-            title: 'Editar Usuário',
-            leading: GestureDetector(
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BottomNavigation(
-                      selectedIndex: widget.index,
-                    ),
-                  ),
-                );
-              },
-              child: const Icon(Icons.arrow_left_rounded),
-            ),
+          ),
+        ],
+      ),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(56),
+        child: MyAppBar(
+          backgroundColor: color00,
+          title: 'Editar Usuário',
+          leading: GestureDetector(
+            onTap: () {
+              Provider.of<ControlNav>(context, listen: false).updateIndex(
+                4,
+                0,
+              );
+              /*Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BottomNavigation(
+                      //selectedIndex: widget.index,
+                      ),
+                ),
+              );*/
+            },
+            child: const Icon(Icons.arrow_back_ios),
           ),
         ),
-        body: bodyMethod(context, widget.usuario),
       ),
+      body: bodyMethod(context, widget.usuario),
     );
   }
 

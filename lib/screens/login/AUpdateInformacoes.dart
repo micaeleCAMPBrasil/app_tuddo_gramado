@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:app_tuddo_gramado/data/php/api_service.dart';
+import 'package:app_tuddo_gramado/services/auth_check.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +13,6 @@ import 'package:app_tuddo_gramado/data/php/functions.dart';
 import 'package:app_tuddo_gramado/data/php/http_client.dart';
 import 'package:app_tuddo_gramado/data/stores/user_store.dart';
 import 'package:app_tuddo_gramado/helper/ui_helper.dart';
-import 'package:app_tuddo_gramado/utils/bottom_navigation.dart';
 
 import '../../utils/constant.dart';
 import '../../utils/widgets.dart';
@@ -44,9 +44,8 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController telefoneController = TextEditingController();
 
   late APIService apiService;
-  late CustomerModel model;
 
-  bool isApiCallProcess = false;
+  String mensagemalerta = 'Aguarde...';
 
   final UsuarioStore storeUser = UsuarioStore(
     repository: IFuncoesPHP(
@@ -65,7 +64,6 @@ class _RegisterPageState extends State<RegisterPage> {
     getToken();
 
     apiService = APIService();
-    model = CustomerModel();
 
     Future.delayed(
       const Duration(seconds: 3),
@@ -124,9 +122,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
     setState(() {
       check = usernamesbase.isEmpty ? false : true;
-
-      model.firstName = primeiroNome;
-      model.lastName = segundoNome;
     });
 
     gerandoUserName(userName);
@@ -192,153 +187,177 @@ class _RegisterPageState extends State<RegisterPage> {
                 centerTitle: true,
                 title: Text('Seja Bem-Vindo!', style: whiteBold22),
               ),
-              body: Container(
-                height: MediaQuery.of(context).size.height,
-                padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).viewPadding.top,
-                  bottom: MediaQuery.of(context).viewInsets.bottom,
-                ),
-                /*decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/image/login_register_bg.png"),
-                    fit: BoxFit.fill,
+              body: SingleChildScrollView(
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).viewPadding.top,
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
                   ),
-                ),*/
-                child: Stack(
-                  alignment: Alignment.bottomCenter,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 25),
-                      child: Form(
-                        key: mykey,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            PrimaryTextfield(
-                              lableText: 'Nome',
-                              controller: nomeController,
-                            ),
-                            heightSpace20,
-                            PrimaryTextfield(
-                              lableText: '@Usuário',
-                              controller: userNameController,
-                            ),
-                            heightSpace20,
-                            PrimaryTextfield(
-                              lableText: 'E-mail',
-                              keyboardType: TextInputType.emailAddress,
-                              controller: emailController,
-                            ),
-                            heightSpace20,
-                            PrimaryTextfieldTelefone(
-                              lableText: 'Telefone',
-                              keyboardType: TextInputType.phone,
-                              controller: telefoneController,
-                              textInputAction: TextInputAction.go,
-                            ),
-                            heightSpace40,
-                            PrimaryButton(
-                              text: 'Continuar',
-                              onTap: () {
-                                if (mykey.currentState!.validate()) {
-                                  setState(() {
-                                    widget.usuario.uid = widget.uid;
-                                    widget.usuario.nome = nomeController.text;
-                                    widget.usuario.username =
-                                        userNameController.text;
-                                    widget.usuario.email = emailController.text;
-                                    widget.usuario.telefone =
-                                        telefoneController.text;
-                                    widget.usuario.tokenAlert = tokenAlert;
-
-                                    // wordpress
-                                    model.email = emailController.text;
-                                    model.password = widget.uid;
-                                  });
-
-                                  storeUser.update(widget.usuario);
-
-                                  Provider.of<UsuarioProvider>(context,
-                                          listen: false)
-                                      .updateUsuario(widget.usuario);
-
-                                  bool resposta = storeUser.isEditable.value;
-                                  if (resposta) {
-                                    debugPrint('model ${model.toJson()}');
+                  /*decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/image/login_register_bg.png"),
+                      fit: BoxFit.fill,
+                    ),
+                  ),*/
+                  child: Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 25),
+                        child: Form(
+                          key: mykey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              PrimaryTextfield(
+                                lableText: 'Nome',
+                                controller: nomeController,
+                              ),
+                              heightSpace20,
+                              PrimaryTextfield(
+                                lableText: '@Usuário',
+                                controller: userNameController,
+                              ),
+                              heightSpace20,
+                              PrimaryTextfield(
+                                lableText: 'E-mail',
+                                keyboardType: TextInputType.emailAddress,
+                                controller: emailController,
+                              ),
+                              heightSpace20,
+                              PrimaryTextfieldTelefone(
+                                lableText: 'Telefone',
+                                keyboardType: TextInputType.phone,
+                                controller: telefoneController,
+                                textInputAction: TextInputAction.go,
+                              ),
+                              heightSpace40,
+                              PrimaryButton(
+                                text: 'Continuar',
+                                onTap: () async {
+                                  if (mykey.currentState!.validate()) {
+                                    UiHelper.showLoadingDialog(
+                                        context, mensagemalerta);
 
                                     setState(() {
-                                      isApiCallProcess = true;
+                                      widget.usuario.uid = widget.uid;
+                                      widget.usuario.nome =
+                                          nomeController.text.toUpperCase();
+                                      widget.usuario.username =
+                                          userNameController.text;
+                                      widget.usuario.email =
+                                          emailController.text;
+                                      widget.usuario.telefone =
+                                          telefoneController.text;
+                                      widget.usuario.tokenAlert = tokenAlert;
                                     });
 
-                                    apiService
-                                        .createCustomer(model)
+                                    storeUser.update(widget.usuario);
+
+                                    Provider.of<UsuarioProvider>(context,
+                                            listen: false)
+                                        .updateUsuario(widget.usuario);
+
+                                    List<String> split =
+                                        widget.usuario.nome.split(' ');
+                                    String primeiroNome = split[0] == ''
+                                        ? ''
+                                        : split[0].toUpperCase();
+                                    String segundoNome = split[1] == ''
+                                        ? ''
+                                        : split[1].toUpperCase();
+
+                                    CustomerModel model = CustomerModel(
+                                      email: widget.usuario.email,
+                                      displayName: widget.usuario.nome,
+                                      firstName: primeiroNome,
+                                      lastName: segundoNome,
+                                      password: widget.usuario.uid,
+                                      roles: ['author'],
+                                    );
+
+                                    bool check = await apiService
+                                        .createCustomer(widget.usuario, model);
+
+                                    debugPrint('check cadastro - $check');
+
+                                    if (check) {
+                                      setState(() {
+                                        mensagemalerta = 'Sucesso!';
+                                      });
+                                      Timer(
+                                        const Duration(seconds: 2),
+                                        () async {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const CheckUserLoggedInOrNot(),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    }
+
+                                    /*apiService
+                                        .createCustomer(widget.usuario, model)
                                         .then((ret) {
+                                      /*apiService
+                                        .createCustomer(widget.usuario, model)
+                                        .then((ret) {*/
+                                      //if (storeUser.isLoading.value) {
                                       setState(() {
                                         isApiCallProcess = false;
                                       });
-
-                                      if (ret) {
-                                        UiHelper.showLoadingDialog(
-                                          context,
-                                          'Sucesso...',
-                                        );
-                                        Timer(
-                                          const Duration(seconds: 1),
-                                          () {
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BottomNavigation(
-                                                  selectedIndex: 0,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      } else {
-                                        debugPrint( 'Erro Cadastro WordPress');
-                                        Timer(
-                                          const Duration(seconds: 1),
-                                          () {
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BottomNavigation(
-                                                  selectedIndex: 0,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      }
-                                    });
+                                      UiHelper.showLoadingDialog(
+                                        context,
+                                        'Sucesso...',
+                                      );
+                                      Timer(
+                                        const Duration(seconds: 1),
+                                        () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const CheckUserLoggedInOrNot(),
+                                            ),
+                                          );
+                                        },
+                                      );*/
+                                    //});
+                                    /*} else {
+                                      debugPrint('Erro Cadastro WordPress');
+                                      Timer(
+                                        const Duration(seconds: 1),
+                                        () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const ALoginScreen(),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    }*/
+                                    //});
                                     /*UiHelper.showLoadingDialog(
-                                        context, 'Aguarde...');*/
-                                  } else {
-                                    debugPrint(
-                                        'Erro Update Informações - ${storeUser.erro.value}');
-                                    /*ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        storeUser.erro.value,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      backgroundColor: Colors.red,
-                                    ),
-                                  );*/
+                                          context, 'Aguarde...');*/
+                                    /*} else {
+                                      debugPrint(
+                                          'Erro Update Informações - ${storeUser.erro.value}');
+                                    }*/
                                   }
-                                }
-                              },
-                            ),
-                          ],
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             )

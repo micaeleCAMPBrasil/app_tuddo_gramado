@@ -185,18 +185,19 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
                           height: 14,
                           width: 14,
                           fit: BoxFit.fill,
+                          color: Colors.black,
                         )
                       : Image.asset(
                           'assets/social/ic_Heart.png',
                           height: 14,
                           width: 14,
                           fit: BoxFit.cover,
-                          color: whiteColor,
+                          color: Colors.black,
                         ),
-                  2.width,
+                  3.width,
                   Text(
                     widget.comment.likeCount.toString(),
-                    style: whiteRegular12,
+                    style: blackRegular12,
                   ),
                 ],
               ),

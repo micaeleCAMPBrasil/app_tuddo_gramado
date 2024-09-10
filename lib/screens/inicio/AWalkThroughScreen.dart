@@ -97,7 +97,7 @@ class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
                                         },
                                         child: Text(
                                           'Pular',
-                                          style: whiteBold18,
+                                          style: blackBold18,
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
@@ -192,7 +192,7 @@ class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
                     },
                     child: const Icon(
                       Icons.arrow_forward_ios_outlined,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
                 ),

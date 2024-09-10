@@ -1,6 +1,8 @@
+import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:app_tuddo_gramado/screens/login/ALoginScreen.dart';
 import 'package:app_tuddo_gramado/services/auth_service.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/constant.dart';
 
@@ -68,6 +70,11 @@ class UiHelper {
                       GestureDetector(
                         onTap: () {
                           AuthService.logout();
+                          Provider.of<ControlNav>(context, listen: false)
+                              .updateIndex(
+                            0,
+                            0,
+                          );
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(

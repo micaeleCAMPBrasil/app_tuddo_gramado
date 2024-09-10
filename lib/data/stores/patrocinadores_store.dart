@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 
 class PatrocinadoresStore {
   final IFuncoes repository;
+  final int idCategoria;
 
-  PatrocinadoresStore({required this.repository}) {
-    fetch();
+  PatrocinadoresStore({required this.repository, this.idCategoria = 0}) {
+    fetch(idCategoria);
   }
 
   ValueNotifier<List<Patrocinadores>> listPatrocinadores =
@@ -16,13 +17,25 @@ class PatrocinadoresStore {
   ValueNotifier<List<Patrocinadores>> listBannerInicial =
       ValueNotifier<List<Patrocinadores>>([]);
 
+  ValueNotifier<List<Patrocinadores>> listPatrocinadoresCategories =
+      ValueNotifier<List<Patrocinadores>>([]);
+
   List<Patrocinadores>? _chachedPatrocinadores;
 
-  fetch() async {
-    listPatrocinadores.value = await repository.getListPatrocinadores();
+  fetch(int idCategoria) async {
+    listPatrocinadores.value = await repository.getListPatrocinadores()
+      ..shuffle();
+
     listBannerInicial.value = listPatrocinadores.value
         .where((element) => element.isBannerInicial)
-        .toList();
+        .toList()
+      ..shuffle();
+
+    listPatrocinadoresCategories.value = listPatrocinadores.value
+        .where((element) => element.idCategoria == idCategoria)
+        .toList()
+      ..shuffle();
+
     _chachedPatrocinadores = listPatrocinadores.value;
   }
 

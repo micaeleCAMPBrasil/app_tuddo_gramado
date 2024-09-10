@@ -1,10 +1,11 @@
 // ignore_for_file: file_names, deprecated_member_use
 
+import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:app_tuddo_gramado/utils/bottom_navigation.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:app_tuddo_gramado/utils/widgets.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class NotificationScreen extends StatefulWidget {
@@ -45,14 +46,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pushReplacement(
+        Provider.of<ControlNav>(context, listen: false)
+            .updateIndex(widget.index, 0);
+        /*Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => BottomNavigation(
               selectedIndex: widget.index,
             ),
           ),
-        );
+        );*/
         return true;
       },
       child: Scaffold(

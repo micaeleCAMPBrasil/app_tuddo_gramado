@@ -6,9 +6,103 @@ import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/data/php/config.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:wp_json_api/enums/wp_auth_type.dart';
+import 'package:wp_json_api/models/responses/wp_user_login_response.dart';
+import 'package:wp_json_api/wp_json_api.dart';
 
 class APIService {
-  Future<bool> createCustomer(CustomerModel model) async {
+  Future<bool> createCustomer(Usuario usuario, CustomerModel model) async {
+    debugPrint('criando novo usuário');
+
+    bool ret = false;
+
+    try {
+      await criandonovousuarioTuddoGramado(model);
+      await criandonovousuarioTuddoDobro(model);
+      ret = true;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        debugPrint("Cadastro Erro${e.message}");
+        ret = false;
+      } else {
+        ret = false;
+      }
+    }
+
+    return ret;
+  }
+
+  Future<bool> updaterole() async {
+    var authToken = base64.encode(
+      utf8.encode("${Config.keyTuddo}:${Config.screetTuddo}"),
+    );
+
+    debugPrint('atualizando regras');
+
+    bool ret = false;
+
+    try {
+      var response = await Dio().post(
+        'https://d.tuddogramado.com.br/wp-json/wp/v2/users/40',
+        data: {
+          "roles": ["author", "customer"]
+        },
+        options: Options(
+          headers: {
+            HttpHeaders.authorizationHeader: 'Authorization $authToken',
+            HttpHeaders.contentTypeHeader: "application/json",
+          },
+        ),
+      );
+
+      if (response.statusCode == 201) {}
+      ret = true;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        debugPrint("Cadastro Erro${e.message}");
+        ret = false;
+      } else {
+        ret = false;
+      }
+    }
+
+    return ret;
+  }
+
+  Future<bool> criandonovousuarioTuddoGramado(CustomerModel model) async {
+    var authToken = base64.encode(
+      utf8.encode("${Config.keyTuddo}:${Config.screetTuddo}"),
+    );
+
+    bool ret = false;
+
+    try {
+      var response = await Dio().post(
+        Config.urlTuddo + Config.customerURL,
+        data: model.toJson(),
+        options: Options(
+          headers: {
+            HttpHeaders.authorizationHeader: 'Basic $authToken',
+            HttpHeaders.contentTypeHeader: "application/json",
+          },
+        ),
+      );
+
+      if (response.statusCode == 201) {}
+      ret = true;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        debugPrint("Cadastro Erro${e.message}");
+        ret = false;
+      } else {
+        ret = false;
+      }
+    }
+
+    return ret;
+  }
+
+  Future<bool> criandonovousuarioTuddoDobro(CustomerModel model) async {
     var authToken = base64.encode(
       utf8.encode("${Config.key}:${Config.screet}"),
     );
@@ -27,12 +121,11 @@ class APIService {
         ),
       );
 
-      if (response.statusCode == 201) {
-        ret = true;
-      }
+      if (response.statusCode == 201) {}
+      ret = true;
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
-        debugPrint("Cadastro Erro${e.message}");
+        debugPrint("Cadastro Erro Tuddo em dobro - ${e.message}");
         ret = false;
       } else {
         ret = false;
@@ -42,30 +135,182 @@ class APIService {
     return ret;
   }
 
-  Future<LoginResponseModel> loginCustomer(
-      String username, String password) async {
-    late LoginResponseModel model;
+  Future<bool> tuddoGramado(Usuario usuario, CustomerModel model) async {
+    WPJsonAPI.instance.init(baseUrl: "https://tuddogramado.com.br/");
+
+    debugPrint('criando novo usuário - tuddo gramado');
+
+    bool ret = false;
+
+    WPUserLoginResponse? wpUserLoginResponse;
+
     try {
-      var response = await Dio().post(
-        Config.tokenURL,
-        data: {
-          "username": username,
-          "password": password,
-        },
-        options: Options(
-          headers: {
-            HttpHeaders.contentTypeHeader: "application/x-www-form-urlencoded",
-          },
+      wpUserLoginResponse = await WPJsonAPI.instance.api(
+        (request) => request.wpLogin(
+          email: usuario.email,
+          password: usuario.uid,
+          authType: WPAuthType.WpEmail,
         ),
       );
-
-      if (response.statusCode == 200) {
-        model = LoginResponseModel.fromJson(response.data);
-      }
-    } on DioException catch (e) {
-      debugPrint("Login Erro${e.message}");
+    } on Exception catch (e) {
+      debugPrint(e.toString());
     }
-    return model;
+
+    if (wpUserLoginResponse == null) {
+      // cadastre
+
+      try {
+        WPJsonAPI.instance.api((request) {
+          return request.wpRegister(
+            email: usuario.email,
+            password: usuario.uid,
+            username: usuario.email,
+            expiry: '0',
+          );
+        });
+
+        WPUserLoginResponse newLogin = await WPJsonAPI.instance.api(
+          (request) => request.wpLogin(
+            email: usuario.email,
+            password: usuario.uid,
+            authType: WPAuthType.WpEmail,
+          ),
+        );
+
+        String? tokenFirebase = newLogin.data!.userToken;
+
+        debugPrint('token tuddo gramado - $tokenFirebase');
+
+        await WPJsonAPI.instance.api((request) {
+          return request.wpUpdateUserInfo(
+            userToken: tokenFirebase,
+            firstName: model.firstName,
+            lastName: model.lastName,
+            displayName: usuario.nome,
+          );
+        });
+
+        await WPJsonAPI.instance.api((request) => request.wpUserAddRole(
+            userToken: tokenFirebase, role: "subscriber"));
+
+        ret = true;
+      } on DioException catch (e) {
+        if (e.response?.statusCode == 400) {
+          debugPrint("Cadastro Erro${e.message}");
+          ret = false;
+        } else {
+          ret = false;
+        }
+      }
+    } else {
+      ret = true;
+      String? tokenFirebase = wpUserLoginResponse.data!.userToken;
+
+      debugPrint('token tuddo gramado - $tokenFirebase');
+    }
+
+    return ret;
+  }
+
+  Future<bool> tuddoemDobro(Usuario usuario, CustomerModel model) async {
+    WPJsonAPI.instance.init(baseUrl: "https://d.tuddogramado.com.br/");
+
+    debugPrint('criando novo usuário - tuddo em dobro');
+
+    bool ret = false;
+
+    WPUserLoginResponse? wpUserLoginResponse;
+
+    try {
+      wpUserLoginResponse = await WPJsonAPI.instance.api(
+        (request) => request.wpLogin(
+          email: usuario.email,
+          password: usuario.uid,
+          authType: WPAuthType.WpEmail,
+        ),
+      );
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
+
+    if (wpUserLoginResponse == null) {
+      // cadastre
+
+      try {
+        WPJsonAPI.instance.api((request) {
+          return request.wpRegister(
+            email: usuario.email,
+            password: usuario.uid,
+            username: usuario.email,
+            expiry: '0',
+          );
+        });
+
+        WPUserLoginResponse newLogin = await WPJsonAPI.instance.api(
+          (request) => request.wpLogin(
+            email: usuario.email,
+            password: usuario.uid,
+            authType: WPAuthType.WpEmail,
+          ),
+        );
+
+        String? tokenFirebase = newLogin.data!.userToken;
+
+        debugPrint('token tuddo em dobro depois do cadastro - $tokenFirebase');
+
+        await WPJsonAPI.instance.api((request) {
+          return request.wpUpdateUserInfo(
+            userToken: tokenFirebase,
+            firstName: model.firstName,
+            lastName: model.lastName,
+            displayName: usuario.nome,
+          );
+        });
+
+        await WPJsonAPI.instance.api((request) => request.wpUserAddRole(
+            userToken: tokenFirebase, role: "subscriber"));
+
+        ret = true;
+      } on DioException catch (e) {
+        if (e.response?.statusCode == 400) {
+          debugPrint("Cadastro Erro${e.message}");
+          ret = false;
+        } else {
+          ret = false;
+        }
+      }
+    } else {
+      ret = true;
+      String? tokenFirebase = wpUserLoginResponse.data!.userToken;
+
+      debugPrint('token tuddo em dobro - $tokenFirebase');
+    }
+
+    return ret;
+  }
+
+  Future<String?> getToken(String email, String senha) async {
+    WPJsonAPI.instance.init(baseUrl: "https://tuddogramado.com.br/");
+    WPUserLoginResponse? wpUserLoginResponse;
+    try {
+      wpUserLoginResponse = await WPJsonAPI.instance.api(
+        (request) => request.wpLogin(
+          email: email,
+          password: senha,
+          authType: WPAuthType.WpEmail,
+        ),
+      );
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
+
+    if (wpUserLoginResponse == null) {
+      debugPrint("invalid login details");
+      return "";
+    } else {
+      debugPrint('- token ${wpUserLoginResponse.data?.userToken}');
+      return wpUserLoginResponse.data?.userToken;
+    }
   }
 
   Future<List<Modalidade>> getModalidades() async {
@@ -82,7 +327,7 @@ class APIService {
           ));
 
       //debugPrint('Response Modalidades - ${response.data}');
-  
+
       if (response.statusCode == 200) {
         data = (response.data as List)
             .map(

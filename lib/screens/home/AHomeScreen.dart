@@ -2,8 +2,7 @@
 import 'package:app_tuddo_gramado/data/models/patrocinadores.dart';
 import 'package:app_tuddo_gramado/data/php/functions.dart';
 import 'package:app_tuddo_gramado/data/php/http_client.dart';
-import 'package:app_tuddo_gramado/screens/patrocinadores/patrocinadores_page.dart';
-import 'package:app_tuddo_gramado/screens/rede_social/SVHomeFragment.dart';
+import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +10,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/data/stores/categorias_button_store.dart';
 import 'package:app_tuddo_gramado/data/stores/patrocinadores_store.dart';
-import 'package:app_tuddo_gramado/screens/patrocinadores/patrocinadores_detail_page.dart';
-import 'package:app_tuddo_gramado/screens/webscreens/WebViewScreen.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class AHomeScreen extends StatefulWidget {
@@ -59,15 +57,27 @@ class _AHomeScreenState extends State<AHomeScreen> {
                   ),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(
+                      Provider.of<ControlNav>(context, listen: false)
+                          .updateIndex(0, 1);
+                      /* Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => WebViewScreen(
+                          builder: (context) => InAppView(
                             url: "https://tuddogramado.com.br/clima/",
                             index: 0,
+                            data: {
+                              "token": widget.usuario.token,
+                              "usuario": widget.usuario.email,
+                              "senha": widget.usuario.uid,
+                            },
+                            routa: MaterialPageRoute(
+                              builder: (context) => BottomNavigation(
+                                selectedIndex: 0,
+                              ),
+                            ),
                           ),
                         ),
-                      );
+                      );*/
                     },
                     child: Image.asset(
                       'assets/icones/clima.png',
@@ -104,16 +114,28 @@ class _AHomeScreenState extends State<AHomeScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushReplacement(
+                          Provider.of<ControlNav>(context, listen: false)
+                              .updateIndex(0, 2);
+                          /*Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => WebViewScreen(
+                              builder: (context) => InAppView(
                                 index: 0,
                                 url:
-                                    "https://tuddogramado.com.br/my-favorites/",
+                                    "https://d.tuddogramado.com.br/member-account/?vendor=wishlist",
+                                data: {
+                                  "token": widget.usuario.token,
+                                  "usuario": widget.usuario.email,
+                                  "senha": widget.usuario.uid,
+                                },
+                                routa: MaterialPageRoute(
+                                  builder: (context) => const BottomNavigation(
+                                      //selectedIndex: 0,
+                                      ),
+                                ),
                               ),
                             ),
-                          );
+                          );*/
                         },
                         child: SvgPicture.asset(
                           'assets/icones/heart.svg',
@@ -137,7 +159,7 @@ class _AHomeScreenState extends State<AHomeScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    heightSpace25,
+                    heightSpace5,
                     ValueListenableBuilder(
                       valueListenable: controller.listBannerInicial,
                       builder: (context, value, child) {
@@ -169,14 +191,22 @@ class _AHomeScreenState extends State<AHomeScreen> {
       items: list.map((i) {
         return GestureDetector(
           onTap: () {
-            Navigator.pushReplacement(
+            Provider.of<ControlNav>(context, listen: false)
+                .updatepatrocinador(i);
+            Provider.of<ControlNav>(context, listen: false).updateIndex(2, 4);
+            /*Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => PatrocinadoresDetailPage(
                   patrocinador: i,
+                  routa: MaterialPageRoute(
+                    builder: (context) => const BottomNavigation(
+                        //selectedIndex: 0,
+                        ),
+                  ),
                 ),
               ),
-            );
+            );*/
           },
           child: Image(
             image: CachedNetworkImageProvider(
@@ -232,72 +262,155 @@ class _AHomeScreenState extends State<AHomeScreen> {
             return GestureDetector(
               onTap: () {
                 if (item.route == 1) {
-                  Navigator.pushReplacement(
+                  // top ofertas
+                  /*Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PatrocinadoresScreen(),
+                      builder: (context) => InAppView(
+                        url: "https://d.tuddogramado.com.br/",
+                        index: 0,
+                        data: {
+                          "token": widget.usuario.token,
+                          "usuario": widget.usuario.email,
+                          "senha": widget.usuario.uid,
+                        },
+                        routa: MaterialPageRoute(
+                          builder: (context) => BottomNavigation(
+                            //selectedIndex: 0,
+                          ),
+                        ),
+                      ),
                     ),
-                  );
+                  );*/
+
+                  Provider.of<ControlNav>(context, listen: false)
+                      .updateIndex(2, 0);
                 } else if (item.route == 2) {
                   //Tuddo em Dobro
-                  Navigator.pushReplacement(
+                  /*Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => WebViewScreen(
-                        url: "https://dobro.tuddogramado.com.br/",
+                      builder: (context) => InAppView(
+                        url: "https://d.tuddogramado.com.br/",
+                        index: 0,
+                        data: {
+                          "token": widget.usuario.token,
+                          "usuario": widget.usuario.email,
+                          "senha": widget.usuario.uid,
+                        },
+                        routa: MaterialPageRoute(
+                          builder: (context) => const BottomNavigation(
+                              //selectedIndex: 0,
+                              ),
+                        ),
                       ),
                     ),
-                  );
+                  );*/
+                  Provider.of<ControlNav>(context, listen: false)
+                      .updateIndex(1, 0);
                 } else if (item.route == 3) {
                   // Transfer
-                  Navigator.pushReplacement(
+                  Provider.of<ControlNav>(context, listen: false)
+                      .updateIndex(0, 3);
+                  /*Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => WebViewScreen(
-                        url:
-                            "https://tuddogramado.com.br/transfer-aeroporto-x-gramado/",
+                      builder: (context) => InAppView(
+                        url: "https://tuddogramado.com.br/transfer/",
+                        data: {
+                          "token": widget.usuario.token,
+                          "usuario": widget.usuario.email,
+                          "senha": widget.usuario.uid,
+                        },
+                        index: 0,
+                        routa: MaterialPageRoute(
+                          builder: (context) => BottomNavigation(
+                            selectedIndex: 0,
+                          ),
+                        ),
                       ),
                     ),
-                  );
+                  );*/
                 } else if (item.route == 4) {
                   // Hospedagem
-                  Navigator.pushReplacement(
+                  Provider.of<ControlNav>(context, listen: false)
+                      .updateIndex(0, 4);
+                  /*Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => WebViewScreen(
-                        url: "https://tuddogramado.com.br/",
+                      builder: (context) => InAppView(
+                        url: "https://tuddogramado.com.br",
+                        index: 0,
+                        data: {
+                          "token": widget.usuario.token,
+                          "usuario": widget.usuario.email,
+                          "senha": widget.usuario.uid,
+                        },
+                        routa: MaterialPageRoute(
+                          builder: (context) => BottomNavigation(
+                            selectedIndex: 0,
+                          ),
+                        ),
                       ),
                     ),
-                  );
+                  );*/
                 } else if (item.route == 5) {
                   // Dicas e Roteiros
-                  Navigator.pushReplacement(
+                  Provider.of<ControlNav>(context, listen: false)
+                      .updateIndex(3, 0);
+                  /*Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const SVHomeFragment(),
                     ),
-                  );
+                  );*/
                 } else if (item.route == 6) {
                   // Assine
-                  Navigator.pushReplacement(
+                  Provider.of<ControlNav>(context, listen: false)
+                      .updateIndex(1, 0);
+                  /*Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => WebViewScreen(
-                        url: "https://dobro.tuddogramado.com.br/planos/",
+                      builder: (context) => InAppView(
+                        url: "https://d.tuddogramado.com.br",
+                        index: 0,
+                        data: {
+                          "token": widget.usuario.token,
+                          "usuario": widget.usuario.email,
+                          "senha": widget.usuario.uid,
+                        },
+                        routa: MaterialPageRoute(
+                          builder: (context) => BottomNavigation(
+                            selectedIndex: 0,
+                          ),
+                        ),
                       ),
                     ),
-                  );
+                  );*/
                 } else if (item.route == 7) {
                   // Faça Parte
-                  Navigator.pushReplacement(
+                  Provider.of<ControlNav>(context, listen: false)
+                      .updateIndex(0, 5);
+                  /*Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => WebViewScreen(
+                      builder: (context) => InAppView(
                         url:
                             "https://tuddogramado.com.br/venda-mais-com-tuddo-em-dobro/",
+                        index: 0,
+                        data: {
+                          "token": widget.usuario.token,
+                          "usuario": widget.usuario.email,
+                          "senha": widget.usuario.uid,
+                        },
+                        routa: MaterialPageRoute(
+                          builder: (context) => BottomNavigation(
+                            selectedIndex: 0,
+                          ),
+                        ),
                       ),
                     ),
-                  );
+                  );*/
                 }
               },
               child: Stack(
@@ -334,22 +447,34 @@ class _AHomeScreenState extends State<AHomeScreen> {
                             : const EdgeInsets.symmetric(horizontal: 5),
                     width: 120,
                     height: 100,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            black,
-                            black,
-                          ]),
-                      borderRadius: BorderRadius.circular(5),
-                      image: DecorationImage(
-                        image: AssetImage(
-                          item.backgroundImage,
-                        ),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
+                    decoration: item.route == 6
+                        ? BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  black,
+                                  black,
+                                ]),
+                            borderRadius: BorderRadius.circular(5),
+                            color: primaryColor,
+                          )
+                        : BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  black,
+                                  black,
+                                ]),
+                            borderRadius: BorderRadius.circular(5),
+                            image: DecorationImage(
+                              image: AssetImage(
+                                item.backgroundImage,
+                              ),
+                              fit: BoxFit.fill,
+                            ),
+                          ),
                   ),
                   Container(
                     alignment: Alignment.center,
@@ -360,19 +485,24 @@ class _AHomeScreenState extends State<AHomeScreen> {
                             : const EdgeInsets.symmetric(horizontal: 5),
                     width: 120,
                     height: 100,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            black.withOpacity(.65),
-                            black.withOpacity(.65),
-                          ]),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
+                    decoration: item.route == 6
+                        ? BoxDecoration(
+                            color: primaryColor,
+                            borderRadius: BorderRadius.circular(5),
+                          )
+                        : BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  black.withOpacity(.65),
+                                  black.withOpacity(.65),
+                                ]),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
                     child: Text(
                       item.name,
-                      style: whiteMedium14,
+                      style: item.route == 6 ? blackBold18 : whiteMedium14,
                       textAlign: TextAlign.center,
                     ),
                   ),

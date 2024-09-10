@@ -7,7 +7,18 @@ class Config {
   static String tokenURL =
       "https://d.tuddogramado.com.br/wp-json/jwt-auth/v1/token";
 
+      
+  static String tokenURLTG =
+      "https://tuddogramado.com.br/wp-json/jwt-auth/v1/token";
+
   static String modalidadesTDUrl = "modalidades";
+
+  static String keyTuddo = "ck_16d0796bdf25ac14ebd4c20034da8f78dacb1a8f";
+  static String screetTuddo = "cs_fa1ace02f8f4e7c319a105526012a976a0e1d2ee";
+  static String urlTuddo = "https://tuddogramado.com.br/wp-json/wc/v3/";
+
+  static String urltuddogramado = "https://tuddogramado.com.br/wp-login.php";
+  static String urltuddoemdobro = "https://d.tuddogramado.com.br/wp-login.php";
 }
 
 

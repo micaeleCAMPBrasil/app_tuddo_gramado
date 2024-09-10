@@ -37,8 +37,8 @@ Color white = Colors.white;
 Color amber = Colors.amber;
 Color black = Colors.black;
 Color transparent = Colors.transparent;
-Color primaryColor = const Color(0xFF2fa6b7);
-Color secondaryColor = const Color.fromARGB(255, 37, 126, 139);
+Color primaryColor = const Color(0xFFFBAC09);
+Color secondaryColor = const Color(0xFF0EF78C);
 Color starColor = const Color(0xffFFAC33);
 Color color22 = const Color(0xff222222);
 Color color28 = const Color(0xff282828);
@@ -126,6 +126,11 @@ TextStyle blackBold18 = TextStyle(
   fontSize: 18,
   color: black,
   fontFamily: 'B',
+);
+TextStyle blackRegular12 = TextStyle(
+  fontSize: 12,
+  color: black,
+  fontFamily: 'R',
 );
 TextStyle whiteRegular15 = TextStyle(
   fontSize: 15,

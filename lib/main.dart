@@ -1,6 +1,9 @@
+import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
+import 'package:app_tuddo_gramado/screens/inicio/ASplashScreen.dart';
 import 'package:app_tuddo_gramado/services/firebase_messaging_service.dart';
 import 'package:app_tuddo_gramado/services/notification_service.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/firebase_options.dart';
@@ -12,16 +15,24 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 
-import 'screens/inicio/ASplashScreen.dart';
-
 AppStore appStore = AppStore();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initialize(aLocaleLanguageList: languageList());
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  /*if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+    await InAppWebViewController.setWebContentsDebuggingEnabled(kDebugMode);
+  }*/
+
+  LocationPermission permission = await Geolocator.checkPermission();
+  debugPrint('$permission');
+  await Geolocator.requestPermission();
+  await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
   appStore.toggleDarkMode(value: getBoolAsync(isDarkModeOnPref));
 
@@ -32,6 +43,9 @@ void main() async {
       providers: [
         ChangeNotifierProvider(
           create: (context) => AuthService(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ControlNav(),
         ),
         ChangeNotifierProvider(
           create: (context) => UsuarioProvider(),
@@ -59,7 +73,6 @@ class MyApp extends StatelessWidget {
       builder: (_) => MaterialApp(
         debugShowCheckedModeBanner: false,
         home: const ASplashScreen(),
-        //home: const SVHomeFragment(),
         theme: ThemeData(
           primarySwatch: Colors.blue,
           scaffoldBackgroundColor: scaffoldColor,

@@ -1,62 +1,107 @@
-// ignore_for_file: library_private_types_in_public_api, file_names, deprecated_member_use
+// ignore_for_file: library_private_types_in_public_api, file_names, deprecated_member_use, use_build_context_synchronously
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:app_tuddo_gramado/utils/bottom_navigation.dart';
-import 'package:app_tuddo_gramado/utils/constant.dart';
-import 'package:app_tuddo_gramado/utils/widgets.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 // ignore: must_be_immutable
-class WebViewScreen extends StatefulWidget {
+class WebViewScreensss extends StatefulWidget {
   String url;
   int index;
+  String? token;
 
-  WebViewScreen({
+  WebViewScreensss({
     super.key,
     required this.url,
+    this.token,
     this.index = 0,
   });
 
   @override
-  _WebViewScreenState createState() => _WebViewScreenState();
+  _WebViewScreensssState createState() => _WebViewScreensssState();
 }
 
-class _WebViewScreenState extends State<WebViewScreen> {
-  late WebViewController controller;
-  bool _loading = false;
+class _WebViewScreensssState extends State<WebViewScreensss> {
+  //late WebViewController controller;
+  late final Completer<WebViewController> controller;
+  //final bool _loading = false;
 
   @override
   void initState() {
     super.initState();
-    controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadRequest(Uri.parse(widget.url));
-
-    Future.delayed(
-      const Duration(seconds: 2),
-      () {
-        if (mounted) {
-          setState(() {
-            _loading = true;
-          });
-        }
-      },
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return _loading
+    return FutureBuilder<WebViewController>(
+      future: controller.future,
+      builder: (context, snapshot) {
+        final WebViewController? controller = snapshot.data;
+        if (snapshot.connectionState != ConnectionState.done ||
+            controller == null) {
+          return const Row(
+            children: <Widget>[
+              Icon(Icons.arrow_back_ios),
+              Icon(Icons.arrow_forward_ios),
+              Icon(Icons.replay),
+            ],
+          );
+        }
+
+        return Row(
+          children: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: () async {
+                if (await controller.canGoBack()) {
+                  await controller.goBack();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('No back history item')),
+                  );
+                  return;
+                }
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.arrow_forward_ios),
+              onPressed: () async {
+                if (await controller.canGoForward()) {
+                  await controller.goForward();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('No forward history item')),
+                  );
+                  return;
+                }
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.replay),
+              onPressed: () {
+                controller.reload();
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    /*_loading
         ? WillPopScope(
             onWillPop: () async {
-              Navigator.pushReplacement(
+              /*Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => BottomNavigation(
                     selectedIndex: widget.index,
                   ),
                 ),
-              );
-              return true;
+              );*/
+
+              Provider.of<ControlNav>(context, listen: false)
+                  .updateIndex(widget.index, 0);
+              return false;
             },
             child: Scaffold(
               appBar: PreferredSize(
@@ -66,14 +111,17 @@ class _WebViewScreenState extends State<WebViewScreen> {
                   centerTitle: true,
                   leading: GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(
+                      /*Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => BottomNavigation(
                             selectedIndex: widget.index,
                           ),
                         ),
-                      );
+                      );*/
+
+                      Provider.of<ControlNav>(context, listen: false)
+                          .updateIndex(widget.index, 0);
                     },
                     child: const Icon(Icons.arrow_back_ios),
                   ),
@@ -88,6 +136,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
             body: Center(
               child: CircularProgressIndicator(),
             ),
-          );
+          );*/
   }
 }

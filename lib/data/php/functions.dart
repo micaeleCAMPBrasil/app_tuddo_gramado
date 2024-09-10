@@ -9,6 +9,7 @@ abstract class IFuncoes {
   Future<List<Usuario>> getAllUsuario();
   Future<Usuario> getUsuarioUID(String uid);
   Future<bool> updateUser(Usuario usuario);
+  Future<bool> updateToken(String uid, String token1, String token2);
 
   Future<List<Patrocinadores>> getListPatrocinadores();
 
@@ -31,12 +32,29 @@ class IFuncoesPHP implements IFuncoes {
 
   @override
   Future<List<Patrocinadores>> getListPatrocinadores() async {
+    /*final response = await client.get(
+      url: "https://tuddogramado.com.br/api/get_patrocinadores.php",
+    );
+
+    if (response.statusCode == 200) {
+      final body = jsonDecode(response.body);
+      if (body == '') {
+      } else {
+        body.map((patrocinadores) {
+          debugPrint('Patrocinadores Web - $patrocinadores');
+        }).toList();
+      }
+    }*/
+
+    String link = "http://184.72.72.250/imagens/patrocinadores/";
+
     List<Patrocinadores> getPatrocinadores = [
       Patrocinadores(
         id: 1,
+        idCategoria: 3,
         nome: 'Space Adventure',
-        logo: 'https://i.ibb.co/5jZjB7p/space-adventure-foto-principal.png',
-        imagemBG: 'https://i.ibb.co/LPrncHc/space-adventure-slide-1.png',
+        logo: '${link}p1/space%20adventure%20foto%20principal.png',
+        imagemBG: '${link}p1/space%20adventure%20-%20slide%201.png',
         descricao:
             'Uma exposição inédita com itens de missões da NASA jamais exibidos fora dos Estados Unidos. Com mais de 270 itens ORIGINAIS de missões da NASA, experiências imersivas e diversas atrações. \n Venha viver uma experiência única! \n Adquira seu ingresso antecipadamente! \n ⏰ De Seg a Ter: das 9h às 18h. Entrada até 16h \n ⏰Sexta a Dom: das 9h às 19h \n Entrada até 17h',
         isFavorite: false,
@@ -46,23 +64,24 @@ class IFuncoesPHP implements IFuncoes {
         galeria: [
           GaleriaPatrocinador(
             idPatrocinador: 1,
-            img: 'https://i.ibb.co/bg0H02f/space-adventure-foto1.png',
+            img: '${link}p1/space%20adventure%20foto1.png',
           ),
           GaleriaPatrocinador(
             idPatrocinador: 1,
-            img: 'https://i.ibb.co/CzNr6qQ/space-adventure-foto2.png',
+            img: '${link}p1/space%20adventure%20foto2.png',
           ),
           GaleriaPatrocinador(
             idPatrocinador: 1,
-            img: 'https://i.ibb.co/Bgd1d4F/space-adventure-foto3.png',
+            img: '${link}p1/space%20adventure%20foto3.png',
           ),
         ],
       ),
       Patrocinadores(
         id: 2,
+        idCategoria: 8,
         nome: 'Gatzz',
-        logo: 'https://i.ibb.co/XkVThBv/gatzz-principal.png',
-        imagemBG: 'https://i.ibb.co/TTLrMnJ/Gatzz-Slide-2.png',
+        logo: '${link}p2/gatzz%20principal.png',
+        imagemBG: '${link}p2/Gatzz%20Slide%202.png',
         descricao:
             'Um pedacinho da Broadway em Gramado-RS \n ✨Bellepoque \n 🔞Dezoito + \n 🎈Imaginadores \n Reservas no site ⬇ ou Bilheteria a partir das 14h',
         isFavorite: false,
@@ -72,19 +91,19 @@ class IFuncoesPHP implements IFuncoes {
         galeria: [
           GaleriaPatrocinador(
             idPatrocinador: 2,
-            img: 'https://i.ibb.co/7Xzd0VQ/gatzz-foto1.png',
+            img: '${link}p2/gatzz%20foto1.png',
           ),
           GaleriaPatrocinador(
             idPatrocinador: 2,
-            img: 'https://i.ibb.co/VmHmwJK/gatzz-foto-2.png',
+            img: '${link}p2/gatzz%20foto%202.png',
           ),
           GaleriaPatrocinador(
             idPatrocinador: 2,
-            img: 'https://i.ibb.co/xFPhPRh/gatzz-foto3.png',
+            img: '${link}p2/gatzz%20foto3.png',
           ),
         ],
       ),
-      Patrocinadores(
+      /*Patrocinadores(
         id: 3,
         nome: 'Laghetto',
         logo: 'https://i.ibb.co/252VVfZ/laghetto-principal.png',
@@ -108,12 +127,13 @@ class IFuncoesPHP implements IFuncoes {
             img: 'https://i.ibb.co/y66k1B7/laghetto-foto3.png',
           ),
         ],
-      ),
+      ),*/
       Patrocinadores(
         id: 4,
+        idCategoria: 0,
         nome: 'Faça Parte!',
-        logo: 'https://i.ibb.co/1n2VTK2/principal-exemplo.png',
-        imagemBG: 'https://i.ibb.co/BPVz0mV/slide-4-marca.png',
+        logo: '${link}principal%20exemplo.png',
+        imagemBG: '${link}slide%204%20marca%20.png',
         descricao:
             'Você já parou para pensar no impacto que a presença da sua marca nos principais meios de publicidade pode ter? 💡 É a oportunidade de alcançar um público certo, construir reconhecimento e estabelecer sua marca como referência no mercado. 💼✨ Não fique de fora dessa oportunidade! Seja visto, seja lembrado. 🚀 Adquira sua cota anual hoje mesmo e faça parte do grupo seleto de empresas visionárias que vão levar a marca ao próximo nível!',
         isFavorite: false,
@@ -123,11 +143,12 @@ class IFuncoesPHP implements IFuncoes {
       ),
       Patrocinadores(
         id: 5,
+        idCategoria: 0,
         nome: 'Faça Parte!',
-        logo: 'https://i.ibb.co/pJzkVNS/foto2-exemplo.png',
+        logo: '${link}foto2%20exemplo.png',
+        imagemBG: '${link}slide%204%20marca%20.png',
         descricao:
             'Você já parou para pensar no impacto que a presença da sua marca nos principais meios de publicidade pode ter? 💡 É a oportunidade de alcançar um público certo, construir reconhecimento e estabelecer sua marca como referência no mercado. 💼✨ Não fique de fora dessa oportunidade! Seja visto, seja lembrado. 🚀 Adquira sua cota anual hoje mesmo e faça parte do grupo seleto de empresas visionárias que vão levar a marca ao próximo nível!',
-        imagemBG: 'https://i.ibb.co/BPVz0mV/slide-4-marca.png',
         isFavorite: true,
         isBannerInicial: false,
         isMostrarSite: false,
@@ -135,18 +156,77 @@ class IFuncoesPHP implements IFuncoes {
       ),
       Patrocinadores(
         id: 6,
+        idCategoria: 0,
         nome: 'Faça Parte!',
-        logo: 'https://i.ibb.co/9NvH5h8/foto3-exemplo.png',
+        logo: '${link}foto3%20exemplo.png',
+        imagemBG: '${link}slide%204%20marca%20.png',
         descricao:
             'Você já parou para pensar no impacto que a presença da sua marca nos principais meios de publicidade pode ter? 💡 É a oportunidade de alcançar um público certo, construir reconhecimento e estabelecer sua marca como referência no mercado. 💼✨ Não fique de fora dessa oportunidade! Seja visto, seja lembrado. 🚀 Adquira sua cota anual hoje mesmo e faça parte do grupo seleto de empresas visionárias que vão levar a marca ao próximo nível!',
-        imagemBG: 'https://i.ibb.co/BPVz0mV/slide-4-marca.png',
         isFavorite: false,
         isBannerInicial: false,
         isMostrarSite: false,
         galeria: [],
       ),
+      Patrocinadores(
+        id: 7,
+        idCategoria: 2,
+        nome: 'GAV Resorts',
+        logo: '${link}p5%20-%20hector/slides%20principal%20hector%20tuddo.png',
+        imagemBG: '${link}slides%20master%20tuddo%20GAV.png',
+        descricao:
+            'A GAV Resorts é líder e pioneira na construção, incorporação imobiliária e multipropriedade do Norte do país. Sua história nasce da união de três importantes empresas do segmento, com mais de 20 anos de experiência: a Gratão Empreendimentos, a Amec Construtora e a Vallepar Empreendimentos.',
+        isFavorite: false,
+        isBannerInicial: true,
+        isMostrarSite: true,
+        linkWebSite: 'https://gavresorts.com.br/',
+        //linkWebSite: 'https://d.tuddogramado.com.br/formulario-gav-resorts/',
+        galeria: [
+          GaleriaPatrocinador(
+            idPatrocinador: 7,
+            img: '${link}p4%20-%20gav/slides%20pequenos%20gav%201.png',
+            link: 'https://d.tuddogramado.com.br/formulario-gav-resorts/',
+          ),
+          GaleriaPatrocinador(
+            idPatrocinador: 7,
+            img: '${link}p4%20-%20gav/slides%20pequenos%20gav%202.png',
+            link: 'https://d.tuddogramado.com.br/formulario-gav-resorts/',
+          ),
+          GaleriaPatrocinador(
+            idPatrocinador: 7,
+            img: '${link}p4%20-%20gav/slides%20pequenos%20gav%203.png',
+            link: 'https://d.tuddogramado.com.br/formulario-gav-resorts/',
+          ),
+        ],
+      ),
+      Patrocinadores(
+        id: 8,
+        idCategoria: 1,
+        nome: 'Hector',
+        logo: '${link}p5%20-%20hector/slides%20principal%20hector%20.png',
+        imagemBG: '${link}slides%20master%20tuddo%20hector.png',
+        descricao:
+            'Era uma vez um pequeno dragão chamado Hector. Ele morava na ilha de Trélion, lar dos dragões azuis, e lá sonhava em conhecer o mundo e tudo que nele há. As histórias contadas por sua avó despertaram nele uma vontade tão grande que o dragãozinho resolveu sair de sua ilha escondido e iniciar uma aventura. Em seu primeiro contato com a terra de Megáligi, Hector foi atacado por um terrível ser mágico – uma criatura das sombras – capaz de roubar os dons mágicos de suas vítimas. Ele teria perdido sua vida se não fosse socorrido por três misteriosos e poderosos magos. Quando despertou do ataque, à beira de uma reconfortante fogueira, ele foi apresentado à um deles: professor Stan. O professor contou ao pequeno sobre uma escola de magia onde ele leciona, lugar em que Hector poderia tentar recuperar o seu poder mágico roubado. Ele falou de Ônyra, a escola que promove o bom uso da magia e o ensino da vida em harmonia com todas as criaturas. Hector parte então para encontrar esse lugar mágico e viver grandes aventuras.',
+        isFavorite: false,
+        isBannerInicial: true,
+        isMostrarSite: false,
+        linkWebSite:
+            'https://hectorexperience.com.br/?origin=MB1-P6-89300-KEYLA',
+        galeria: [
+          GaleriaPatrocinador(
+            idPatrocinador: 8,
+            img: '${link}p5%20-%20hector/slides%20pequenos%20hector%201.png',
+          ),
+          GaleriaPatrocinador(
+            idPatrocinador: 8,
+            img: '${link}p5%20-%20hector/slides%20pequenos%20hector%202.png',
+          ),
+          GaleriaPatrocinador(
+            idPatrocinador: 8,
+            img: '${link}p5%20-%20hector/slides%20pequenos%20hector%203.png',
+          ),
+        ],
+      ),
     ];
-
     return getPatrocinadores;
   }
 
@@ -212,6 +292,35 @@ class IFuncoesPHP implements IFuncoes {
   }
 
   @override
+  Future<bool> updateToken(String uid, String token1, String token2) async {
+
+    debugPrint('atualizando token server');
+    
+    final response = await client.get(
+      url:
+          "https://campbrasil.com/tuddo_gramado/php/update_token.php?uid=$uid&token_1=$token1&token_2=$token2",
+    );
+    if (response.statusCode == 200) {
+      final body = jsonDecode(response.body);
+
+      debugPrint('Body - $body');
+
+      debugPrint("resposta - $body");
+      if (body == 'dados_vazios') {
+        return false;
+      } else if (body == 'Database erro') {
+        return false;
+      } else {
+        return true;
+      }
+    } else if (response.statusCode == 404) {
+      throw NotFoundException("A url informada não é válida.");
+    } else {
+      throw Exception("Não foi possível carregar os usuários.");
+    }
+  }
+
+  @override
   Future<Usuario> getUsuarioUID(String uid) async {
     final response = await client.get(
       url:
@@ -223,10 +332,14 @@ class IFuncoesPHP implements IFuncoes {
 
       final body = jsonDecode(response.body);
 
+      debugPrint('body $body');
+
       if (body == 'dados_vazios') {
         usuarioFinal = Usuario(
           uid: '',
           tokenAlert: '',
+          tokenTG: '',
+          tokenTD: '',
           nome: '',
           username: '',
           email: '',
@@ -238,6 +351,8 @@ class IFuncoesPHP implements IFuncoes {
         usuarioFinal = Usuario(
           uid: '',
           tokenAlert: '',
+          tokenTG: '',
+          tokenTD: '',
           nome: '',
           username: '',
           email: '',
@@ -247,10 +362,25 @@ class IFuncoesPHP implements IFuncoes {
         );
       } else {
         body.map((users) {
+          /*debugPrint('user $users');
+
+          usuarioFinal = Usuario(
+            uid: users['uid'],
+            tokenAlert: users['token_alert'],
+            token: '',
+            nome: users['name'],
+            username: users['username'],
+            email: users['uid'],
+            telefone: users['uid'],
+            photo: users['uid'],
+            data: users['uid'],
+          );*/
           Usuario userConvertido = Usuario.fromMap(users);
           usuarioFinal = userConvertido;
         }).toList();
       }
+
+      debugPrint('usuario final ${usuarioFinal.nome}');
       return usuarioFinal;
     } else if (response.statusCode == 404) {
       throw NotFoundException("A url informada não é válida.");

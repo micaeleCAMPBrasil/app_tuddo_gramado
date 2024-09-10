@@ -1,5 +1,4 @@
 // ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
 import 'AWalkThroughScreen.dart';
 
@@ -21,6 +20,7 @@ class _ASplashScreenState extends State<ASplashScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
+            //builder: (context) => const CheckUserLoggedInOrNot(),
             builder: (context) => const AWalkThroughScreen(),
           ),
         );

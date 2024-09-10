@@ -25,7 +25,7 @@ class PrimaryButton extends StatelessWidget {
         child: Text(
           textAlign: TextAlign.center,
           text,
-          style: whiteBold18,
+          style: blackBold18,
         ),
       ),
     );
@@ -265,8 +265,16 @@ Future<File> svGetImageSource() async {
 
 String formatarNome(String nome) {
   final nomeDividido = nome.split(' ');
-  String pNome = nomeDividido[0];
-  String sNome = nomeDividido[1];
+  String pNome = "";
+  String sNome = "";
+
+  if (nomeDividido.isEmpty) {
+  } else if (nomeDividido.length == 1) {
+    pNome = nomeDividido[0];
+  } else {
+    pNome = nomeDividido[0];
+    sNome = nomeDividido[1];
+  }
   String nomeFormatado = '$pNome $sNome';
   return nomeFormatado;
 }

@@ -1,3 +1,5 @@
+import 'package:app_tuddo_gramado/data/php/api_service.dart';
+import 'package:app_tuddo_gramado/utils/bottom_navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,7 +9,6 @@ import 'package:app_tuddo_gramado/data/php/http_client.dart';
 import 'package:app_tuddo_gramado/data/stores/user_store.dart';
 import 'package:app_tuddo_gramado/screens/login/ALoginScreen.dart';
 import 'package:app_tuddo_gramado/services/auth_service.dart';
-import 'package:app_tuddo_gramado/utils/bottom_navigation.dart';
 
 class CheckUserLoggedInOrNot extends StatefulWidget {
   const CheckUserLoggedInOrNot({super.key});
@@ -24,29 +25,71 @@ class _CheckUserLoggedInOrNotState extends State<CheckUserLoggedInOrNot> {
     ),
   );
 
+  late APIService apiService;
+  bool jalogou = false;
+
   @override
   void initState() {
-    
+    apiService = APIService();
+
     AuthService.isLoggedIn().then((value) async {
+      setState(() {
+        jalogou = value;
+      });
+
       if (value) {
         User userFire = AuthService.gerarUserFirebase();
+
         await storeUser.getUID(userFire.uid);
-        await storeUser.getUID(userFire.uid);
+        //await storeUser.getUID(userFire.uid);
+
         Usuario usuario = storeUser.state.value;
 
-        debugPrint("USUARIO _ ${usuario.nome}");
+        //final token = await FirebaseMessaging.instance.getToken();
 
-        // ignore: use_build_context_synchronously
-        Provider.of<UsuarioProvider>(context, listen: false)
-            .updateUsuario(usuario);
+        if (usuario.nome == '') {
+          Navigator.pushReplacement(
+            // ignore: use_build_context_synchronously
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ALoginScreen(),
+            ),
+          );
+        } else {
+          /*storeUser.repository.loginwordpress(usuario);*/
 
-        Navigator.pushReplacement(
+          /*WPJsonAPI.instance.initWith(baseUrl: "https://tuddogramado.com.br/");
+          WPUserLoginResponse newLogin = await WPJsonAPI.instance.api(
+            (request) => request.wpLogin(
+              email: usuario.email,
+              password: usuario.uid,
+              authType: WPAuthType.WpEmail,
+            ),
+          );*/
+
           // ignore: use_build_context_synchronously
-          context,
-          MaterialPageRoute(
-            builder: (context) => BottomNavigation(),
-          ),
-        );
+          Provider.of<UsuarioProvider>(context, listen: false)
+              .updateUsuario(usuario);
+
+          debugPrint('UID - ${usuario.uid}');
+          /*CustomerModel model = CustomerModel(
+            email: usuario.email,
+            displayName: usuario.nome,
+            firstName: usuario.nome,
+            lastName: usuario.nome,
+            password: usuario.uid,
+          );*/
+
+          // await apiService.updaterole();
+
+          Navigator.pushReplacement(
+            // ignore: use_build_context_synchronously
+            context,
+            MaterialPageRoute(
+              builder: (context) => const BottomNavigation(),
+            ),
+          );
+        }
       } else {
         Navigator.pushReplacement(
           context,
