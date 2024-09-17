@@ -41,6 +41,11 @@ class CategoriasButoonStore {
 
   static List<CategoriasButoon> getCategoriasPatrocinadores = [
     CategoriasButoon(
+      name: 'Todas as Ofertas',
+      backgroundImage: 'assets/image/a1.png',
+      route: 0,
+    ),
+    CategoriasButoon(
       name: 'Gastronomia',
       backgroundImage: 'assets/image/a1.png',
       route: 1,
@@ -86,7 +91,7 @@ class CategoriasButoonStore {
       route: 8,
     ),
     CategoriasButoon(
-      name: 'Chocolateria',
+      name: 'Chocolataria',
       backgroundImage: 'assets/image/a1.png',
       route: 9,
     ),

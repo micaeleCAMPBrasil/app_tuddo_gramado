@@ -179,16 +179,18 @@ class _ALoginScreenState extends State<ALoginScreen> {
                                 onTap: () =>
                                     AuthService.signInWithGoogle().then(
                                   (value) async {
-                                    User user = AuthService.gerarUserFirebase();
-                                    String uid = user.uid;
-                                    String? nome = user.displayName;
-                                    String? emailEscolhido = user.email;
-
-                                    await storeUser.getUID(uid);
-
-                                    Usuario usuarioBase = storeUser.state.value;
-
                                     if (value == "Sucess") {
+                                      User user =
+                                          AuthService.gerarUserFirebase();
+                                      String uid = user.uid;
+                                      String? nome = user.displayName;
+                                      String? emailEscolhido = user.email;
+
+                                      await storeUser.getUID(uid);
+
+                                      Usuario usuarioBase =
+                                          storeUser.state.value;
+
                                       if (usuarioBase.nome == '' ||
                                           usuarioBase.email == '' ||
                                           usuarioBase.telefone == '') {

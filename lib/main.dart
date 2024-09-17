@@ -32,7 +32,8 @@ void main() async {
   LocationPermission permission = await Geolocator.checkPermission();
   debugPrint('$permission');
   await Geolocator.requestPermission();
-  await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  await Geolocator.getCurrentPosition();
+  //await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
   appStore.toggleDarkMode(value: getBoolAsync(isDarkModeOnPref));
 

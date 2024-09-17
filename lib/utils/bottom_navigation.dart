@@ -1,10 +1,6 @@
 // ignore_for_file: deprecated_member_use, must_be_immutable
-
-import 'dart:io';
-
 import 'package:app_tuddo_gramado/data/models/SVPostModel.dart';
 import 'package:app_tuddo_gramado/data/models/patrocinadores.dart';
-import 'package:app_tuddo_gramado/data/php/config.dart';
 import 'package:app_tuddo_gramado/data/php/functions.dart';
 import 'package:app_tuddo_gramado/data/php/http_client.dart';
 import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
@@ -20,7 +16,6 @@ import 'package:app_tuddo_gramado/screens/webscreens/InAppView.dart';
 import 'package:app_tuddo_gramado/services/firebase_messaging_service.dart';
 import 'package:app_tuddo_gramado/services/login_wordpress.dart';
 import 'package:app_tuddo_gramado/services/notification_service.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -30,9 +25,6 @@ import 'package:app_tuddo_gramado/screens/home/AHomeScreen.dart';
 import 'package:app_tuddo_gramado/screens/patrocinadores/patrocinadores_page.dart';
 import 'package:app_tuddo_gramado/screens/profile/profile_page.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
-import 'package:wp_json_api/enums/wp_auth_type.dart';
-import 'package:wp_json_api/models/responses/wp_user_login_response.dart';
-import 'package:wp_json_api/wp_json_api.dart';
 
 class BottomNavigation extends StatefulWidget {
   //int selectedIndex;
@@ -66,83 +58,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
     client: HttpClient(),
   );
 
-  mudandoregratuddogramado(BuildContext context, Usuario usuario) async {
-    debugPrint('mudando as regras');
-
-    debugPrint('Usuario Token TG - ${usuario.tokenTG}');
-
-    if (usuario.tokenTG == '') {
-      WPJsonAPI.instance.init(baseUrl: "https://tuddogramado.com.br/");
-
-      WPUserLoginResponse newLogin = await WPJsonAPI.instance.api(
-        (request) => request.wpLogin(
-          email: usuario.email,
-          password: usuario.uid,
-          authType: WPAuthType.WpEmail,
-        ),
-      );
-
-      String? tokenWP = newLogin.data!.userToken;
-
-      debugPrint('token tuddo gramado - $tokenWP');
-
-      await WPJsonAPI.instance.api((request) =>
-          request.wpUserRemoveRole(userToken: tokenWP, role: "customer"));
-
-      await WPJsonAPI.instance.api((request) =>
-          request.wpUserAddRole(userToken: tokenWP, role: "subscriber"));
-
-      setState(() {
-        usuario.tokenTG = tokenWP!;
-      });
-
-      // ignore: use_build_context_synchronously
-      Provider.of<UsuarioProvider>(context, listen: false)
-          .updateUsuario(usuario);
-
-      // ignore: use_build_context_synchronously
-      mudandoregratuddodobro(context, usuario);
-    }
-  }
-
-  mudandoregratuddodobro(BuildContext context, Usuario usuario) async {
-    debugPrint('mudando as regras');
-
-    debugPrint('Usuario Token TG - ${usuario.tokenTD}');
-
-    if (usuario.tokenTD == '') {
-      WPJsonAPI.instance.init(baseUrl: "https://d.tuddogramado.com.br/");
-
-      WPUserLoginResponse newLogin = await WPJsonAPI.instance.api(
-        (request) => request.wpLogin(
-          email: usuario.email,
-          password: usuario.uid,
-          authType: WPAuthType.WpEmail,
-        ),
-      );
-
-      String? tokenWP = newLogin.data!.userToken;
-
-      debugPrint('token tuddo em dobro - $tokenWP');
-
-      await WPJsonAPI.instance.api((request) =>
-          request.wpUserRemoveRole(userToken: tokenWP, role: "customer"));
-
-      await WPJsonAPI.instance.api((request) =>
-          request.wpUserAddRole(userToken: tokenWP, role: "subscriber"));
-
-      setState(() {
-        usuario.tokenTD = tokenWP!;
-      });
-
-      // ignore: use_build_context_synchronously
-      Provider.of<UsuarioProvider>(context, listen: false)
-          .updateUsuario(usuario);
-
-      await funcoes.updateToken(usuario.uid, usuario.tokenTG, usuario.tokenTD);
-    }
-  }
-
   initializeFirebaseMessaging() async {
     await Provider.of<FirebaseMessagingService>(context, listen: false)
         .initialize();
@@ -153,32 +68,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
         .checkForNotifications();
   }
 
-  loginCustomer(String username, String password) async {
-    debugPrint('chamando função');
-    try {
-      var response = await Dio().post(
-        Config.tokenURLTG,
-        data: {
-          "username": username,
-          "password": password,
-        },
-        options: Options(
-          headers: {
-            HttpHeaders.contentTypeHeader: "application/x-www-form-urlencoded",
-          },
-        ),
-      );
-
-      debugPrint('response - ${response.data}');
-
-      if (response.statusCode == 200) {
-        //model = LoginResponseModel.fromJson(response.data);
-      }
-    } on DioException catch (e) {
-      debugPrint("Login Erro ${e.message}");
-    }
-  }
-
   late InAppWebViewController webView;
   double progress = 0;
 
@@ -186,9 +75,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   Widget build(BuildContext context) {
     Usuario usuario = Provider.of<UsuarioProvider>(context).getUsuario;
     Routa routa = Provider.of<ControlNav>(context).getrouta;
-    mudandoregratuddogramado(context, usuario);
 
-    //loginCustomer(usuario.email, usuario.uid);
     int routaCategoriaPatrocinador =
         Provider.of<ControlNav>(context).getIdPatrocinador;
     Patrocinadores ptEscolhido = routa.page == 2 &&

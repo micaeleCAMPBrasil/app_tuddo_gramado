@@ -274,31 +274,33 @@ class _RegisterPageState extends State<RegisterPage> {
                                       firstName: primeiroNome,
                                       lastName: segundoNome,
                                       password: widget.usuario.uid,
-                                      roles: ['author'],
+                                      roles: ['subscriber'],
                                     );
 
-                                    bool check = await apiService
-                                        .createCustomer(widget.usuario, model);
+                                    await apiService
+                                        .criandonovousuarioTuddoGramado(model);
+
+                                    await apiService
+                                        .criandonovousuarioTuddoDobro(model);
 
                                     debugPrint('check cadastro - $check');
 
-                                    if (check) {
-                                      setState(() {
-                                        mensagemalerta = 'Sucesso!';
-                                      });
-                                      Timer(
-                                        const Duration(seconds: 2),
-                                        () async {
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const CheckUserLoggedInOrNot(),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    }
+                                    setState(() {
+                                      mensagemalerta = 'Sucesso!';
+                                    });
+
+                                    Timer(
+                                      const Duration(seconds: 2),
+                                      () async {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const CheckUserLoggedInOrNot(),
+                                          ),
+                                        );
+                                      },
+                                    );
 
                                     /*apiService
                                         .createCustomer(widget.usuario, model)

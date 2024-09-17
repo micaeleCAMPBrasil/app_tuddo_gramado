@@ -1,7 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api, file_names, use_build_context_synchronously
 import 'dart:async';
 
-import 'package:app_tuddo_gramado/services/auth_check_wp.dart';
+import 'package:app_tuddo_gramado/services/auth_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
@@ -160,10 +160,8 @@ class _AVerifyCodeState extends State<AVerifyCode> {
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => LoginWP(
-                                          usuario: usuarioBase.email,
-                                          senha: usuarioBase.uid,
-                                        ),
+                                        builder: (context) =>
+                                            const CheckUserLoggedInOrNot(),
                                       ),
                                     );
                                   },

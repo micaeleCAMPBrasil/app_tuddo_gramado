@@ -2,9 +2,9 @@
 import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:app_tuddo_gramado/utils/widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
@@ -44,14 +44,15 @@ class _InAppViewState extends State<InAppView> {
         loading = false;
       });
     });
-    /*pullToRefreshController = kIsWeb ||
+    pullToRefreshController = kIsWeb ||
             ![TargetPlatform.iOS, TargetPlatform.android]
                 .contains(defaultTargetPlatform)
         ? null
         : PullToRefreshController(
-            settings: PullToRefreshSettings(
-              color: Colors.blue,
-            ),
+            options: PullToRefreshOptions(color: primaryColor),
+            /*settings: PullToRefreshSettings(
+              color: color00,
+            ),*/
             onRefresh: () async {
               if (defaultTargetPlatform == TargetPlatform.android) {
                 webViewController?.reload();
@@ -63,6 +64,8 @@ class _InAppViewState extends State<InAppView> {
               }
             },
           );
+
+    /*
 
 // ########## -- Read here --- ####
 // this is us creating a full fleged webview but headless
@@ -168,6 +171,7 @@ class _InAppViewState extends State<InAppView> {
         body: Stack(
           children: [
             InAppWebView(
+              pullToRefreshController: pullToRefreshController,
               initialUrlRequest: URLRequest(
                 url: Uri.parse(widget.url),
                 headers: {
@@ -214,15 +218,31 @@ class _InAppViewState extends State<InAppView> {
                 });
               },
             ),
-            loading
-                ? const Column(
+            progress < 100
+                ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Align(
                         alignment: Alignment.center,
                         child: CircularProgressIndicator(
-                          color: whiteColor,
+                          color: primaryColor,
+                          //value: double.parse(progress.toString()),
+                          //backgroundColor: Colors.redAccent.withOpacity(0.2),
+                        ),
+                      ),
+                    ],
+                  )
+                : Container(),
+            loading
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: CircularProgressIndicator(
+                          color: primaryColor,
                           //value: double.parse(progress.toString()),
                           //backgroundColor: Colors.redAccent.withOpacity(0.2),
                         ),
