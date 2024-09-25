@@ -29,10 +29,9 @@ class _LoginWordPressState extends State<LoginWordPress> {
         InAppWebView(
           initialUrlRequest: URLRequest(
             url: Uri.parse(
-                '${Config.urltuddogramado}?is_api=true&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
+                '${Config.urltuddogramado}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
             headers: {
               "Authorization": '*',
-              'user_token': widget.usuario.tokenTG,
             },
           ),
           onWebViewCreated: (controller) {
@@ -59,10 +58,35 @@ class _LoginWordPressState extends State<LoginWordPress> {
         InAppWebView(
           initialUrlRequest: URLRequest(
             url: Uri.parse(
-                '${Config.urltuddoemdobro}?is_api=true&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
+                '${Config.urltuddoemdobro}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
             headers: {
               "Authorization": '*',
-              'user_token': widget.usuario.tokenTD,
+            },
+          ),
+          onWebViewCreated: (controller) {
+            webView = controller;
+          },
+          onReceivedHttpAuthRequest:
+              (InAppWebViewController controller, challenge) async {
+            return HttpAuthResponse(
+              username: widget.usuario.email,
+              password: widget.usuario.uid,
+              action: HttpAuthResponseAction.PROCEED,
+            );
+          },
+          onLoadStart: (InAppWebViewController controller, Uri? uri) async {},
+          onProgressChanged: (controller, progres) {
+            setState(() {
+              progress = progres / 100;
+            });
+          },
+        ),
+        InAppWebView(
+          initialUrlRequest: URLRequest(
+            url: Uri.parse(
+                '${Config.urltranfer}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
+            headers: {
+              "Authorization": '*',
             },
           ),
           onWebViewCreated: (controller) {

@@ -176,7 +176,6 @@ class _InAppViewState extends State<InAppView> {
                 url: Uri.parse(widget.url),
                 headers: {
                   "Authorization": '*',
-                  'user_token': widget.data['token'],
                 },
               ),
               initialOptions: InAppWebViewGroupOptions(

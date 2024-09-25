@@ -74,13 +74,10 @@ class _RegisterPageState extends State<RegisterPage> {
       },
     );
 
-    getUsersData();
+    //getUsersData();
     setState(() {
       uidController = TextEditingController(text: widget.uid);
-      nomeController = TextEditingController(text: widget.nome);
-
       emailController = TextEditingController(text: widget.email);
-      telefoneController = TextEditingController(text: widget.telefone);
     });
   }
 
@@ -282,6 +279,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
                                     await apiService
                                         .criandonovousuarioTuddoDobro(model);
+
+                                    await apiService
+                                        .criandonovousuarioTransfer(model);
 
                                     debugPrint('check cadastro - $check');
 

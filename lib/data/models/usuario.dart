@@ -1,21 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Usuario {
-  String uid,
-      tokenTG,
-      tokenTD,
-      tokenAlert,
-      nome,
-      username,
-      email,
-      telefone,
-      photo,
-      data;
+  String uid, tokenAlert, nome, username, email, telefone, photo, data;
 
   Usuario({
     required this.uid,
-    required this.tokenTG,
-    required this.tokenTD,
     required this.tokenAlert,
     required this.nome,
     required this.username,
@@ -28,8 +17,6 @@ class Usuario {
   factory Usuario.fromMap(Map<String, dynamic> map) {
     return Usuario(
       uid: map['uid'],
-      tokenTG: map['tokenTG'],
-      tokenTD: map['tokenTD'],
       tokenAlert: map['token_alert'],
       nome: map['name'],
       username: map['username'],
@@ -151,8 +138,6 @@ class UsuarioProvider extends ChangeNotifier {
     uid: '',
     nome: '',
     username: '',
-    tokenTG: '',
-    tokenTD: '',
     tokenAlert: '',
     email: '',
     telefone: '',

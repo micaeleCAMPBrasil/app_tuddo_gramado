@@ -11,15 +11,10 @@ import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/data/php/functions.dart';
 import 'package:app_tuddo_gramado/data/php/http_client.dart';
 import 'package:app_tuddo_gramado/data/stores/user_store.dart';
-import 'package:app_tuddo_gramado/helper/ui_helper.dart';
 import 'package:app_tuddo_gramado/screens/login/AUpdateInformacoes.dart';
-import 'package:app_tuddo_gramado/screens/login/AVerifyCode.dart';
 import 'package:app_tuddo_gramado/services/auth_service.dart';
 
-import 'package:auto_size_text/auto_size_text.dart';
-
 import 'package:app_tuddo_gramado/utils/constant.dart';
-import 'package:app_tuddo_gramado/utils/widgets.dart';
 import 'package:provider/provider.dart';
 
 class ALoginScreen extends StatefulWidget {
@@ -31,7 +26,7 @@ class ALoginScreen extends StatefulWidget {
 
 class _ALoginScreenState extends State<ALoginScreen> {
   GlobalKey<FormState> mykey = GlobalKey<FormState>();
-  final TextEditingController _phoneTextController = TextEditingController();
+  //final TextEditingController _phoneTextController = TextEditingController();
 
   bool isApiCallProcess = false;
   late APIService apiService;
@@ -90,7 +85,7 @@ class _ALoginScreenState extends State<ALoginScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        AutoSizeText(
+                        /*AutoSizeText(
                           'Digite o número de telefone para continuar',
                           style: whiteMedium20,
                           maxLines: 1,
@@ -138,10 +133,10 @@ class _ALoginScreenState extends State<ALoginScreen> {
                               );
                             }
                           },
-                        ),
+                        ),*/
                         heightSpace20,
                         Text(
-                          'Ou continue com',
+                          'Faça Login usando:',
                           style: whiteRegular15,
                           textAlign: TextAlign.center,
                         ),
@@ -183,7 +178,6 @@ class _ALoginScreenState extends State<ALoginScreen> {
                                       User user =
                                           AuthService.gerarUserFirebase();
                                       String uid = user.uid;
-                                      String? nome = user.displayName;
                                       String? emailEscolhido = user.email;
 
                                       await storeUser.getUID(uid);
@@ -203,7 +197,6 @@ class _ALoginScreenState extends State<ALoginScreen> {
                                                 builder: (context) =>
                                                     RegisterPage(
                                                   uid: uid,
-                                                  nome: nome!,
                                                   email: emailEscolhido!,
                                                   usuario: usuarioBase,
                                                 ),
@@ -285,7 +278,7 @@ class _ALoginScreenState extends State<ALoginScreen> {
                             ),
                           ],
                         ),
-                        heightSpace10,
+                        heightSpace100,
                       ],
                     ),
                   ),

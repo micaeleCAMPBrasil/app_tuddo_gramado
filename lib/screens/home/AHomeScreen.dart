@@ -210,7 +210,7 @@ class _AHomeScreenState extends State<AHomeScreen> {
           },
           child: Image(
             image: CachedNetworkImageProvider(
-              i.imagemBG,
+              i.logo,
             ),
             loadingBuilder: (context, child, loadingProgress) {
               if (loadingProgress == null) {
@@ -228,20 +228,7 @@ class _AHomeScreenState extends State<AHomeScreen> {
                 ],
               );
             },
-          ), /*CachedNetworkImage(
-            imageUrl: i.imagemBG,
-            imageBuilder: (context, imageProvider) => Container(
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.fill,
-                ),
-                borderRadius: BorderRadius.circular(5),
-              ),
-            ),
-          ),*/
-          /*child: ,*/
+          ),
         );
       }).toList(),
     );
@@ -263,154 +250,32 @@ class _AHomeScreenState extends State<AHomeScreen> {
               onTap: () {
                 if (item.route == 1) {
                   // top ofertas
-                  /*Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => InAppView(
-                        url: "https://d.tuddogramado.com.br/",
-                        index: 0,
-                        data: {
-                          "token": widget.usuario.token,
-                          "usuario": widget.usuario.email,
-                          "senha": widget.usuario.uid,
-                        },
-                        routa: MaterialPageRoute(
-                          builder: (context) => BottomNavigation(
-                            //selectedIndex: 0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );*/
-
                   Provider.of<ControlNav>(context, listen: false)
                       .updateIndex(2, 0);
                 } else if (item.route == 2) {
-                  //Tuddo em Dobro
-                  /*Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => InAppView(
-                        url: "https://d.tuddogramado.com.br/",
-                        index: 0,
-                        data: {
-                          "token": widget.usuario.token,
-                          "usuario": widget.usuario.email,
-                          "senha": widget.usuario.uid,
-                        },
-                        routa: MaterialPageRoute(
-                          builder: (context) => const BottomNavigation(
-                              //selectedIndex: 0,
-                              ),
-                        ),
-                      ),
-                    ),
-                  );*/
+                  //Tuddo em Dobro                  
                   Provider.of<ControlNav>(context, listen: false)
                       .updateIndex(1, 0);
                 } else if (item.route == 3) {
                   // Transfer
                   Provider.of<ControlNav>(context, listen: false)
                       .updateIndex(0, 3);
-                  /*Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => InAppView(
-                        url: "https://tuddogramado.com.br/transfer/",
-                        data: {
-                          "token": widget.usuario.token,
-                          "usuario": widget.usuario.email,
-                          "senha": widget.usuario.uid,
-                        },
-                        index: 0,
-                        routa: MaterialPageRoute(
-                          builder: (context) => BottomNavigation(
-                            selectedIndex: 0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );*/
                 } else if (item.route == 4) {
                   // Hospedagem
                   Provider.of<ControlNav>(context, listen: false)
                       .updateIndex(0, 4);
-                  /*Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => InAppView(
-                        url: "https://tuddogramado.com.br",
-                        index: 0,
-                        data: {
-                          "token": widget.usuario.token,
-                          "usuario": widget.usuario.email,
-                          "senha": widget.usuario.uid,
-                        },
-                        routa: MaterialPageRoute(
-                          builder: (context) => BottomNavigation(
-                            selectedIndex: 0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );*/
                 } else if (item.route == 5) {
                   // Dicas e Roteiros
                   Provider.of<ControlNav>(context, listen: false)
                       .updateIndex(3, 0);
-                  /*Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SVHomeFragment(),
-                    ),
-                  );*/
                 } else if (item.route == 6) {
                   // Assine
                   Provider.of<ControlNav>(context, listen: false)
                       .updateIndex(1, 0);
-                  /*Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => InAppView(
-                        url: "https://d.tuddogramado.com.br",
-                        index: 0,
-                        data: {
-                          "token": widget.usuario.token,
-                          "usuario": widget.usuario.email,
-                          "senha": widget.usuario.uid,
-                        },
-                        routa: MaterialPageRoute(
-                          builder: (context) => BottomNavigation(
-                            selectedIndex: 0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );*/
                 } else if (item.route == 7) {
                   // Faça Parte
                   Provider.of<ControlNav>(context, listen: false)
                       .updateIndex(0, 5);
-                  /*Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => InAppView(
-                        url:
-                            "https://tuddogramado.com.br/venda-mais-com-tuddo-em-dobro/",
-                        index: 0,
-                        data: {
-                          "token": widget.usuario.token,
-                          "usuario": widget.usuario.email,
-                          "senha": widget.usuario.uid,
-                        },
-                        routa: MaterialPageRoute(
-                          builder: (context) => BottomNavigation(
-                            selectedIndex: 0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );*/
                 }
               },
               child: Stack(

@@ -11,6 +11,7 @@ import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
 import 'package:app_tuddo_gramado/data/stores/publicacao_store.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:app_tuddo_gramado/utils/widgets.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -55,6 +56,7 @@ class _SVPostEditState extends State<SVPostEdit> {
     } else {
       setState(() {
         editarImagem = false;
+        editarImagem = false;
       });
     }
   }
@@ -74,6 +76,7 @@ class _SVPostEditState extends State<SVPostEdit> {
       uploadImageFile();
     } else {
       setState(() {
+        editarImagem = false;
         editarImagem = false;
       });
     }
@@ -122,7 +125,7 @@ class _SVPostEditState extends State<SVPostEdit> {
   bool editarImagem = false;
 
   void uploadImageFile() async {
-    String url = "https://campbrasil.com/tuddo_gramado/upload_img.php";
+    String url = "http://98.83.196.247/upload_img.php";
 
     try {
       /*String fileName = _image!.path.split('/').last;
@@ -157,10 +160,12 @@ class _SVPostEditState extends State<SVPostEdit> {
         "pasta": 'posts/',
       }).then((value) {
         debugPrint('upload ${value.body}');
-        setState(() {
-          imgURL =
-              editarImagem ? value.body.toString() : widget.post.postImage!;
-        });
+        if (mounted) {
+          setState(() {
+            imgURL =
+                editarImagem ? value.body.toString() : widget.post.postImage!;
+          });
+        }
       });
     } catch (e) {
       debugPrint("Error");
@@ -195,7 +200,7 @@ class _SVPostEditState extends State<SVPostEdit> {
                 builder: (context) => const SVHomeFragment(),
               ),
             );*/
-    
+
             Provider.of<ControlNav>(context, listen: false).updateIndex(3, 0);
           },
           child: const Icon(Icons.arrow_back_ios),
@@ -228,12 +233,40 @@ class _SVPostEditState extends State<SVPostEdit> {
                                     width: 56,
                                     fit: BoxFit.cover,
                                   ).cornerRadiusWithClipRRect(12)
-                                : Image.network(
+                                : Image(
+                                    image: CachedNetworkImageProvider(
+                                      widget.usuario.photo,
+                                    ),
+                                    height: 56,
+                                    width: 56,
+                                    fit: BoxFit.cover,
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      }
+                                      return Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Center(
+                                            child: CircularProgressIndicator(
+                                              color: Colors.grey[400],
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ).cornerRadiusWithClipRRect(
+                                    12) /*Image.network(
                                     widget.usuario.photo,
                                     height: 56,
                                     width: 56,
                                     fit: BoxFit.cover,
-                                  ).cornerRadiusWithClipRRect(12),
+                                  ).cornerRadiusWithClipRRect(12)*/
+                            ,
                             widthSpace10,
                             Text(
                               formatarNome(widget.usuario.nome),
@@ -253,18 +286,44 @@ class _SVPostEditState extends State<SVPostEdit> {
                   ),
                   heightSpace15,
                   !editarImagem
-                      ? widget.post.postImage == ''
+                      ? widget.post.postImage == '' ||
+                              widget.post.postImage == 'http://98.83.196.247/'
                           ? Image.asset(
                               'assets/social/no-camera.png',
                               height: 300,
                               width: context.width() - 32,
                               color: whiteColor,
                             ).cornerRadiusWithClipRRect(12).center()
-                          : Image.network(
+                          : /*Image.network(
                               widget.post.postImage!,
                               height: 300,
                               width: context.width() - 32,
                               fit: BoxFit.cover,
+                            ).cornerRadiusWithClipRRect(12).center()*/
+                          Image(
+                              image: CachedNetworkImageProvider(
+                                widget.post.postImage!,
+                              ),
+                              height: 300,
+                              width: context.width() - 32,
+                              fit: BoxFit.cover,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                }
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Center(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.grey[400],
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
                             ).cornerRadiusWithClipRRect(12).center()
                       : _image == null
                           ? Image.asset(
@@ -359,7 +418,7 @@ class _SVPostEditState extends State<SVPostEdit> {
                             if (mykey.currentState!.validate()) {
                               postPost(
                                 editarImagem
-                                    ? "https://campbrasil.com/tuddo_gramado/$imgURL"
+                                    ? "http://98.83.196.247/$imgURL"
                                     : widget.post.postImage!,
                                 _descriptionTextController.text,
                               );

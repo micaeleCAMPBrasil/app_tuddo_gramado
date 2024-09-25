@@ -40,12 +40,15 @@ class _CheckUserLoggedInOrNotState extends State<CheckUserLoggedInOrNot> {
       if (value) {
         User userFire = AuthService.gerarUserFirebase();
 
+        debugPrint('UID - ${userFire.uid}');
+
         await storeUser.getUID(userFire.uid);
         //await storeUser.getUID(userFire.uid);
 
         Usuario usuario = storeUser.state.value;
 
         //final token = await FirebaseMessaging.instance.getToken();
+        debugPrint('NOMESS - ${usuario.nome}');
 
         if (usuario.nome == '') {
           Navigator.pushReplacement(

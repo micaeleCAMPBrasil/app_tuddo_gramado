@@ -25,7 +25,7 @@ class _LogOutWordPressState extends State<LogOutWordPress> {
       children: [
         InAppWebView(
           initialUrlRequest: URLRequest(
-            url: Uri.parse('${Config.urltuddogramado}?acao=logout'),
+            url: Uri.parse('${Config.urltuddogramado}?is_api=true&acao=logout'),
             headers: {
               "Authorization": '*',
             },
@@ -42,7 +42,24 @@ class _LogOutWordPressState extends State<LogOutWordPress> {
         ),
         InAppWebView(
           initialUrlRequest: URLRequest(
-            url: Uri.parse('${Config.urltuddoemdobro}?acao=logout'),
+            url: Uri.parse('${Config.urltuddoemdobro}?is_api=true&acao=logout'),
+            headers: {
+              "Authorization": '*',
+            },
+          ),
+          onWebViewCreated: (controller) {
+            webView = controller;
+          },
+          onLoadStart: (InAppWebViewController controller, Uri? uri) async {},
+          onProgressChanged: (controller, progres) {
+            setState(() {
+              progress = progres / 100;
+            });
+          },
+        ),
+        InAppWebView(
+          initialUrlRequest: URLRequest(
+            url: Uri.parse('${Config.urltranfer}?is_api=true&acao=logout'),
             headers: {
               "Authorization": '*',
             },

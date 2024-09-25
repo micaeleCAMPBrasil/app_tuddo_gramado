@@ -8,6 +8,7 @@ import 'package:app_tuddo_gramado/data/stores/publicacao_store.dart';
 import 'package:app_tuddo_gramado/data/stores/user_store.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:app_tuddo_gramado/utils/widgets.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -66,12 +67,38 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
                               width: 56,
                               fit: BoxFit.cover,
                             ).cornerRadiusWithClipRRect(12)
-                          : Image.network(
+                          : Image(
+                              image: CachedNetworkImageProvider(
+                                usuarioQPublicou.photo.validate(),
+                              ),
+                              height: 56,
+                              width: 56,
+                              fit: BoxFit.cover,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                }
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Center(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.grey[400],
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ).cornerRadiusWithClipRRect(
+                              12) /*Image.network(
                               usuarioQPublicou.photo.validate(),
                               height: 56,
                               width: 56,
                               fit: BoxFit.cover,
-                            ).cornerRadiusWithClipRRect(12),
+                            ).cornerRadiusWithClipRRect(12)*/
+                      ,
                       widthSpace15,
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,

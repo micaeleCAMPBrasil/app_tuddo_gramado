@@ -1,3 +1,4 @@
+import 'package:app_tuddo_gramado/data/models/categoriasButton.dart';
 import 'package:app_tuddo_gramado/data/models/patrocinadores.dart';
 import 'package:app_tuddo_gramado/data/php/functions.dart';
 import 'package:flutter/foundation.dart';
@@ -11,6 +12,9 @@ class PatrocinadoresStore {
     fetch(idCategoria);
   }
 
+  ValueNotifier<List<CategoriasButoon>> listCategorias =
+      ValueNotifier<List<CategoriasButoon>>([]);
+
   ValueNotifier<List<Patrocinadores>> listPatrocinadores =
       ValueNotifier<List<Patrocinadores>>([]);
 
@@ -23,6 +27,8 @@ class PatrocinadoresStore {
   List<Patrocinadores>? _chachedPatrocinadores;
 
   fetch(int idCategoria) async {
+    listCategorias.value = await repository.getCategorias();
+
     listPatrocinadores.value = await repository.getListPatrocinadores()
       ..shuffle();
 
@@ -32,7 +38,7 @@ class PatrocinadoresStore {
       ..shuffle();
 
     listPatrocinadoresCategories.value = listPatrocinadores.value
-        .where((element) => element.idCategoria == idCategoria)
+        .where((element) => element.idCategoria.contains(idCategoria))
         .toList()
       ..shuffle();
 

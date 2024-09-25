@@ -102,6 +102,42 @@ class APIService {
     return ret;
   }
 
+  Future<bool> criandonovousuarioTransfer(CustomerModel model) async {
+    bool ret = false;
+
+    // String email, String senha
+    Map? data =
+        await getIdTG(Config.tokenURLTransfer, 'tuddotransfer', 'K17s31D02@');
+    String tokenadm = data!['token'];
+
+    try {
+      var response = await Dio().post(
+        Config.urlTuddoTransfer + Config.customerURL,
+        data: model.toJson(),
+        options: Options(
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $tokenadm',
+            HttpHeaders.contentTypeHeader: "application/json",
+          },
+        ),
+      );
+
+      if (response.statusCode == 201) {
+        debugPrint('usuario do transfer cadastrado');
+        ret = true;
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        debugPrint("Cadastro Erro transfer - ${e.message}");
+        ret = false;
+      } else {
+        ret = false;
+      }
+    }
+
+    return ret;
+  }
+
   Future<Map<String, dynamic>?> getIdTG(
       String url, String email, String senha) async {
     var authToken = base64.encode(
@@ -132,4 +168,105 @@ class APIService {
     }
     return null;
   }
+
+  Future<bool> editandousuariowordpress(
+      String urlToken, String url, Usuario usuario) async {
+    bool ret = false;
+
+    // String email, String senha
+    Map? data = await getIdTG(urlToken, usuario.email, usuario.uid);
+    String iduser = data!['id'].toString();
+    String tokenuser = data['token'];
+
+    List<String> split = usuario.nome.split(' ');
+    String primeiroNome = split[0] == '' ? '' : split[0].toUpperCase();
+    String segundoNome = split[1] == '' ? '' : split[1].toUpperCase();
+
+    try {
+      var response = await Dio().post(
+        '$url/$iduser',
+        data: jsonEncode({
+          'first_name': primeiroNome,
+          'last_name': segundoNome,
+          'name': usuario.nome,
+          'email': usuario.email,
+          'username': usuario.email,
+        }),
+        options: Options(
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $tokenuser',
+            HttpHeaders.contentTypeHeader: "application/json",
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        debugPrint('usuario editado');
+        ret = true;
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        debugPrint("Edição Erro - ${e.message}");
+        ret = false;
+      } else {
+        ret = false;
+      }
+    }
+
+    return ret;
+  }
+
+  /*Future<void> uploadImage(String token, XFile imageFile) async {
+    final request = http.MultipartRequest(
+      'POST',
+      Uri.parse('https://seu-site.com/wp-json/wp/v2/media'),
+    );
+
+    // Adiciona o arquivo de imagem no corpo da requisição
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'file',
+        imageFile.path,
+        filename: imageFile.name,
+      ),
+    );
+
+    request.headers['Authorization'] = 'Bearer $token';
+    request.headers['Content-Disposition'] =
+        'attachment; filename="${imageFile.name}"';
+
+    final response = await request.send();
+
+    if (response.statusCode == 201) {
+      print('Imagem enviada com sucesso');
+      final responseData = await http.Response.fromStream(response);
+      final data = jsonDecode(responseData.body);
+      print('ID da mídia: ${data['id']}');
+    } else {
+      print('Falha no upload de imagem');
+    }
+  }
+
+  Future<void> updateProfilePicture(
+      String token, int userId, int mediaId) async {
+    final response = await http.put(
+      Uri.parse('https://seu-site.com/wp-json/wp/v2/users/$userId'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'meta': {
+          'avatar_id': mediaId, // Supondo que o plugin utilize esse meta field
+        },
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Avatar atualizado com sucesso');
+    } else {
+      print('Falha ao atualizar avatar');
+    }
+  }
+  */
 }

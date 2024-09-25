@@ -118,16 +118,39 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   child: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: user.photo == ''
-                          ? Image.asset(
-                              "assets/image/nopicture.png",
-                              fit: BoxFit.fill,
-                            )
-                          : Image.network(
+                    borderRadius: BorderRadius.circular(100),
+                    child: user.photo == ''
+                        ? Image.asset(
+                            "assets/image/nopicture.png",
+                            fit: BoxFit.fill,
+                          )
+                        : /*Image.network(
                               user.photo,
                               fit: BoxFit.cover,
-                            )),
+                            ),*/
+                        Image(
+                            image: CachedNetworkImageProvider(
+                              user.photo,
+                            ),
+                            fit: BoxFit.cover,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) {
+                                return child;
+                              }
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Center(
+                                    child: CircularProgressIndicator(
+                                      color: Colors.grey[400],
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                  ),
                 ),
                 widthSpace20,
                 Column(
@@ -366,7 +389,8 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget addvertise(Patrocinadores item) {
     return GestureDetector(
       onTap: () {
-        Provider.of<ControlNav>(context, listen: false).updatepatrocinador(item);
+        Provider.of<ControlNav>(context, listen: false)
+            .updatepatrocinador(item);
         Provider.of<ControlNav>(context, listen: false).updateIndex(2, 2);
         /*Navigator.pushReplacement(
           context,

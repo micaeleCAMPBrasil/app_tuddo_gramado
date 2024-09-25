@@ -39,7 +39,7 @@ class CategoriasButoonStore {
     ),
   ];
 
-  static List<CategoriasButoon> getCategoriasPatrocinadores = [
+  /*static List<CategoriasButoon> getCategoriasPatrocinadores = [
     CategoriasButoon(
       name: 'Todas as Ofertas',
       backgroundImage: 'assets/image/a1.png',
@@ -95,5 +95,5 @@ class CategoriasButoonStore {
       backgroundImage: 'assets/image/a1.png',
       route: 9,
     ),
-  ];
+  ];*/
 }

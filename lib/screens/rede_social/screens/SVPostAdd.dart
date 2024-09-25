@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
@@ -112,7 +113,7 @@ class _SVPostAddState extends State<SVPostAdd> {
   Dio dio = Dio();
 
   void uploadImageFile() async {
-    String url = "https://campbrasil.com/tuddo_gramado/upload_img.php";
+    String url = "http://98.83.196.247/upload_img.php";
 
     try {
       /*String fileName = _image!.path.split('/').last;
@@ -147,9 +148,11 @@ class _SVPostAddState extends State<SVPostAdd> {
         "pasta": 'posts/',
       }).then((value) {
         debugPrint('upload ${value.body}');
-        setState(() {
-          imgURL = value.body.toString();
-        });
+        if (mounted) {
+          setState(() {
+            imgURL = value.body.toString();
+          });
+        }
       });
     } catch (e) {
       debugPrint("Error");
@@ -213,12 +216,39 @@ class _SVPostAddState extends State<SVPostAdd> {
                                     width: 56,
                                     fit: BoxFit.cover,
                                   ).cornerRadiusWithClipRRect(12)
-                                : Image.network(
+                                : Image(
+                                    image: CachedNetworkImageProvider(
+                                      widget.usuario.photo,
+                                    ),
+                                    height: 56,
+                                    width: 56,
+                                    fit: BoxFit.cover,
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      }
+                                      return Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Center(
+                                            child: CircularProgressIndicator(
+                                              color: Colors.grey[400],
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ).cornerRadiusWithClipRRect(12),
+                            /*Image.network(
                                     widget.usuario.photo,
                                     height: 56,
                                     width: 56,
                                     fit: BoxFit.cover,
-                                  ).cornerRadiusWithClipRRect(12),
+                                  ).cornerRadiusWithClipRRect(12),*/
                             widthSpace10,
                             Text(
                               formatarNome(widget.usuario.nome),
@@ -331,7 +361,7 @@ class _SVPostAddState extends State<SVPostAdd> {
                               postPost(
                                 imgURL == ''
                                     ? ''
-                                    : "https://campbrasil.com/tuddo_gramado/$imgURL",
+                                    : "http://98.83.196.247/$imgURL",
                                 _descriptionTextController.text,
                               );
                             }

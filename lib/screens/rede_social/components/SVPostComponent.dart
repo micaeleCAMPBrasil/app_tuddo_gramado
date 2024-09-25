@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:app_tuddo_gramado/data/models/SVPostModel.dart';
@@ -172,11 +173,39 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                     fit: BoxFit.cover,
                                                   ).cornerRadiusWithClipRRect(
                                                     12)
-                                                : Image.network(
-                                                    usuarioQPublicou.photo,
+                                                : Image(
+                                                    image:
+                                                        CachedNetworkImageProvider(
+                                                      usuarioQPublicou.photo,
+                                                    ),
                                                     height: 56,
                                                     width: 56,
                                                     fit: BoxFit.cover,
+                                                    loadingBuilder: (context,
+                                                        child,
+                                                        loadingProgress) {
+                                                      if (loadingProgress ==
+                                                          null) {
+                                                        return child;
+                                                      }
+                                                      return Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Center(
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              color: Colors
+                                                                  .grey[400],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
                                                   ).cornerRadiusWithClipRRect(
                                                     12),
                                             widthSpace10,
@@ -416,11 +445,46 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                     fit: BoxFit.cover,
                                                   ).cornerRadiusWithClipRRect(
                                                     12)
-                                                : Image.network(
+                                                : /*Image.network(
                                                     usuarioQPublicou.photo,
                                                     height: 56,
                                                     width: 56,
                                                     fit: BoxFit.cover,
+                                                  ).cornerRadiusWithClipRRect(
+                                                    12)*/
+                                                Image(
+                                                    image:
+                                                        CachedNetworkImageProvider(
+                                                      usuarioQPublicou.photo,
+                                                    ),
+                                                    height: 56,
+                                                    width: 56,
+                                                    fit: BoxFit.cover,
+                                                    loadingBuilder: (context,
+                                                        child,
+                                                        loadingProgress) {
+                                                      if (loadingProgress ==
+                                                          null) {
+                                                        return child;
+                                                      }
+                                                      return Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Center(
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              color: Colors
+                                                                  .grey[400],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
                                                   ).cornerRadiusWithClipRRect(
                                                     12),
                                             widthSpace10,
@@ -495,7 +559,6 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                                           false)
                                                                   .updateIndex(
                                                                       3, 3);
-                                                              
                                                             },
                                                             child: Container(
                                                               height: 50,
@@ -661,12 +724,41 @@ class _SVPostComponentState extends State<SVPostComponent> {
                           ? heightSpace15
                           : const Offstage(),
                       post['postImage'] != ''
-                          ? Image.network(
-                              post['postImage'],
-                              height: 300,
-                              width: context.width() - 32,
-                              fit: BoxFit.cover,
-                            ).cornerRadiusWithClipRRect(12).center()
+                          ? post['postImage'] != 'http://98.83.196.247/'
+                              ? /*Image.network(
+                                  post['postImage'],
+                                  height: 300,
+                                  width: context.width() - 32,
+                                  fit: BoxFit.cover,
+                                ).cornerRadiusWithClipRRect(12).center()*/
+                              Image(
+                                  image: CachedNetworkImageProvider(
+                                    post['postImage'],
+                                  ),
+                                  height: 300,
+                                  width: context.width() - 32,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    }
+                                    return Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Center(
+                                          child: CircularProgressIndicator(
+                                            color: Colors.grey[400],
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ).cornerRadiusWithClipRRect(12).center()
+                              : heightSpace10
                           : heightSpace10,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -786,13 +878,49 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                         fit: BoxFit.cover,
                                                       ).cornerRadiusWithClipRRect(
                                                         100)
-                                                    : Image.network(
+                                                    : Image(
+                                                        image:
+                                                            CachedNetworkImageProvider(
+                                                          userdata[0].photo,
+                                                        ),
+                                                        height: 24,
+                                                        width: 24,
+                                                        fit: BoxFit.cover,
+                                                        loadingBuilder: (context,
+                                                            child,
+                                                            loadingProgress) {
+                                                          if (loadingProgress ==
+                                                              null) {
+                                                            return child;
+                                                          }
+                                                          return Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Center(
+                                                                child:
+                                                                    CircularProgressIndicator(
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      400],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          );
+                                                        },
+                                                      ).cornerRadiusWithClipRRect(
+                                                        100) /*Image.network(
                                                         userdata[0].photo,
                                                         height: 24,
                                                         width: 24,
                                                         fit: BoxFit.cover,
                                                       ).cornerRadiusWithClipRRect(
-                                                        100),
+                                                        100)*/
+                                                ,
                                               ),
                                             ),
                                           ),
@@ -844,11 +972,40 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                             fit: BoxFit.cover,
                                                           ).cornerRadiusWithClipRRect(
                                                             100)
-                                                        : Image.network(
-                                                            userdata[0].photo,
+                                                        : Image(
+                                                            image:
+                                                                CachedNetworkImageProvider(
+                                                              userdata[0].photo,
+                                                            ),
                                                             height: 24,
                                                             width: 24,
                                                             fit: BoxFit.cover,
+                                                            loadingBuilder:
+                                                                (context, child,
+                                                                    loadingProgress) {
+                                                              if (loadingProgress ==
+                                                                  null) {
+                                                                return child;
+                                                              }
+                                                              return Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Center(
+                                                                    child:
+                                                                        CircularProgressIndicator(
+                                                                      color: Colors
+                                                                              .grey[
+                                                                          400],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            },
                                                           ).cornerRadiusWithClipRRect(
                                                             100),
                                                   ),
@@ -870,11 +1027,40 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                             fit: BoxFit.cover,
                                                           ).cornerRadiusWithClipRRect(
                                                             100)
-                                                        : Image.network(
-                                                            userdata[1].photo,
+                                                        : Image(
+                                                            image:
+                                                                CachedNetworkImageProvider(
+                                                              userdata[1].photo,
+                                                            ),
                                                             height: 24,
                                                             width: 24,
                                                             fit: BoxFit.cover,
+                                                            loadingBuilder:
+                                                                (context, child,
+                                                                    loadingProgress) {
+                                                              if (loadingProgress ==
+                                                                  null) {
+                                                                return child;
+                                                              }
+                                                              return Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Center(
+                                                                    child:
+                                                                        CircularProgressIndicator(
+                                                                      color: Colors
+                                                                              .grey[
+                                                                          400],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            },
                                                           ).cornerRadiusWithClipRRect(
                                                             100),
                                                   ),
@@ -951,11 +1137,40 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                             fit: BoxFit.cover,
                                                           ).cornerRadiusWithClipRRect(
                                                             100)
-                                                        : Image.network(
-                                                            userdata[0].photo,
+                                                        : Image(
+                                                            image:
+                                                                CachedNetworkImageProvider(
+                                                              userdata[0].photo,
+                                                            ),
                                                             height: 24,
                                                             width: 24,
                                                             fit: BoxFit.cover,
+                                                            loadingBuilder:
+                                                                (context, child,
+                                                                    loadingProgress) {
+                                                              if (loadingProgress ==
+                                                                  null) {
+                                                                return child;
+                                                              }
+                                                              return Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Center(
+                                                                    child:
+                                                                        CircularProgressIndicator(
+                                                                      color: Colors
+                                                                              .grey[
+                                                                          400],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            },
                                                           ).cornerRadiusWithClipRRect(
                                                             100),
                                                   ),
@@ -978,11 +1193,40 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                             fit: BoxFit.cover,
                                                           ).cornerRadiusWithClipRRect(
                                                             100)
-                                                        : Image.network(
-                                                            userdata[1].photo,
+                                                        : Image(
+                                                            image:
+                                                                CachedNetworkImageProvider(
+                                                              userdata[1].photo,
+                                                            ),
                                                             height: 24,
                                                             width: 24,
                                                             fit: BoxFit.cover,
+                                                            loadingBuilder:
+                                                                (context, child,
+                                                                    loadingProgress) {
+                                                              if (loadingProgress ==
+                                                                  null) {
+                                                                return child;
+                                                              }
+                                                              return Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Center(
+                                                                    child:
+                                                                        CircularProgressIndicator(
+                                                                      color: Colors
+                                                                              .grey[
+                                                                          400],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            },
                                                           ).cornerRadiusWithClipRRect(
                                                             100),
                                                   ),
@@ -1004,11 +1248,40 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                             fit: BoxFit.cover,
                                                           ).cornerRadiusWithClipRRect(
                                                             100)
-                                                        : Image.network(
-                                                            userdata[2].photo,
+                                                        : Image(
+                                                            image:
+                                                                CachedNetworkImageProvider(
+                                                              userdata[2].photo,
+                                                            ),
                                                             height: 24,
                                                             width: 24,
                                                             fit: BoxFit.cover,
+                                                            loadingBuilder:
+                                                                (context, child,
+                                                                    loadingProgress) {
+                                                              if (loadingProgress ==
+                                                                  null) {
+                                                                return child;
+                                                              }
+                                                              return Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Center(
+                                                                    child:
+                                                                        CircularProgressIndicator(
+                                                                      color: Colors
+                                                                              .grey[
+                                                                          400],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            },
                                                           ).cornerRadiusWithClipRRect(
                                                             100),
                                                   ),
@@ -1094,11 +1367,40 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                             fit: BoxFit.cover,
                                                           ).cornerRadiusWithClipRRect(
                                                             100)
-                                                        : Image.network(
-                                                            userdata[0].photo,
+                                                        : Image(
+                                                            image:
+                                                                CachedNetworkImageProvider(
+                                                              userdata[0].photo,
+                                                            ),
                                                             height: 24,
                                                             width: 24,
                                                             fit: BoxFit.cover,
+                                                            loadingBuilder:
+                                                                (context, child,
+                                                                    loadingProgress) {
+                                                              if (loadingProgress ==
+                                                                  null) {
+                                                                return child;
+                                                              }
+                                                              return Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Center(
+                                                                    child:
+                                                                        CircularProgressIndicator(
+                                                                      color: Colors
+                                                                              .grey[
+                                                                          400],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            },
                                                           ).cornerRadiusWithClipRRect(
                                                             100),
                                                   ),
@@ -1121,11 +1423,40 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                             fit: BoxFit.cover,
                                                           ).cornerRadiusWithClipRRect(
                                                             100)
-                                                        : Image.network(
-                                                            userdata[1].photo,
+                                                        : Image(
+                                                            image:
+                                                                CachedNetworkImageProvider(
+                                                              userdata[1].photo,
+                                                            ),
                                                             height: 24,
                                                             width: 24,
                                                             fit: BoxFit.cover,
+                                                            loadingBuilder:
+                                                                (context, child,
+                                                                    loadingProgress) {
+                                                              if (loadingProgress ==
+                                                                  null) {
+                                                                return child;
+                                                              }
+                                                              return Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Center(
+                                                                    child:
+                                                                        CircularProgressIndicator(
+                                                                      color: Colors
+                                                                              .grey[
+                                                                          400],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            },
                                                           ).cornerRadiusWithClipRRect(
                                                             100),
                                                   ),
@@ -1147,11 +1478,40 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                             fit: BoxFit.cover,
                                                           ).cornerRadiusWithClipRRect(
                                                             100)
-                                                        : Image.network(
-                                                            userdata[2].photo,
+                                                        : Image(
+                                                            image:
+                                                                CachedNetworkImageProvider(
+                                                              userdata[2].photo,
+                                                            ),
                                                             height: 24,
                                                             width: 24,
                                                             fit: BoxFit.cover,
+                                                            loadingBuilder:
+                                                                (context, child,
+                                                                    loadingProgress) {
+                                                              if (loadingProgress ==
+                                                                  null) {
+                                                                return child;
+                                                              }
+                                                              return Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Center(
+                                                                    child:
+                                                                        CircularProgressIndicator(
+                                                                      color: Colors
+                                                                              .grey[
+                                                                          400],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            },
                                                           ).cornerRadiusWithClipRRect(
                                                             100),
                                                   ),

@@ -3,7 +3,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:app_tuddo_gramado/data/models/imgbbResponseModel.dart';
+import 'package:app_tuddo_gramado/data/php/api_service.dart';
 import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
+
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/cupertino.dart';
@@ -60,6 +62,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _phoneNumberController.dispose();
     super.dispose();
   }
+
+  APIService apiService = APIService();
 
   final UsuarioStore storeUser = UsuarioStore(
     repository: IFuncoesPHP(
@@ -189,7 +193,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String imgURL = '';
 
   void uploadImage() async {
-    String url = "https://campbrasil.com/tuddo_gramado/upload_img.php";
+    String url = "http://98.83.196.247/upload_img.php";
     try {
       //String
 
@@ -201,19 +205,34 @@ class _EditProfilePageState extends State<EditProfilePage> {
         "pasta": 'users/',
       }).then((value) {
         debugPrint('upload ${value.body}');
-        setState(() {
-          imgURL = value.body.toString();
-        });
+
+        if (mounted) {
+          setState(() {
+            imgURL = value.body.toString();
+          });
+        }
       });
     } catch (e) {
       debugPrint("Error");
     }
   }
 
-  void editarUsuario(Usuario usuario) {
+  void editarUsuario(Usuario usuario) async {
     storeUser.update(
       usuario,
     );
+
+    /*String linktuddogramado = Config.urlTuddo + Config.customerURL;
+    await apiService.editandousuariowordpress(
+        Config.tokenURLTG, linktuddogramado, usuario);
+
+    String linktuddoemdobro = Config.url + Config.customerURL;
+    await apiService.editandousuariowordpress(
+        Config.tokenURL, linktuddoemdobro, usuario);
+
+    String linktuddotransfer = Config.urlTuddoTransfer + Config.customerURL;
+    await apiService.editandousuariowordpress(
+        Config.tokenURLTransfer, linktuddotransfer, usuario);*/
   }
 
   @override
@@ -233,9 +252,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 text: 'Salvar',
                 onTap: () {
                   //UiHelper.showLoadingDialog(context, 'Aguarda...');
-
                   Future.delayed(
-                    const Duration(seconds: 3),
+                    const Duration(seconds: 1),
                     () {
                       debugPrint("IMG URL $imgURL");
 
@@ -248,7 +266,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             ? widget.usuario.photo != ''
                                 ? widget.usuario.photo
                                 : ""
-                            : "https://campbrasil.com/tuddo_gramado/$imgURL";
+                            : "http://98.83.196.247/$imgURL";
                       });
 
                       debugPrint("A foto do usuário é ${widget.usuario.photo}");
@@ -258,13 +276,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
                       editarUsuario(widget.usuario);
 
-                      //UiHelper.showLoadingDialog(context, 'Aguarde...');
-
                       Provider.of<ControlNav>(context, listen: false)
                           .updateIndex(
                         4,
                         0,
                       );
+                      //UiHelper.showLoadingDialog(context, 'Aguarde...');
 
                       /*Navigator.pushReplacement(
                         context,

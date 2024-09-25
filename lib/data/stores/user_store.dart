@@ -14,8 +14,6 @@ class UsuarioStore {
     Usuario(
       uid: '',
       tokenAlert: '',
-      tokenTG: '',
-      tokenTD: '',
       nome: '',
       username: '',
       email: '',
@@ -52,9 +50,13 @@ class UsuarioStore {
     try {
       final result = await repository.getUsuarioUID(uid);
       state.value = result;
+
+      debugPrint('STORE USER - ${state.value}');
     } on NotFoundException catch (e) {
       erro.value = e.message;
+      debugPrint('erros 1 ${e.message}');
     } catch (e) {
+      debugPrint('erros 2 ${e.toString()}');
       erro.value = e.toString();
     }
 

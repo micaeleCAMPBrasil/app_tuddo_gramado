@@ -98,7 +98,7 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
                         height: MediaQuery.of(context).size.height * 0.6,
                         child: Image(
                           image: CachedNetworkImageProvider(
-                            widget.patrocinador.logo,
+                            widget.patrocinador.imagemBG,
                           ),
                           fit: BoxFit.fill,
                           loadingBuilder: (context, child, loadingProgress) {

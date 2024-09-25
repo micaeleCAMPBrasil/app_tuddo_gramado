@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:app_tuddo_gramado/data/models/categoriasButton.dart';
 import 'package:app_tuddo_gramado/data/models/patrocinadores.dart';
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/data/php/functions.dart';
@@ -147,7 +148,7 @@ class _NewPatrocinadoresScreenState extends State<NewPatrocinadoresScreen> {
           },
           child: Image(
             image: CachedNetworkImageProvider(
-              i.imagemBG,
+              i.logo,
             ),
             loadingBuilder: (context, child, loadingProgress) {
               if (loadingProgress == null) {
@@ -187,113 +188,143 @@ class _NewPatrocinadoresScreenState extends State<NewPatrocinadoresScreen> {
   Container categoryMethod(double heightDisponivel) {
     // ignore: avoid_unnecessary_containers
     return Container(
-      child: SizedBox(
-        height: heightDisponivel * 0.1,
-        child: ListView.builder(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          itemCount: CategoriasButoonStore.getCategoriasPatrocinadores.length,
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) {
-            var item = CategoriasButoonStore.getCategoriasPatrocinadores[index];
-            return GestureDetector(
-              onTap: () {
-                /*Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PatrocinadoresScreen(
-                      idCategoria: item.route,
-                      usuario: widget.usuario,
-                      index: 2,
-                    ),
-                  ),
-                );*/
-                Provider.of<ControlNav>(context, listen: false)
-                    .updateidcategori(item.route);
-                Provider.of<ControlNav>(context, listen: false)
-                    .updateIndex(2, 1);
-              },
-              child: Stack(
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    margin: index == 0
-                        ? const EdgeInsets.only(right: 5)
-                        : index == CategoriasButoonStore.getbuttons.length - 1
-                            ? const EdgeInsets.only(left: 5)
-                            : const EdgeInsets.symmetric(
-                                horizontal: 5,
-                              ),
-                    width: 120,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: primaryColor,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        item.name,
-                        style: whiteMedium14,
-                        textAlign: TextAlign.center,
+      child: ValueListenableBuilder<List<CategoriasButoon>>(
+        valueListenable: controller.listCategorias,
+        builder: (context, list, child) {
+          return SizedBox(
+            height: heightDisponivel * 0.1,
+            child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: list.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                var item = list[index];
+                return GestureDetector(
+                  onTap: () {
+                    /*Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PatrocinadoresScreen(
+                        idCategoria: item.route,
+                        usuario: widget.usuario,
+                        index: 2,
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: index == 0
-                        ? const EdgeInsets.only(right: 5)
-                        : index == CategoriasButoonStore.getbuttons.length - 1
-                            ? const EdgeInsets.only(left: 5)
-                            : const EdgeInsets.symmetric(horizontal: 5),
-                    width: 120,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            black,
-                            black,
-                          ]),
-                      borderRadius: BorderRadius.circular(5),
-                      image: DecorationImage(
-                        image: AssetImage(
-                          item.backgroundImage,
+                  );*/
+                    Provider.of<ControlNav>(context, listen: false)
+                        .updateidcategori(item.route);
+                    Provider.of<ControlNav>(context, listen: false)
+                        .updateIndex(2, 1);
+                  },
+                  child: Stack(
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        margin: index == 0
+                            ? const EdgeInsets.only(right: 5)
+                            : index ==
+                                    CategoriasButoonStore.getbuttons.length - 1
+                                ? const EdgeInsets.only(left: 5)
+                                : const EdgeInsets.symmetric(
+                                    horizontal: 5,
+                                  ),
+                        width: 120,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: primaryColor,
+                          borderRadius: BorderRadius.circular(5),
                         ),
-                        fit: BoxFit.fill,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            item.name,
+                            style: whiteMedium14,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ),
-                    ),
+                      Container(
+                        margin: index == 0
+                            ? const EdgeInsets.only(right: 5)
+                            : index ==
+                                    CategoriasButoonStore.getbuttons.length - 1
+                                ? const EdgeInsets.only(left: 5)
+                                : const EdgeInsets.symmetric(horizontal: 5),
+                        width: 120,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                black,
+                                black,
+                              ]),
+                          borderRadius: BorderRadius.circular(5),
+                          /*image: DecorationImage(
+                          image: CachedNetworkImageProvider(
+                            item.backgroundImage,
+                          ),
+                          fit: BoxFit.fill,
+                        ),*/
+                        ),
+                        child: Image(
+                          image: CachedNetworkImageProvider(
+                            item.backgroundImage,
+                          ),
+                          fit: BoxFit.fill,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            }
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.grey[400],
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        margin: index == 0
+                            ? const EdgeInsets.only(right: 5)
+                            : index ==
+                                    CategoriasButoonStore.getbuttons.length - 1
+                                ? const EdgeInsets.only(left: 5)
+                                : const EdgeInsets.symmetric(horizontal: 5),
+                        width: 120,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                black.withOpacity(.65),
+                                black.withOpacity(.65),
+                              ]),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Text(
+                          item.name,
+                          style: whiteMedium14,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
                   ),
-                  Container(
-                    alignment: Alignment.center,
-                    margin: index == 0
-                        ? const EdgeInsets.only(right: 5)
-                        : index == CategoriasButoonStore.getbuttons.length - 1
-                            ? const EdgeInsets.only(left: 5)
-                            : const EdgeInsets.symmetric(horizontal: 5),
-                    width: 120,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            black.withOpacity(.65),
-                            black.withOpacity(.65),
-                          ]),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Text(
-                      item.name,
-                      style: whiteMedium14,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }
@@ -347,7 +378,7 @@ class _NewPatrocinadoresScreenState extends State<NewPatrocinadoresScreen> {
                       ),
                       child: Image(
                         image: CachedNetworkImageProvider(
-                          item.imagemBG,
+                          item.logo,
                         ),
                         fit: BoxFit.cover,
                         loadingBuilder: (context, child, loadingProgress) {

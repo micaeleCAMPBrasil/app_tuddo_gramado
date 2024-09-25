@@ -5,6 +5,7 @@ import 'package:app_tuddo_gramado/data/php/functions.dart';
 import 'package:app_tuddo_gramado/data/php/http_client.dart';
 import 'package:app_tuddo_gramado/data/stores/publicacao_store.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -60,15 +61,40 @@ class _SVCommentReplyComponentState extends State<SVCommentReplyComponent> {
                       width: 48,
                       fit: BoxFit.cover,
                     ).cornerRadiusWithClipRRect(8)
-                  : Image.network(
+                  : Image(
+                      image: CachedNetworkImageProvider(
+                        widget.usuario.photo.validate(),
+                      ),
+                      height: 48,
+                      width: 48,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        }
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.grey[400],
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ).cornerRadiusWithClipRRect(8),
+              /*Image.network(
                       widget.usuario.photo.validate(),
                       height: 48,
                       width: 48,
                       fit: BoxFit.cover,
-                    ).cornerRadiusWithClipRRect(8),
+                    ).cornerRadiusWithClipRRect(8),*/
               10.width,
               SizedBox(
-                width: checksize ? context.width() * 0.5 : context.width() * 0.6,
+                width:
+                    checksize ? context.width() * 0.5 : context.width() * 0.6,
                 child: AppTextField(
                   textFieldType: TextFieldType.OTHER,
                   textStyle: whiteRegular12,

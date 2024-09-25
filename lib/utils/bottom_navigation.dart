@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use, must_be_immutable
 import 'package:app_tuddo_gramado/data/models/SVPostModel.dart';
 import 'package:app_tuddo_gramado/data/models/patrocinadores.dart';
+import 'package:app_tuddo_gramado/data/php/api_service.dart';
 import 'package:app_tuddo_gramado/data/php/functions.dart';
 import 'package:app_tuddo_gramado/data/php/http_client.dart';
 import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
@@ -68,6 +69,31 @@ class _BottomNavigationState extends State<BottomNavigation> {
         .checkForNotifications();
   }
 
+  APIService apiService = APIService();
+
+  cadastrousuario(Usuario usuario) async {
+    List<String> split = usuario.nome.split(' ');
+    String primeiroNome = split[0] == '' ? '' : split[0].toUpperCase();
+    String segundoNome = split[1] == '' ? '' : split[1].toUpperCase();
+
+    CustomerModel model = CustomerModel(
+      email: usuario.email,
+      displayName: usuario.nome,
+      firstName: primeiroNome,
+      lastName: segundoNome,
+      password: usuario.uid,
+      roles: ['subscriber'],
+    );
+
+    //await apiService.getIdTG(Config.tokenURLTG, usuario.email, usuario.uid);
+
+    await apiService.criandonovousuarioTuddoGramado(model);
+
+    await apiService.criandonovousuarioTuddoDobro(model);
+
+    await apiService.criandonovousuarioTransfer(model);
+  }
+
   late InAppWebViewController webView;
   double progress = 0;
 
@@ -75,7 +101,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   Widget build(BuildContext context) {
     Usuario usuario = Provider.of<UsuarioProvider>(context).getUsuario;
     Routa routa = Provider.of<ControlNav>(context).getrouta;
-
+    cadastrousuario(usuario);
     int routaCategoriaPatrocinador =
         Provider.of<ControlNav>(context).getIdPatrocinador;
     Patrocinadores ptEscolhido = routa.page == 2 &&
@@ -83,7 +109,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         ? Provider.of<ControlNav>(context).getPatrocinador
         : Patrocinadores(
             id: 0,
-            idCategoria: 0,
+            idCategoria: [],
             nome: '',
             logo: '',
             imagemBG: '',
@@ -124,7 +150,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
           page: 0,
           index: 0,
           data: {
-            "token": usuario.tokenTG,
             "usuario": usuario.email,
             "senha": usuario.uid,
           },
@@ -140,7 +165,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
           index: 0,
           url: "https://d.tuddogramado.com.br/my-wishlist/",
           data: {
-            "token": usuario.tokenTD,
             "usuario": usuario.email,
             "senha": usuario.uid,
           },
@@ -152,9 +176,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
         ),
         // 3
         InAppView(
-          url: "https://tuddogramado.com.br/transfer/",
+          url: "https://transfer.tuddogramado.com.br/",
           data: {
-            "token": usuario.tokenTG,
             "usuario": usuario.email,
             "senha": usuario.uid,
           },
@@ -172,7 +195,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
           page: 0,
           index: 0,
           data: {
-            "token": usuario.tokenTG,
             "usuario": usuario.email,
             "senha": usuario.uid,
           },
@@ -188,7 +210,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
           page: 0,
           index: 0,
           data: {
-            "token": usuario.tokenTG,
             "usuario": usuario.email,
             "senha": usuario.uid,
           },
@@ -204,7 +225,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
           page: 0,
           index: 0,
           data: {
-            "token": usuario.tokenTD,
             "usuario": usuario.email,
             "senha": usuario.uid,
           },
@@ -220,7 +240,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
         InAppView(
           url: 'https://d.tuddogramado.com.br',
           data: {
-            "token": usuario.tokenTG,
             "usuario": usuario.email,
             "senha": usuario.uid,
           },
@@ -388,7 +407,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
           page: 4,
           index: 0,
           data: {
-            "token": usuario.tokenTG,
             "usuario": usuario.email,
             "senha": usuario.uid,
           },
@@ -404,7 +422,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
           page: 4,
           index: 0,
           data: {
-            "token": usuario.tokenTD,
             "usuario": usuario.email,
             "senha": usuario.uid,
           },
@@ -421,7 +438,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
           page: 4,
           index: 0,
           data: {
-            "token": usuario.tokenTD,
             "usuario": usuario.email,
             "senha": usuario.uid,
           },
@@ -467,7 +483,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
           page: 4,
           index: 5,
           data: {
-            "token": usuario.tokenTD,
             "usuario": usuario.email,
             "senha": usuario.uid,
           },

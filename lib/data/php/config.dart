@@ -18,4 +18,13 @@ class Config {
       "https://tuddogramado.com.br/wp-json/jwt-auth/v1/token";
 
   static String urltuddogramado = "https://tuddogramado.com.br/wp-login.php";
+
+  static String urlTuddoTransfer =
+      "https://transfer.tuddogramado.com.br/wp-json/wp/v2/";
+
+  static String tokenURLTransfer =
+      "https://transfer.tuddogramado.com.br/wp-json/jwt-auth/v1/token";
+
+  static String urltranfer =
+      "https://transfer.tuddogramado.com.br/wp-login.php";
 }

@@ -2,7 +2,8 @@ import 'package:flutter/foundation.dart';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class Patrocinadores {
-  int id, idCategoria;
+  int id;
+  List<int> idCategoria;
   String nome,
       descricao,
       logo,
@@ -71,7 +72,7 @@ class Patrocinadores {
 
   Patrocinadores copyWith({
     int? id,
-    int? idCategoria,
+    List<int>? idCategoria,
     String? nome,
     String? logo,
     String? imagemBG,
