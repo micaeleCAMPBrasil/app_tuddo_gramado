@@ -61,7 +61,7 @@ class SubscribePage extends StatelessWidget {
             children: [
               heightSpace15,
               Links(
-                link: 'https://d.tuddogramado.com.br/',
+                link: 'https://site.tuddogramado.com.br/',
                 title: 'Assine',
                 subtitle: '12 meses',
                 description: 'R\$ 197,00',

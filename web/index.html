@@ -27,28 +27,15 @@
   <meta name="apple-mobile-web-app-title" content="app_tuddo_gramado">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png" />
 
   <title>app_tuddo_gramado</title>
-  <link rel="manifest" href="manifest.json">
 
-  <script type="application/javascript" src="/assets/packages/flutter_inappwebview_web/assets/web/web_support.js"
-    defer></script>
-
-  <script>
-    // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = null;
-  </script>
-  <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js" defer></script>
-  <meta http-equiv="Permissions-Policy" content="camera=(self), geolocation=(self)">
   <script type="module">
     // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -67,33 +54,13 @@
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
-
-    // Inicializando o Firebase Messaging
-    const messaging = firebase.messaging();
-
-    // Manipulador para mensagens em segundo plano
-    messaging.onBackgroundMessage((payload) => {
-      console.log('Mensagem recebida em segundo plano: ', payload);
-    });
   </script>
+
+  <link rel="manifest" href="manifest.json">
 </head>
 
 <body>
-  <script>
-    window.addEventListener('load', function (ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: function (engineInitializer) {
-          engineInitializer.initializeEngine().then(function (appRunner) {
-            appRunner.runApp();
-          });
-        }
-      });
-    });
-  </script>
+  <script src="flutter_bootstrap.js" async></script>
 </body>
 
 </html>

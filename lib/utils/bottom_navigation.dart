@@ -166,7 +166,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         InAppView(
           page: 0,
           index: 0,
-          url: "https://d.tuddogramado.com.br/my-wishlist/",
+          url: "https://site.tuddogramado.com.br/my-wishlist/",
           data: {
             "usuario": usuario.email,
             "senha": usuario.uid,
@@ -225,7 +225,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         ),
         // 6 - top ofertas
         InAppView(
-          url: "https://d.tuddogramado.com.br/",
+          url: "https://site.tuddogramado.com.br/",
           page: 0,
           index: 0,
           data: {
@@ -242,7 +242,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
       // tuddo em dobro // 1
       [
         InAppView(
-          url: 'https://d.tuddogramado.com.br/tuddo-em-dobro/',
+          url: 'https://site.tuddogramado.com.br/tuddo-em-dobro/',
           data: {
             "usuario": usuario.email,
             "senha": usuario.uid,
@@ -437,7 +437,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         ),
         // 2 - favorite
         InAppView(
-          url: "https://d.tuddogramado.com.br/my-wishlist/",
+          url: "https://site.tuddogramado.com.br/my-wishlist/",
           page: 4,
           index: 0,
           data: {
@@ -453,7 +453,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         // 3 -
         InAppView(
           url:
-              "https://d.tuddogramado.com.br/member-account/?vendor=mybookings",
+              "https://site.tuddogramado.com.br/member-account/?vendor=mybookings",
           page: 4,
           index: 0,
           data: {
@@ -497,10 +497,26 @@ class _BottomNavigationState extends State<BottomNavigation> {
           },
           child: SubscribePage(),
         ),
+        // 6
         InAppView(
           url: linkurl,
           page: 4,
           index: 5,
+          data: {
+            "usuario": usuario.email,
+            "senha": usuario.uid,
+          },
+          /*routa: MaterialPageRoute(
+            builder: (context) => const BottomNavigation(
+                //selectedIndex: 4,
+                ),
+          ),*/
+        ),
+        // 7
+        InAppView(
+          url: "https://site.tuddogramado.com.br/area-afiliado-2/",
+          page: 4,
+          index: 0,
           data: {
             "usuario": usuario.email,
             "senha": usuario.uid,

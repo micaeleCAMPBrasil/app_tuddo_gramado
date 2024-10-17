@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:app_tuddo_gramado/data/models/categoriasButton.dart';
 import 'package:app_tuddo_gramado/data/models/patrocinadores.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/data/php/exceptions.dart';
@@ -24,14 +25,18 @@ class IFuncoesPHP implements IFuncoes {
 
   @override
   Future<List<Patrocinadores>> getListPatrocinadores() async {
-    final response = await client.get(
+    /*final response = await client.get(
       url: "http://98.83.196.247/php/patrocinadores/getAllPatrocinador.php",
+    );*/
+
+    final response = await Dio().get(
+      "http://98.83.196.247/php/patrocinadores/getAllPatrocinador.php",
     );
 
     List<Patrocinadores> getPatrocinadores = [];
 
     if (response.statusCode == 200) {
-      final body = jsonDecode(response.body);
+      final body = jsonDecode(response.data);
       if (body == '') {
       } else {
         for (var patrocinador in body['dados_patrocinadores']) {
@@ -295,9 +300,13 @@ class IFuncoesPHP implements IFuncoes {
 
   @override
   Future<List<CategoriasButoon>> getCategorias() async {
-    final response = await client.get(
-      url: "http://98.83.196.247/php/patrocinadores/getCategorias.php",
+    final response = await Dio().get(
+      "http://98.83.196.247/php/patrocinadores/getCategorias.php",
     );
+
+    /*final response = await client.get(
+      url: "http://98.83.196.247/php/patrocinadores/getCategorias.php",
+    );*/
 
     if (response.statusCode == 200) {
       List<CategoriasButoon> categorias = [
@@ -309,7 +318,7 @@ class IFuncoesPHP implements IFuncoes {
         )
       ];
 
-      final body = jsonDecode(response.body);
+      final body = jsonDecode(response.data);
 
       if (body == 'dados_vazios') {
       } else if (body == 'Database erro') {
@@ -333,14 +342,18 @@ class IFuncoesPHP implements IFuncoes {
 
   @override
   Future<List<Usuario>> getAllUsuario() async {
-    final response = await client.get(
+    /*final response = await client.get(
       url: "http://98.83.196.247/php/getAllUsuario.php",
+    );*/
+
+    final response = await Dio().get(
+      "http://98.83.196.247/php/getAllUsuario.php",
     );
 
     if (response.statusCode == 200) {
       List<Usuario> usuarioFinal = [];
 
-      final body = jsonDecode(response.body);
+      final body = jsonDecode(response.data);
 
       if (body == 'dados_vazios') {
       } else if (body == 'Database erro') {
@@ -368,12 +381,22 @@ class IFuncoesPHP implements IFuncoes {
     String foto = usuario.photo;
     String token = usuario.tokenAlert;
 
-    final response = await client.get(
+    /*final response =
+        await Dio().get("http://98.83.196.247/php/updateUser.php", data: {
+          "uid":
+        });*/
+
+    /*final response = await client.get(
       url:
           "http://98.83.196.247/php/updateUser.php?uid=$uid&nome=$nome&email=$email&phone=$phone&username=$userName&photo=$foto&token=$token",
+    );*/
+
+    final response = await Dio().get(
+      "http://98.83.196.247/php/updateUser.php?uid=$uid&nome=$nome&email=$email&phone=$phone&username=$userName&photo=$foto&token=$token",
     );
+
     if (response.statusCode == 200) {
-      final body = jsonDecode(response.body);
+      final body = jsonDecode(response.data);
 
       debugPrint('Body - $body');
 
@@ -394,14 +417,18 @@ class IFuncoesPHP implements IFuncoes {
 
   @override
   Future<Usuario> getUsuarioUID(String uid) async {
-    final response = await client.get(
-      url: "http://98.83.196.247/php/getUsuarioUID.php?uid=$uid",
+    final response = await Dio().get(
+      "http://98.83.196.247/php/getUsuarioUID.php?uid=$uid",
     );
+
+    /*final response = await client.get(
+      url: "http://98.83.196.247/php/getUsuarioUID.php?uid=$uid",
+    );*/
 
     if (response.statusCode == 200) {
       late Usuario usuarioFinal;
 
-      final body = jsonDecode(response.body);
+      final body = jsonDecode(response.data);
 
       debugPrint('body $body');
 

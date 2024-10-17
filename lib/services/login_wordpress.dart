@@ -18,6 +18,16 @@ class _LoginWordPressState extends State<LoginWordPress> {
   @override
   void initState() {
     super.initState();
+
+    /*if (kIsWeb) {
+      js.context.callMethod(
+        'open',
+        [
+          '${Config.urltranfer}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}',
+          '_self'
+        ],
+      );
+    }*/
     /*_controllerweb = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
@@ -131,13 +141,22 @@ class _LoginWordPressState extends State<LoginWordPress> {
           },
         ),
       ],
-    ); /*
-        : Scaffold(
+    );
+    /*: Scaffold(
             appBar: AppBar(title: const Text('Flutter Simple Example')),
-            body: Webview(
-              // ?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}
-              url: Config.urltranfer,
-              appName: '',
+            body: Container(
+              color: Colors.yellow,
+              width: 100,
+              height: 100,
+              child: GestureDetector(
+                child: const Text('Button'),
+                onTap: () {
+                  html(
+                    '${Config.urltranfer}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}',
+                    '_self',
+                  );
+                },
+              ),
             ),
           );*/
   }

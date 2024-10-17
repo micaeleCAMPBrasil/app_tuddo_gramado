@@ -161,7 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       style: whiteSemiBold20,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    Row(
+                    /*Row(
                       children: [
                         SizedBox(
                           child: Image.asset(
@@ -171,9 +171,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                         widthSpace10,
-                        Text('Non-Premium', style: color94Regular15),
+                        //Text('Non-Premium', style: color94Regular15),
                       ],
-                    )
+                    )*/
                   ],
                 )
               ],
@@ -205,6 +205,11 @@ class _ProfilePageState extends State<ProfilePage> {
         'icon': 'assets/icones/tickets-icon.svg',
         'title': 'Meus Pedidos',
         'navigate': '/MeusPedidosTuddoEmDobro',
+      },
+      {
+        'icon': 'assets/icones/tickets-icon.svg',
+        'title': 'Painel de Afiliado',
+        'navigate': '/PaineldeAfiliado',
       },
     ];
 
@@ -289,6 +294,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               );*/
+            } else if (e['navigate'] == "/PaineldeAfiliado") {
+              Provider.of<ControlNav>(context, listen: false).updateIndex(4, 7);
             }
           },
           leading: SizedBox(
@@ -299,12 +306,18 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: 30,
                     height: 30,
                   )
-                : Image.asset(
-                    e['icon'],
-                    color: color94,
-                    width: 30,
-                    height: 30,
-                  ),
+                : e['title'] == 'Painel de Afiliado'
+                    ? Icon(
+                        Icons.monetization_on_outlined,
+                        color: color94,
+                        size: 30,
+                      )
+                    : Image.asset(
+                        e['icon'],
+                        color: color94,
+                        width: 30,
+                        height: 30,
+                      ),
           ),
           title: Text(
             e['title'],
