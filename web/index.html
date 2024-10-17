@@ -27,6 +27,8 @@
   <meta name="apple-mobile-web-app-title" content="app_tuddo_gramado">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png" />
 
@@ -42,6 +44,38 @@
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
+  <meta http-equiv="Permissions-Policy" content="camera=(self), geolocation=(self)">
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyB15omqgnpZN46kuTrlXi7f_FutkC5MqyA",
+      authDomain: "tuddo-gramado-app.firebaseapp.com",
+      projectId: "tuddo-gramado-app",
+      storageBucket: "tuddo-gramado-app.appspot.com",
+      messagingSenderId: "111160179496",
+      appId: "1:111160179496:web:2bc13492ed961224812e1d",
+      measurementId: "G-CYM1P69CX9"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    // Inicializando o Firebase Messaging
+    const messaging = firebase.messaging();
+
+    // Manipulador para mensagens em segundo plano
+    messaging.onBackgroundMessage((payload) => {
+      console.log('Mensagem recebida em segundo plano: ', payload);
+    });
+  </script>
 </head>
 
 <body>

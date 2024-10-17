@@ -1,4 +1,3 @@
-
 import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
 import 'package:app_tuddo_gramado/screens/inicio/ASplashScreen.dart';
 import 'package:app_tuddo_gramado/services/firebase_messaging_service.dart';
@@ -16,7 +15,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 
-
 AppStore appStore = AppStore();
 
 void main() async {
@@ -26,6 +24,17 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  /*if (kIsWeb) {
+    // Registrar o viewType 'iframeElement' com a fábrica para criar o IFrameElement
+    ui.platformViewRegistry.registerViewFactory(
+      'login_tuddo_dobro',
+      (int viewId) => IFrameElement()
+        ..src =
+            'https://d.tuddogramado.com.br/wp-login.php?is_api=true&acao=login&user=sales.micaele1911@gmail.com&pass=bRUWHRaEbBbj0313KCtfSdgLWqO2'
+        ..style.border = 'none',
+    );
+  }*/
 
   /*if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
     await InAppWebViewController.setWebContentsDebuggingEnabled(kDebugMode);

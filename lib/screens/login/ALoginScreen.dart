@@ -3,8 +3,11 @@
 import 'dart:async';
 
 import 'package:app_tuddo_gramado/data/php/api_service.dart';
+import 'package:app_tuddo_gramado/helper/ui_helper.dart';
 import 'package:app_tuddo_gramado/services/auth_check.dart';
 import 'package:app_tuddo_gramado/services/logout_wordpress.dart';
+import 'package:app_tuddo_gramado/utils/widgets.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
@@ -26,7 +29,7 @@ class ALoginScreen extends StatefulWidget {
 
 class _ALoginScreenState extends State<ALoginScreen> {
   GlobalKey<FormState> mykey = GlobalKey<FormState>();
-  //final TextEditingController _phoneTextController = TextEditingController();
+  final TextEditingController _emailTextController = TextEditingController();
 
   bool isApiCallProcess = false;
   late APIService apiService;
@@ -85,20 +88,19 @@ class _ALoginScreenState extends State<ALoginScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        /*AutoSizeText(
-                          'Digite o número de telefone para continuar',
+                        AutoSizeText(
+                          'Digite seu e-mail',
                           style: whiteMedium20,
                           maxLines: 1,
                         ),
                         heightSpace10,
                         Form(
                           key: mykey,
-                          child: PrimaryTextfieldTelefone(
-                            lableText: 'Digite seu Telefone',
-                            hintText: 'Digite seu Telefone',
-                            keyboardType: TextInputType.number,
-                            prefixText: "+55 ",
-                            controller: _phoneTextController,
+                          child: PrimaryTextfield(
+                            lableText: 'Digite seu E-mail',
+                            hintText: 'Digite seu E-mail',
+                            keyboardType: TextInputType.emailAddress,
+                            controller: _emailTextController,
                             textInputAction: TextInputAction.go,
                           ),
                         ),
@@ -108,32 +110,88 @@ class _ALoginScreenState extends State<ALoginScreen> {
                           onTap: () {
                             if (mykey.currentState!.validate()) {
                               UiHelper.showLoadingDialog(context, 'Aguarde...');
-                              AuthService.sendOtp(
-                                phone: _phoneTextController.text,
-                                erroStep: () =>
+                              AuthService.signInWithEmail(
+                                      _emailTextController.text)
+                                  .then(
+                                (value) async {
+                                  if (value == "Sucess") {
+                                    User user = AuthService.gerarUserFirebase();
+                                    String uid = user.uid;
+                                    String? emailEscolhido = user.email;
+
+                                    await storeUser.getUID(uid);
+
+                                    Usuario usuarioBase = storeUser.state.value;
+
+                                    if (usuarioBase.nome == '' ||
+                                        usuarioBase.email == '' ||
+                                        usuarioBase.telefone == '') {
+                                      Timer(
+                                        const Duration(seconds: 1),
+                                        () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  RegisterPage(
+                                                uid: uid,
+                                                email: emailEscolhido!,
+                                                usuario: usuarioBase,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    } else {
+                                      setState(() {
+                                        isApiCallProcess = true;
+                                      });
+
+                                      Provider.of<UsuarioProvider>(context,
+                                              listen: false)
+                                          .updateUsuario(usuarioBase);
+
+                                      Timer(
+                                        const Duration(seconds: 1),
+                                        () {
+                                          /*Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => LoginWP(
+                                                  usuario: usuarioBase.email,
+                                                  senha: usuarioBase.uid,
+                                                ),
+                                              ),
+                                            );*/
+
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const CheckUserLoggedInOrNot(),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    }
+                                  } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: const Text(
-                                      "Erro ao enviar o número",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    backgroundColor: primaryColor,
-                                  ),
-                                ),
-                                nextStep: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => AVerifyCode(
-                                        telefone: _phoneTextController.text,
+                                      SnackBar(
+                                        content: Text(
+                                          value,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        backgroundColor: primaryColor,
                                       ),
-                                    ),
-                                  );
+                                    );
+                                  }
                                 },
                               );
                             }
                           },
-                        ),*/
+                        ),
                         heightSpace20,
                         Text(
                           'Faça Login usando:',
@@ -236,6 +294,7 @@ class _ALoginScreenState extends State<ALoginScreen> {
                                           },
                                         );
                                       }
+                                    } else if (value == "n_cadastrado") {
                                     } else {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(

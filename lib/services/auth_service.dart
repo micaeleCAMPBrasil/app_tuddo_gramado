@@ -71,7 +71,6 @@ class AuthService extends ChangeNotifier {
 
   static signInWithGoogle() async {
     //try {
-    GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     //GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
     /*AuthCredential credential = GoogleAuthProvider.credential(
@@ -87,6 +86,7 @@ class AuthService extends ChangeNotifier {
     } on FirebaseAuthException catch (e) {
       return e.message.toString();*/
     try {
+      GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       debugPrint('fazendo login');
       await _firebaseAuth.signInWithEmailAndPassword(
           email: googleUser!.email, password: googleUser.email);
@@ -97,11 +97,28 @@ class AuthService extends ChangeNotifier {
           email: googleUser!.email, password: googleUser.email);
     }*/
       return 'Sucess';
-    // ignore: unused_catch_clause
+      // ignore: unused_catch_clause
+    } on FirebaseAuthException catch (e) {
+      debugPrint('n_cadastrado');
+      return 'n_cadastrado';
+    } catch (e) {
+      return "Você não escolheu um e-mail";
+    }
+  }
+
+  static signInWithEmail(String email) async {
+    debugPrint('email digitado é - $email');
+
+    try {
+      debugPrint('fazendo login');
+      await _firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: email);
+      return 'Sucess';
+      // ignore: unused_catch_clause
     } on FirebaseAuthException catch (e) {
       debugPrint('cadastrando');
       await _firebaseAuth.createUserWithEmailAndPassword(
-          email: googleUser!.email, password: googleUser.email);
+          email: email, password: email);
       return 'Sucess';
     } catch (e) {
       return "Você não escolheu um e-mail";

@@ -42,14 +42,18 @@ class IFuncoesPHP implements IFuncoes {
 
           bool isbannerinicial =
               int.parse(patrocinador['isBannerInicial'].toString()) == 1
-                  ? true
-                  : false;
+                  ? false
+                  : true;
+
+          String imgMaster =
+              isbannerinicial ? patrocinador['img_master'].toString() : '';
+
           var patrocinadoresStrings = patrocinador['id_categoria'];
 
           var separados = patrocinadoresStrings == ''
               ? []
               : patrocinadoresStrings.split(',');
-              
+
           List<int> patrocinadores = [];
 
           for (var umaum in separados) {
@@ -62,8 +66,9 @@ class IFuncoesPHP implements IFuncoes {
             idCategoria: patrocinadores,
             nome: patrocinador['nome'],
             descricao: patrocinador['descricao'],
-            logo: patrocinador['img_logo'],
-            imagemBG: patrocinador['img_bg'],
+            imagemMaster: imgMaster,
+            imagemPrincipal: patrocinador['img_logo'],
+            imagemBusca: patrocinador['img_bg'],
             isFavorite: false,
             isMostrarSite: false,
             isBannerInicial: isbannerinicial,
@@ -89,6 +94,7 @@ class IFuncoesPHP implements IFuncoes {
                 idPatrocinador: int.parse(patrocinador['id'].toString()),
                 img: galeria['link_img'],
                 link: galeria['url'],
+                isLinkExterno: galeria['link_externo'] == '1' ? true : false,
               ));
             }
           }

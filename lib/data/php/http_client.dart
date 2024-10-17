@@ -9,6 +9,9 @@ class HttpClient implements IHttpClient {
 
   @override
   Future get({required String url}) async {
-    return await client.get(Uri.parse(url));
+    return await client.get(Uri.parse(url), headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE, HEAD",
+    });
   }
 }

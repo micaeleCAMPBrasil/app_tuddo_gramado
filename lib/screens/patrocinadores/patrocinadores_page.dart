@@ -148,7 +148,7 @@ class _NewPatrocinadoresScreenState extends State<NewPatrocinadoresScreen> {
           },
           child: Image(
             image: CachedNetworkImageProvider(
-              i.logo,
+              i.imagemMaster,
             ),
             loadingBuilder: (context, child, loadingProgress) {
               if (loadingProgress == null) {
@@ -214,8 +214,16 @@ class _NewPatrocinadoresScreenState extends State<NewPatrocinadoresScreen> {
                   );*/
                     Provider.of<ControlNav>(context, listen: false)
                         .updateidcategori(item.route);
-                    Provider.of<ControlNav>(context, listen: false)
-                        .updateIndex(2, 1);
+
+                    debugPrint('route ${item.route}');
+
+                    if (item.route == 0) {
+                      Provider.of<ControlNav>(context, listen: false)
+                          .updateIndex(0, 6);
+                    } else {
+                      Provider.of<ControlNav>(context, listen: false)
+                          .updateIndex(2, 1);
+                    }
                   },
                   child: Stack(
                     children: [
@@ -378,7 +386,7 @@ class _NewPatrocinadoresScreenState extends State<NewPatrocinadoresScreen> {
                       ),
                       child: Image(
                         image: CachedNetworkImageProvider(
-                          item.logo,
+                          item.imagemBusca,
                         ),
                         fit: BoxFit.cover,
                         loadingBuilder: (context, child, loadingProgress) {
@@ -525,7 +533,7 @@ class _PatrocinadoresScreenState extends State<PatrocinadoresScreen> {
                                               0.43,
                                           child: Image(
                                             image: CachedNetworkImageProvider(
-                                              list[index].imagemBG,
+                                              list[index].imagemBusca,
                                             ),
                                             loadingBuilder: (context, child,
                                                 loadingProgress) {

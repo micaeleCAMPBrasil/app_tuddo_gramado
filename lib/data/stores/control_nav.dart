@@ -18,6 +18,9 @@ class ControlNav extends ChangeNotifier {
   int idPatrocinador = 0;
   int get getIdPatrocinador => idPatrocinador;
 
+  String linkUrlGaleria = '';
+  String get getLinkPatrocinador => linkUrlGaleria;
+
   String urllinkinscricoes = '';
   String get urllinksubcribe => urllinkinscricoes;
 
@@ -42,6 +45,11 @@ class ControlNav extends ChangeNotifier {
 
   updateidcategori(int id) {
     idPatrocinador = id;
+    notifyListeners();
+  }
+
+  updateurllinkgaleria(String link) {
+    linkUrlGaleria = link;
     notifyListeners();
   }
 

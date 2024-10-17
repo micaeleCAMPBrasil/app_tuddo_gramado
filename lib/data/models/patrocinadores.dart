@@ -6,8 +6,9 @@ class Patrocinadores {
   List<int> idCategoria;
   String nome,
       descricao,
-      logo,
-      imagemBG,
+      imagemMaster,
+      imagemPrincipal,
+      imagemBusca,
       linkWebSite,
       linkInstagram,
       linkFacebook,
@@ -20,8 +21,9 @@ class Patrocinadores {
     required this.id,
     required this.idCategoria,
     required this.nome,
-    required this.logo,
-    required this.imagemBG,
+    required this.imagemMaster,
+    required this.imagemPrincipal,
+    required this.imagemBusca,
     required this.galeria,
     required this.isFavorite,
     required this.isBannerInicial,
@@ -35,7 +37,7 @@ class Patrocinadores {
 
   @override
   String toString() =>
-      'Patrocinadores(id: $id, idCategoria: $idCategoria, nome: $nome, logo: $logo, imagemBG: $imagemBG, descricao: $descricao, linkWebSite: $linkWebSite, linkInstagram: $linkInstagram, linkFacebook: $linkFacebook, linkEndereco: $linkEndereco, isFavorite: $isFavorite, galeria: $galeria)';
+      'Patrocinadores(id: $id, idCategoria: $idCategoria, nome: $nome, imagemMaster: $imagemMaster, imagemPrincipal: $imagemPrincipal, imagemBusca: $imagemBusca, descricao: $descricao, linkWebSite: $linkWebSite, linkInstagram: $linkInstagram, linkFacebook: $linkFacebook, linkEndereco: $linkEndereco, isFavorite: $isFavorite, galeria: $galeria)';
 
   @override
   bool operator ==(covariant Patrocinadores other) {
@@ -45,8 +47,9 @@ class Patrocinadores {
         other.idCategoria == idCategoria &&
         other.nome == nome &&
         other.descricao == descricao &&
-        other.logo == logo &&
-        other.imagemBG == imagemBG &&
+        other.imagemMaster == imagemMaster &&
+        other.imagemPrincipal == imagemPrincipal &&
+        other.imagemBusca == imagemBusca &&
         other.linkWebSite == linkWebSite &&
         other.linkInstagram == linkInstagram &&
         other.linkFacebook == linkFacebook &&
@@ -60,8 +63,9 @@ class Patrocinadores {
       id.hashCode ^
       idCategoria.hashCode ^
       nome.hashCode ^
-      logo.hashCode ^
-      imagemBG.hashCode ^
+      imagemMaster.hashCode ^
+      imagemPrincipal.hashCode ^
+      imagemBusca.hashCode ^
       descricao.hashCode ^
       linkWebSite.hashCode ^
       linkInstagram.hashCode ^
@@ -74,8 +78,9 @@ class Patrocinadores {
     int? id,
     List<int>? idCategoria,
     String? nome,
-    String? logo,
-    String? imagemBG,
+    String? imagemMaster,
+    String? imagemPrincipal,
+    String? imagemBusca,
     String? descricao,
     String? linkWebSite,
     String? linkInstagram,
@@ -90,8 +95,9 @@ class Patrocinadores {
       id: id ?? this.id,
       idCategoria: idCategoria ?? this.idCategoria,
       nome: nome ?? this.nome,
-      logo: logo ?? this.logo,
-      imagemBG: imagemBG ?? this.imagemBG,
+      imagemMaster: imagemMaster ?? this.imagemMaster,
+      imagemPrincipal: imagemPrincipal ?? this.imagemPrincipal,
+      imagemBusca: imagemBusca ?? this.imagemBusca,
       descricao: descricao ?? this.descricao,
       linkWebSite: linkWebSite ?? this.linkWebSite,
       linkInstagram: linkInstagram ?? this.linkInstagram,
@@ -108,9 +114,12 @@ class Patrocinadores {
 class GaleriaPatrocinador {
   int idPatrocinador;
   String img, link;
+  bool? isLinkExterno;
+
   GaleriaPatrocinador({
     required this.idPatrocinador,
     this.img = '',
     this.link = '',
+    this.isLinkExterno,
   });
 }

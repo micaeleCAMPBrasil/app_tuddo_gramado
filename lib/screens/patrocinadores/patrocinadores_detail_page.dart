@@ -98,9 +98,9 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
                         height: MediaQuery.of(context).size.height * 0.6,
                         child: Image(
                           image: CachedNetworkImageProvider(
-                            widget.patrocinador.imagemBG,
+                            widget.patrocinador.imagemPrincipal,
                           ),
-                          fit: BoxFit.fill,
+                          fit: BoxFit.cover,
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) {
                               return child;
@@ -311,6 +311,11 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
     );
   }
 
+  mudarRouta(String link) {
+    Provider.of<ControlNav>(context, listen: false).updateurllinkgaleria(link);
+    Provider.of<ControlNav>(context, listen: false).updateIndex(2, 5);
+  }
+
   Widget galeria() {
     return SizedBox(
       height: 90,
@@ -321,6 +326,9 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
         itemCount: widget.patrocinador.galeria.length,
         itemBuilder: (context, index) {
           var item = widget.patrocinador.galeria[index];
+
+          debugPrint(
+              '${item.idPatrocinador} IS LINK EXTERNO? - ${item.isLinkExterno} - ${item.link}');
           return Stack(
             children: [
               Padding(
@@ -333,13 +341,15 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        _launchUrl(
-                          Uri.parse(
-                            item.link == ''
-                                ? widget.patrocinador.linkWebSite
-                                : item.link,
-                          ),
-                        );
+                        item.isLinkExterno!
+                            ? mudarRouta(item.link)
+                            : _launchUrl(
+                                Uri.parse(
+                                  item.link == ''
+                                      ? widget.patrocinador.linkWebSite
+                                      : item.link,
+                                ),
+                              );
                       },
                       child: SizedBox(
                         height: 90,

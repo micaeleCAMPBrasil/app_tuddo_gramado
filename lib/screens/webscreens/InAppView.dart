@@ -40,9 +40,11 @@ class _InAppViewState extends State<InAppView> {
   @override
   void initState() {
     Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
-        loading = false;
-      });
+      if (mounted) {
+        setState(() {
+          loading = false;
+        });
+      }
     });
     pullToRefreshController = kIsWeb ||
             ![TargetPlatform.iOS, TargetPlatform.android]

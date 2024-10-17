@@ -210,8 +210,9 @@ class _AHomeScreenState extends State<AHomeScreen> {
           },
           child: Image(
             image: CachedNetworkImageProvider(
-              i.logo,
+              i.imagemMaster,
             ),
+            errorBuilder: (context, url, error) => const Icon(Icons.error),
             loadingBuilder: (context, child, loadingProgress) {
               if (loadingProgress == null) {
                 return child;
@@ -253,7 +254,7 @@ class _AHomeScreenState extends State<AHomeScreen> {
                   Provider.of<ControlNav>(context, listen: false)
                       .updateIndex(2, 0);
                 } else if (item.route == 2) {
-                  //Tuddo em Dobro                  
+                  //Tuddo em Dobro
                   Provider.of<ControlNav>(context, listen: false)
                       .updateIndex(1, 0);
                 } else if (item.route == 3) {

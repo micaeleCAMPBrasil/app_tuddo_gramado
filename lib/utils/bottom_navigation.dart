@@ -111,8 +111,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
             id: 0,
             idCategoria: [],
             nome: '',
-            logo: '',
-            imagemBG: '',
+            imagemMaster: '',
+            imagemPrincipal: '',
+            imagemBusca: '',
             galeria: [],
             isFavorite: false,
             isBannerInicial: false,
@@ -128,6 +129,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
         : SVPostModel(idPost: '', idUsuario: '');
 
     String linkurl = Provider.of<ControlNav>(context).urllinksubcribe;
+    String linkurlcategoria =
+        Provider.of<ControlNav>(context).getLinkPatrocinador;
 
     _widgetOptions = [
       //home - page 0
@@ -146,7 +149,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         ),
         // 1
         InAppView(
-          url: "https://tuddogramado.com.br/clima/",
+          url: "https://d.tuddogramado.com.br/previsao-do-tempo/",
           page: 0,
           index: 0,
           data: {
@@ -176,7 +179,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
         ),
         // 3
         InAppView(
-          url: "https://transfer.tuddogramado.com.br/",
+          url: "https://tuddogramado.com.br/",
+          //url: "https://transfer.tuddogramado.com.br/",
           data: {
             "usuario": usuario.email,
             "senha": usuario.uid,
@@ -238,7 +242,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
       // tuddo em dobro // 1
       [
         InAppView(
-          url: 'https://d.tuddogramado.com.br',
+          url: 'https://d.tuddogramado.com.br/tuddo-em-dobro/',
           data: {
             "usuario": usuario.email,
             "senha": usuario.uid,
@@ -338,7 +342,22 @@ class _BottomNavigationState extends State<BottomNavigation> {
               ),
             ),*/
           ),
-        )
+        ),
+        // 5
+        InAppView(
+          url: linkurlcategoria,
+          data: {
+            "usuario": usuario.email,
+            "senha": usuario.uid,
+          },
+          page: 2,
+          index: 4,
+          /*routa: MaterialPageRoute(
+            builder: (context) => const BottomNavigation(
+                //selectedIndex: 0,
+                ),
+          ),*/
+        ),
       ],
       // rede social // 3
       [

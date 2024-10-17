@@ -64,13 +64,19 @@ dependencies:
   store_locator: ^0.0.6
   timezone: ^0.9.2
   url_launcher: ^6.2.6
-  webview_flutter: ^4.9.0
+  webview_all: ^0.1.3
   wp_json_api: ^3.3.4
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.13.1
   flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icones/icon.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -36,7 +36,7 @@ class APIService {
     bool ret = false;
 
     // String email, String senha
-    Map? data = await getIdTG(Config.tokenURLTG, 'admin', 'K17s31D02@tuddo');
+    Map? data = await getIdTG(Config.tokenURLTG, 'admin', 'K17s31D02@milenaepedro');
     String tokenadm = data!['token'];
 
     try {
@@ -71,7 +71,7 @@ class APIService {
     bool ret = false;
 
     // String email, String senha
-    Map? data = await getIdTG(Config.tokenURL, 'tuddoemdobro', 'K17s31D02@');
+    Map? data = await getIdTG(Config.tokenURL, 'tuddoemdobro', 'K17s31D02@milenaepedro');
     String tokenadm = data!['token'];
 
     try {
@@ -107,7 +107,7 @@ class APIService {
 
     // String email, String senha
     Map? data =
-        await getIdTG(Config.tokenURLTransfer, 'tuddotransfer', 'K17s31D02@');
+        await getIdTG(Config.tokenURLTransfer, 'tuddotransfer', 'K17s31D02@milenaepedro');
     String tokenadm = data!['token'];
 
     try {

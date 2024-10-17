@@ -14,9 +14,30 @@ class LoginWordPress extends StatefulWidget {
 }
 
 class _LoginWordPressState extends State<LoginWordPress> {
+  //late WebViewController _controllerweb;
   @override
   void initState() {
     super.initState();
+    /*_controllerweb = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {
+            // Update loading bar.
+          },
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) {},
+          onHttpError: (HttpResponseError error) {},
+          onWebResourceError: (WebResourceError error) {},
+          onNavigationRequest: (NavigationRequest request) {
+            if (request.url.startsWith('https://www.youtube.com/')) {
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse('https://flutter.dev'));*/
   }
 
   late InAppWebViewController webView;
@@ -24,7 +45,9 @@ class _LoginWordPressState extends State<LoginWordPress> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return /*!kIsWeb
+        ? */
+        Stack(
       children: [
         InAppWebView(
           initialUrlRequest: URLRequest(
@@ -108,6 +131,14 @@ class _LoginWordPressState extends State<LoginWordPress> {
           },
         ),
       ],
-    );
+    ); /*
+        : Scaffold(
+            appBar: AppBar(title: const Text('Flutter Simple Example')),
+            body: Webview(
+              // ?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}
+              url: Config.urltranfer,
+              appName: '',
+            ),
+          );*/
   }
 }

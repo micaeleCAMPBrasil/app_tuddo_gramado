@@ -156,7 +156,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(user.nome, style: whiteSemiBold20),
+                    Text(
+                      user.nome,
+                      style: whiteSemiBold20,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     Row(
                       children: [
                         SizedBox(
@@ -343,17 +347,9 @@ class _ProfilePageState extends State<ProfilePage> {
               },
             ),
           ),
-          GestureDetector(
+          /*GestureDetector(
             onTap: () {
               Provider.of<ControlNav>(context, listen: false).updateIndex(4, 5);
-              /*Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SubscribePage(
-                    index: 4,
-                  ),
-                ),
-              );*/
             },
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -380,7 +376,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
             ),
-          )
+          )*/
         ],
       ),
     );
@@ -424,7 +420,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               child: Image(
                 image: CachedNetworkImageProvider(
-                  item.imagemBG,
+                  item.imagemBusca,
                 ),
                 fit: BoxFit.cover,
                 loadingBuilder: (context, child, loadingProgress) {
