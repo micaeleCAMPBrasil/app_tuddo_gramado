@@ -113,7 +113,7 @@ class _SVPostAddState extends State<SVPostAdd> {
   Dio dio = Dio();
 
   void uploadImageFile() async {
-    String url = "http://98.83.196.247/upload_img.php";
+    String url = "https://www.tuddo.org/upload_img.php";
 
     try {
       /*String fileName = _image!.path.split('/').last;
@@ -361,7 +361,7 @@ class _SVPostAddState extends State<SVPostAdd> {
                               postPost(
                                 imgURL == ''
                                     ? ''
-                                    : "http://98.83.196.247/$imgURL",
+                                    : "https://www.tuddo.org/$imgURL",
                                 _descriptionTextController.text,
                               );
                             }

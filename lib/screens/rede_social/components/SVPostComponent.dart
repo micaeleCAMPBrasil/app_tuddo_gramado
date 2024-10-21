@@ -724,7 +724,7 @@ class _SVPostComponentState extends State<SVPostComponent> {
                           ? heightSpace15
                           : const Offstage(),
                       post['postImage'] != ''
-                          ? post['postImage'] != 'http://98.83.196.247/'
+                          ? post['postImage'] != 'https://www.tuddo.org/'
                               ? /*Image.network(
                                   post['postImage'],
                                   height: 300,

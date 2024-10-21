@@ -69,7 +69,8 @@ class SubscribePage extends StatelessWidget {
               ),
               heightSpace10,
               Links(
-                link: 'https://tuddogramado.com.br/affiliate-area/',
+                link:
+                    'https://site.tuddogramado.com.br/area-afiliado-2/ref/13/',
                 title: 'Seja Afiliado',
                 subtitle: 'Venda para sua audiência',
                 description: 'Faça Parte',
@@ -78,7 +79,7 @@ class SubscribePage extends StatelessWidget {
               heightSpace10,
               Links(
                 link:
-                    'https://tuddogramado.com.br/venda-mais-com-tuddo-em-dobro/',
+                    'https://transfer.tuddogramado.com.br/oferta-tuddo-em-dobro/',
                 title: 'Tuddo em Dobro',
                 subtitle: 'Venda Mais',
                 description: 'Faça Parte',
@@ -87,7 +88,7 @@ class SubscribePage extends StatelessWidget {
               heightSpace10,
               Links(
                 link:
-                    'https://tuddogramado.com.br/seja-motorista-parceiro-da-tuddo-gramado/',
+                    'https://transfer.tuddogramado.com.br/seja-motorista-parceiro-da-tuddo/',
                 title: 'Seja Motorista',
                 subtitle: 'Parceiro de Transfer',
                 description: 'Faça Parte',
@@ -95,7 +96,7 @@ class SubscribePage extends StatelessWidget {
               ),
               heightSpace10,
               Links(
-                link: 'https://tuddogramado.com.br/account/new-post/',
+                link: 'https://tuddogramado.com.br/function-memberpackage/',
                 title: 'Aluguel por Temporada',
                 subtitle: 'Cadastre seu Imovél',
                 description: 'Faça Parte',

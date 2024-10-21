@@ -149,7 +149,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         ),
         // 1
         InAppView(
-          url: "https://d.tuddogramado.com.br/previsao-do-tempo/",
+          url: "https://site.tuddogramado.com.br/previsao-do-tempo",
           page: 0,
           index: 0,
           data: {
@@ -179,8 +179,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         ),
         // 3
         InAppView(
-          url: "https://tuddogramado.com.br/",
-          //url: "https://transfer.tuddogramado.com.br/",
+          url: "https://transfer.tuddogramado.com.br/",
           data: {
             "usuario": usuario.email,
             "senha": usuario.uid,

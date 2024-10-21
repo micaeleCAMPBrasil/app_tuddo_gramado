@@ -26,11 +26,11 @@ class IFuncoesPHP implements IFuncoes {
   @override
   Future<List<Patrocinadores>> getListPatrocinadores() async {
     /*final response = await client.get(
-      url: "http://98.83.196.247/php/patrocinadores/getAllPatrocinador.php",
+      url: "https://www.tuddo.org/php/patrocinadores/getAllPatrocinador.php",
     );*/
 
     final response = await Dio().get(
-      "http://98.83.196.247/php/patrocinadores/getAllPatrocinador.php",
+      "https://www.tuddo.org/php/patrocinadores/getAllPatrocinador.php",
     );
 
     List<Patrocinadores> getPatrocinadores = [];
@@ -301,11 +301,11 @@ class IFuncoesPHP implements IFuncoes {
   @override
   Future<List<CategoriasButoon>> getCategorias() async {
     final response = await Dio().get(
-      "http://98.83.196.247/php/patrocinadores/getCategorias.php",
+      "https://www.tuddo.org/php/patrocinadores/getCategorias.php",
     );
 
     /*final response = await client.get(
-      url: "http://98.83.196.247/php/patrocinadores/getCategorias.php",
+      url: "https://www.tuddo.org/php/patrocinadores/getCategorias.php",
     );*/
 
     if (response.statusCode == 200) {
@@ -313,7 +313,7 @@ class IFuncoesPHP implements IFuncoes {
         CategoriasButoon(
           name: 'Todas as Ofertas',
           backgroundImage:
-              'http://98.83.196.247/php/patrocinadores/imagens/categorias/a2.png',
+              'https://www.tuddo.org/php/patrocinadores/imagens/categorias/a2.png',
           route: 0,
         )
       ];
@@ -343,11 +343,11 @@ class IFuncoesPHP implements IFuncoes {
   @override
   Future<List<Usuario>> getAllUsuario() async {
     /*final response = await client.get(
-      url: "http://98.83.196.247/php/getAllUsuario.php",
+      url: "https://www.tuddo.org/php/getAllUsuario.php",
     );*/
 
     final response = await Dio().get(
-      "http://98.83.196.247/php/getAllUsuario.php",
+      "https://www.tuddo.org/php/getAllUsuario.php",
     );
 
     if (response.statusCode == 200) {
@@ -382,17 +382,17 @@ class IFuncoesPHP implements IFuncoes {
     String token = usuario.tokenAlert;
 
     /*final response =
-        await Dio().get("http://98.83.196.247/php/updateUser.php", data: {
+        await Dio().get("https://www.tuddo.org/php/updateUser.php", data: {
           "uid":
         });*/
 
     /*final response = await client.get(
       url:
-          "http://98.83.196.247/php/updateUser.php?uid=$uid&nome=$nome&email=$email&phone=$phone&username=$userName&photo=$foto&token=$token",
+          "https://www.tuddo.org/php/updateUser.php?uid=$uid&nome=$nome&email=$email&phone=$phone&username=$userName&photo=$foto&token=$token",
     );*/
 
     final response = await Dio().get(
-      "http://98.83.196.247/php/updateUser.php?uid=$uid&nome=$nome&email=$email&phone=$phone&username=$userName&photo=$foto&token=$token",
+      "https://www.tuddo.org/php/updateUser.php?uid=$uid&nome=$nome&email=$email&phone=$phone&username=$userName&photo=$foto&token=$token",
     );
 
     if (response.statusCode == 200) {
@@ -418,11 +418,11 @@ class IFuncoesPHP implements IFuncoes {
   @override
   Future<Usuario> getUsuarioUID(String uid) async {
     final response = await Dio().get(
-      "http://98.83.196.247/php/getUsuarioUID.php?uid=$uid",
+      "https://www.tuddo.org/php/getUsuarioUID.php?uid=$uid",
     );
 
     /*final response = await client.get(
-      url: "http://98.83.196.247/php/getUsuarioUID.php?uid=$uid",
+      url: "https://www.tuddo.org/php/getUsuarioUID.php?uid=$uid",
     );*/
 
     if (response.statusCode == 200) {
@@ -490,7 +490,7 @@ class IFuncoesPHP implements IFuncoes {
 
     for (var element in uidUsers) {
       final response = await client.get(
-        url: "http://98.83.196.247/php/getUsuarioUID.php?uid=$element",
+        url: "https://www.tuddo.org/php/getUsuarioUID.php?uid=$element",
       );
 
       if (response.statusCode == 200) {
