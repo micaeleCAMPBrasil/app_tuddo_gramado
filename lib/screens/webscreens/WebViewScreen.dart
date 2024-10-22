@@ -2,7 +2,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+
+import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
+import 'package:webview_flutter_web/webview_flutter_web.dart';
 
 // ignore: must_be_immutable
 class WebViewScreensss extends StatefulWidget {
@@ -23,7 +25,13 @@ class WebViewScreensss extends StatefulWidget {
 
 class _WebViewScreensssState extends State<WebViewScreensss> {
   //late WebViewController controller;
-  late final Completer<WebViewController> controller;
+  final PlatformWebViewController _controller = PlatformWebViewController(
+    const PlatformWebViewControllerCreationParams(),
+  )..loadRequest(
+      LoadRequestParams(
+        uri: Uri.parse('https://tuddogramado.com.br/'),
+      ),
+    );
   //final bool _loading = false;
 
   @override
@@ -33,7 +41,11 @@ class _WebViewScreensssState extends State<WebViewScreensss> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<WebViewController>(
+    return Scaffold(
+      body: PlatformWebViewWidget(
+        PlatformWebViewWidgetCreationParams(controller: _controller),
+      ).build(context),
+    ); /*FutureBuilder<WebViewController>(
       future: controller.future,
       builder: (context, snapshot) {
         final WebViewController? controller = snapshot.data;
@@ -85,7 +97,7 @@ class _WebViewScreensssState extends State<WebViewScreensss> {
           ],
         );
       },
-    );
+    );*/
 
     /*_loading
         ? WillPopScope(

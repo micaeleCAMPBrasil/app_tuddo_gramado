@@ -28,9 +28,11 @@ class InAppView extends StatefulWidget {
 class _InAppViewState extends State<InAppView> {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  HeadlessInAppWebView? headlessWebView;
-  PullToRefreshController? pullToRefreshController;
-  InAppWebViewController? webViewController;
+  //HeadlessInAppWebView? headlessWebView;
+  //PullToRefreshController? pullToRefreshController;
+  //InAppWebViewController? webViewController;
+
+  late InAppWebViewController webView;
 
   int progress = 0;
   bool convertFlag = false;
@@ -46,7 +48,7 @@ class _InAppViewState extends State<InAppView> {
         });
       }
     });
-    pullToRefreshController = kIsWeb ||
+    /*pullToRefreshController = kIsWeb ||
             ![TargetPlatform.iOS, TargetPlatform.android]
                 .contains(defaultTargetPlatform)
         ? null
@@ -65,7 +67,7 @@ class _InAppViewState extends State<InAppView> {
                         URLRequest(url: await webViewController?.getUrl()));
               }
             },
-          );
+          );*/
 
     /*
 
@@ -114,24 +116,35 @@ class _InAppViewState extends State<InAppView> {
     ),
   );*/
 
-  run() async {
+  /*run() async {
     await headlessWebView!.run();
     /*if (!convertFlag) {
       setState(() {
         convertFlag = true;
       });
     }*/
-  }
+  }*/
 
   @override
   void dispose() {
     super.dispose();
-    headlessWebView?.dispose();
+    //headlessWebView?.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    return Scaffold(
+      appBar: AppBar(title: Text("In-App Browser")),
+      body: InAppWebView(
+        initialUrlRequest:
+            URLRequest(url: WebUri("https://tuddogramado.com.br/")),
+        onWebViewCreated: (InAppWebViewController controller) {
+          webView = controller;
+        },
+      ),
+    );
+
+    /*return WillPopScope(
       onWillPop: () async {
         if (!await webViewController!.canGoBack()) {
           /*Navigator.pushReplacement(
@@ -175,10 +188,7 @@ class _InAppViewState extends State<InAppView> {
             InAppWebView(
               pullToRefreshController: pullToRefreshController,
               initialUrlRequest: URLRequest(
-                url: Uri.parse(widget.url),
-                headers: {
-                  "Authorization": '*',
-                },
+                url: WebUri(widget.url),
               ),
               initialOptions: InAppWebViewGroupOptions(
                 android: AndroidInAppWebViewOptions(
@@ -390,10 +400,10 @@ class _InAppViewState extends State<InAppView> {
         ),*/
         //),
       ),
-    );
+    );*/
   }
 
-  Widget backButton() {
+  /*Widget backButton() {
     return FloatingActionButton(
       onPressed: () async {
         if (!await webViewController!.canGoBack()) {
@@ -404,5 +414,5 @@ class _InAppViewState extends State<InAppView> {
       },
       child: const Icon(Icons.navigate_before),
     );
-  }
+  }*/
 }

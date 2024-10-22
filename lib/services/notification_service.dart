@@ -27,8 +27,8 @@ class NotificationService {
 
   NotificationService() {
     localNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    _setupAndroidDetails();
-    _setupNotifications();
+    //_setupAndroidDetails();
+    //_setupNotifications();
   }
 
   _setupAndroidDetails() {

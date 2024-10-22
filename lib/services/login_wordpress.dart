@@ -47,7 +47,7 @@ class _LoginWordPressState extends State<LoginWordPress> {
           },
         ),
       )
-      ..loadRequest(Uri.parse('https://flutter.dev'));*/
+      ..loadRequest(WebUri('https://flutter.dev'));*/
   }
 
   late InAppWebViewController webView;
@@ -61,7 +61,7 @@ class _LoginWordPressState extends State<LoginWordPress> {
       children: [
         InAppWebView(
           initialUrlRequest: URLRequest(
-            url: Uri.parse(
+            url: WebUri(
                 '${Config.urltuddogramado}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
             headers: {
               "Authorization": '*',
@@ -90,8 +90,10 @@ class _LoginWordPressState extends State<LoginWordPress> {
               ?*/
         InAppWebView(
           initialUrlRequest: URLRequest(
-            url: Uri.parse(
+            url: WebUri(
                 '${Config.urltuddoemdobro}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
+            /*url: WebUri(
+                '${Config.urltuddoemdobro}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),*/
             headers: {
               "Authorization": '*',
             },
@@ -116,7 +118,7 @@ class _LoginWordPressState extends State<LoginWordPress> {
         ),
         InAppWebView(
           initialUrlRequest: URLRequest(
-            url: Uri.parse(
+            url: WebUri(
                 '${Config.urltranfer}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
             headers: {
               "Authorization": '*',
