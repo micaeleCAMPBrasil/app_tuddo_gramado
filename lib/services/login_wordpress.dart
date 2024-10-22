@@ -54,7 +54,7 @@ class _LoginWordPressState extends State<LoginWordPress> {
         /*: Container(),
           jalogou
               ?*/
-        /*InAppWebView(
+        InAppWebView(
           initialUrlRequest: URLRequest(
             url: WebUri(
                 '${Config.urltuddoemdobro}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
@@ -76,7 +76,7 @@ class _LoginWordPressState extends State<LoginWordPress> {
               progress = progres / 100;
             });
           },
-        ),*/
+        ),
         InAppWebView(
           initialUrlRequest: URLRequest(
             url: WebUri(

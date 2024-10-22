@@ -15,6 +15,7 @@ import 'package:app_tuddo_gramado/screens/rede_social/screens/SVPostAdd.dart';
 import 'package:app_tuddo_gramado/screens/rede_social/screens/SVPostUpdate.dart';
 import 'package:app_tuddo_gramado/screens/webscreens/InAppView.dart';
 import 'package:app_tuddo_gramado/services/firebase_messaging_service.dart';
+import 'package:app_tuddo_gramado/services/login_wordpress.dart';
 import 'package:app_tuddo_gramado/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -598,9 +599,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
       ),
       body: Stack(
         children: [
-          /*LoginWordPress(
+          LoginWordPress(
             usuario: usuario,
-          ),*/
+          ),
           _widgetOptions[routa.page].elementAt(routa.index),
         ],
       ),

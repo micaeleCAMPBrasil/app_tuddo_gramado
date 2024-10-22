@@ -1,10 +1,9 @@
 // ignore_for_file: library_private_types_in_public_api, file_names, deprecated_member_use, use_build_context_synchronously
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+// ignore: depend_on_referenced_packages
 import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
-import 'package:webview_flutter_web/webview_flutter_web.dart';
 
 // ignore: must_be_immutable
 class WebViewScreensss extends StatefulWidget {
