@@ -46,7 +46,7 @@ class _InAppViewState extends State<InAppView> {
         });
       }
     });
-    pullToRefreshController = kIsWeb ||
+    /*pullToRefreshController = kIsWeb ||
             ![TargetPlatform.iOS, TargetPlatform.android]
                 .contains(defaultTargetPlatform)
         ? null
@@ -65,7 +65,7 @@ class _InAppViewState extends State<InAppView> {
                         URLRequest(url: await webViewController?.getUrl()));
               }
             },
-          );
+          );*/
 
     /*
 
@@ -131,17 +131,33 @@ class _InAppViewState extends State<InAppView> {
 
   @override
   Widget build(BuildContext context) {
-    /*return Scaffold(
-      body: InAppWebView(
-        initialUrlRequest:
-            URLRequest(url: WebUri("https://tuddogramado.com.br/")),
-        onWebViewCreated: (InAppWebViewController controller) {
-          webView = controller;
+    return Scaffold(
+      body: WillPopScope(
+        onWillPop: () async {
+          if (!await webViewController!.canGoBack()) {
+            /*Navigator.pushReplacement(
+            context,
+            widget.routa,
+          );*/
+            Provider.of<ControlNav>(context, listen: false)
+                .updateIndex(widget.page, widget.index);
+          } else {
+            webViewController!.goBack();
+          }
+          return false;
         },
+        child: InAppWebView(
+          initialUrlRequest: URLRequest(
+            url: WebUri(widget.url),
+          ),
+          onWebViewCreated: (InAppWebViewController controller) {
+            webViewController = controller;
+          },
+        ),
       ),
-    );*/
+    );
 
-    return WillPopScope(
+    /*return WillPopScope(
       onWillPop: () async {
         if (!await webViewController!.canGoBack()) {
           /*Navigator.pushReplacement(
@@ -397,10 +413,10 @@ class _InAppViewState extends State<InAppView> {
         ),*/
         //),
       ),
-    );
+    );*/
   }
 
-  /*Widget backButton() {
+  Widget backButton() {
     return FloatingActionButton(
       onPressed: () async {
         if (!await webViewController!.canGoBack()) {
@@ -411,5 +427,5 @@ class _InAppViewState extends State<InAppView> {
       },
       child: const Icon(Icons.navigate_before),
     );
-  }*/
+  }
 }
