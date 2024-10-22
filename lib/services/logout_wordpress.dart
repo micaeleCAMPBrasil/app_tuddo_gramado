@@ -26,9 +26,6 @@ class _LogOutWordPressState extends State<LogOutWordPress> {
         InAppWebView(
           initialUrlRequest: URLRequest(
             url: WebUri('${Config.urltuddogramado}?is_api=true&acao=logout'),
-            headers: {
-              "Authorization": '*',
-            },
           ),
           onWebViewCreated: (controller) {
             webView = controller;
@@ -43,9 +40,6 @@ class _LogOutWordPressState extends State<LogOutWordPress> {
         InAppWebView(
           initialUrlRequest: URLRequest(
             url: WebUri('${Config.urltuddoemdobro}?is_api=true&acao=logout'),
-            headers: {
-              "Authorization": '*',
-            },
           ),
           onWebViewCreated: (controller) {
             webView = controller;
@@ -60,9 +54,6 @@ class _LogOutWordPressState extends State<LogOutWordPress> {
         InAppWebView(
           initialUrlRequest: URLRequest(
             url: WebUri('${Config.urltranfer}?is_api=true&acao=logout'),
-            headers: {
-              "Authorization": '*',
-            },
           ),
           onWebViewCreated: (controller) {
             webView = controller;

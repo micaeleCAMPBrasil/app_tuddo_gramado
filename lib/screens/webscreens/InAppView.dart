@@ -28,11 +28,9 @@ class InAppView extends StatefulWidget {
 class _InAppViewState extends State<InAppView> {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  //HeadlessInAppWebView? headlessWebView;
-  //PullToRefreshController? pullToRefreshController;
-  //InAppWebViewController? webViewController;
-
-  late InAppWebViewController webView;
+  HeadlessInAppWebView? headlessWebView;
+  PullToRefreshController? pullToRefreshController;
+  InAppWebViewController? webViewController;
 
   int progress = 0;
   bool convertFlag = false;
@@ -48,7 +46,7 @@ class _InAppViewState extends State<InAppView> {
         });
       }
     });
-    /*pullToRefreshController = kIsWeb ||
+    pullToRefreshController = kIsWeb ||
             ![TargetPlatform.iOS, TargetPlatform.android]
                 .contains(defaultTargetPlatform)
         ? null
@@ -67,7 +65,7 @@ class _InAppViewState extends State<InAppView> {
                         URLRequest(url: await webViewController?.getUrl()));
               }
             },
-          );*/
+          );
 
     /*
 
@@ -116,14 +114,14 @@ class _InAppViewState extends State<InAppView> {
     ),
   );*/
 
-  /*run() async {
+  run() async {
     await headlessWebView!.run();
     /*if (!convertFlag) {
       setState(() {
         convertFlag = true;
       });
     }*/
-  }*/
+  }
 
   @override
   void dispose() {
@@ -133,8 +131,7 @@ class _InAppViewState extends State<InAppView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("In-App Browser")),
+    /*return Scaffold(
       body: InAppWebView(
         initialUrlRequest:
             URLRequest(url: WebUri("https://tuddogramado.com.br/")),
@@ -142,9 +139,9 @@ class _InAppViewState extends State<InAppView> {
           webView = controller;
         },
       ),
-    );
+    );*/
 
-    /*return WillPopScope(
+    return WillPopScope(
       onWillPop: () async {
         if (!await webViewController!.canGoBack()) {
           /*Navigator.pushReplacement(
@@ -400,7 +397,7 @@ class _InAppViewState extends State<InAppView> {
         ),*/
         //),
       ),
-    );*/
+    );
   }
 
   /*Widget backButton() {

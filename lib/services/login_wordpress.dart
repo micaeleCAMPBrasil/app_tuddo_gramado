@@ -14,40 +14,9 @@ class LoginWordPress extends StatefulWidget {
 }
 
 class _LoginWordPressState extends State<LoginWordPress> {
-  //late WebViewController _controllerweb;
   @override
   void initState() {
     super.initState();
-
-    /*if (kIsWeb) {
-      js.context.callMethod(
-        'open',
-        [
-          '${Config.urltranfer}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}',
-          '_self'
-        ],
-      );
-    }*/
-    /*_controllerweb = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (int progress) {
-            // Update loading bar.
-          },
-          onPageStarted: (String url) {},
-          onPageFinished: (String url) {},
-          onHttpError: (HttpResponseError error) {},
-          onWebResourceError: (WebResourceError error) {},
-          onNavigationRequest: (NavigationRequest request) {
-            if (request.url.startsWith('https://www.youtube.com/')) {
-              return NavigationDecision.prevent;
-            }
-            return NavigationDecision.navigate;
-          },
-        ),
-      )
-      ..loadRequest(WebUri('https://flutter.dev'));*/
   }
 
   late InAppWebViewController webView;
@@ -63,9 +32,6 @@ class _LoginWordPressState extends State<LoginWordPress> {
           initialUrlRequest: URLRequest(
             url: WebUri(
                 '${Config.urltuddogramado}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
-            headers: {
-              "Authorization": '*',
-            },
           ),
           onWebViewCreated: (controller) {
             webView = controller;
@@ -88,15 +54,10 @@ class _LoginWordPressState extends State<LoginWordPress> {
         /*: Container(),
           jalogou
               ?*/
-        InAppWebView(
+        /*InAppWebView(
           initialUrlRequest: URLRequest(
             url: WebUri(
                 '${Config.urltuddoemdobro}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
-            /*url: WebUri(
-                '${Config.urltuddoemdobro}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),*/
-            headers: {
-              "Authorization": '*',
-            },
           ),
           onWebViewCreated: (controller) {
             webView = controller;
@@ -115,14 +76,11 @@ class _LoginWordPressState extends State<LoginWordPress> {
               progress = progres / 100;
             });
           },
-        ),
+        ),*/
         InAppWebView(
           initialUrlRequest: URLRequest(
             url: WebUri(
                 '${Config.urltranfer}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
-            headers: {
-              "Authorization": '*',
-            },
           ),
           onWebViewCreated: (controller) {
             webView = controller;

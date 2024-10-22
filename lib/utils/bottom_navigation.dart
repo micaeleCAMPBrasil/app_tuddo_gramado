@@ -14,9 +14,7 @@ import 'package:app_tuddo_gramado/screens/rede_social/screens/SVCommentScreen.da
 import 'package:app_tuddo_gramado/screens/rede_social/screens/SVPostAdd.dart';
 import 'package:app_tuddo_gramado/screens/rede_social/screens/SVPostUpdate.dart';
 import 'package:app_tuddo_gramado/screens/webscreens/InAppView.dart';
-import 'package:app_tuddo_gramado/screens/webscreens/WebViewScreen.dart';
 import 'package:app_tuddo_gramado/services/firebase_messaging_service.dart';
-import 'package:app_tuddo_gramado/services/login_wordpress.dart';
 import 'package:app_tuddo_gramado/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -241,13 +239,13 @@ class _BottomNavigationState extends State<BottomNavigation> {
       ],
       // tuddo em dobro // 1
       [
-        WebViewScreensss(
+        InAppView(
           url: 'https://site.tuddogramado.com.br/tuddo-em-dobro/',
-          /*data: {
+          data: {
             "usuario": usuario.email,
             "senha": usuario.uid,
           },
-          page: 0,*/
+          page: 0,
           index: 0,
           /*routa: MaterialPageRoute(
             builder: (context) => const BottomNavigation(
