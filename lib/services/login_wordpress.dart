@@ -36,7 +36,7 @@ class _LoginWordPressState extends State<LoginWordPress> {
           onWebViewCreated: (controller) {
             webView = controller;
           },
-          onReceivedHttpAuthRequest:
+          /*onReceivedHttpAuthRequest:
               (InAppWebViewController controller, challenge) async {
             return HttpAuthResponse(
               username: widget.usuario.email,
@@ -49,20 +49,20 @@ class _LoginWordPressState extends State<LoginWordPress> {
             setState(() {
               progress = progres / 100;
             });
-          },
+          },*/
         ),
         /*: Container(),
           jalogou
               ?*/
-        InAppWebView(
+        /*InAppWebView(
           initialUrlRequest: URLRequest(
             url: WebUri(
                 '${Config.urltuddoemdobro}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
           ),
           onWebViewCreated: (controller) {
             webView = controller;
-          },
-          onReceivedHttpAuthRequest:
+          },*/
+        /*onReceivedHttpAuthRequest:
               (InAppWebViewController controller, challenge) async {
             return HttpAuthResponse(
               username: widget.usuario.email,
@@ -75,17 +75,17 @@ class _LoginWordPressState extends State<LoginWordPress> {
             setState(() {
               progress = progres / 100;
             });
-          },
-        ),
-        InAppWebView(
+          },*/
+        //),
+        /*InAppWebView(
           initialUrlRequest: URLRequest(
             url: WebUri(
                 '${Config.urltranfer}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
           ),
           onWebViewCreated: (controller) {
             webView = controller;
-          },
-          onReceivedHttpAuthRequest:
+          },*/
+        /*onReceivedHttpAuthRequest:
               (InAppWebViewController controller, challenge) async {
             return HttpAuthResponse(
               username: widget.usuario.email,
@@ -98,8 +98,8 @@ class _LoginWordPressState extends State<LoginWordPress> {
             setState(() {
               progress = progres / 100;
             });
-          },
-        ),
+          },*/
+        //),
       ],
     );
     /*: Scaffold(
