@@ -40,6 +40,42 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:111160179496:android:11ea2800461f6edf812e1d",
+        "android_client_info": {
+          "package_name": "com.tuddo.tuddo.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "111160179496-tg3iemjs1hldfa5tgpqg69ku7eiulto1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNFCBCw-ynEYG6TwG2sCNIB255MjJ63Ls"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "111160179496-tg3iemjs1hldfa5tgpqg69ku7eiulto1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "111160179496-9bot51g261854a3hk0sraj3avog977bd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.appTuddoGramado"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

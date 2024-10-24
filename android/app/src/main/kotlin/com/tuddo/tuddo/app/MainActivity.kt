@@ -1,4 +1,4 @@
-package com.example.app_tuddo_gramado
+package com.tuddo.tuddo.app
 
 import io.flutter.embedding.android.FlutterActivity
 
