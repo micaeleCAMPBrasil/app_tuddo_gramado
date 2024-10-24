@@ -101,7 +101,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   Widget build(BuildContext context) {
     Usuario usuario = Provider.of<UsuarioProvider>(context).getUsuario;
     Routa routa = Provider.of<ControlNav>(context).getrouta;
-    //cadastrousuario(usuario);
+    cadastrousuario(usuario);
     int routaCategoriaPatrocinador =
         Provider.of<ControlNav>(context).getIdPatrocinador;
     Patrocinadores ptEscolhido = routa.page == 2 &&
@@ -602,7 +602,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
           LoginWordPress(
             usuario: usuario,
           ),
-          _widgetOptions[routa.page].elementAt(routa.index),
+          //_widgetOptions[routa.page].elementAt(routa.index),
         ],
       ),
     );
