@@ -46,7 +46,7 @@ class _InAppViewState extends State<InAppView> {
         });
       }
     });
-    /*pullToRefreshController = kIsWeb ||
+    pullToRefreshController = kIsWeb ||
             ![TargetPlatform.iOS, TargetPlatform.android]
                 .contains(defaultTargetPlatform)
         ? null
@@ -65,7 +65,7 @@ class _InAppViewState extends State<InAppView> {
                         URLRequest(url: await webViewController?.getUrl()));
               }
             },
-          );*/
+          );
 
     /*
 
@@ -101,26 +101,7 @@ class _InAppViewState extends State<InAppView> {
       },
     );*/
 
-    //run();
     super.initState();
-  }
-
-  /*Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(
-      builder: (context) => BottomNavigation(
-        selectedIndex: widget.index,
-      ),
-    ),
-  );*/
-
-  run() async {
-    await headlessWebView!.run();
-    /*if (!convertFlag) {
-      setState(() {
-        convertFlag = true;
-      });
-    }*/
   }
 
   @override
@@ -131,7 +112,7 @@ class _InAppViewState extends State<InAppView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    /*return Scaffold(
       body: WillPopScope(
         onWillPop: () async {
           if (!await webViewController!.canGoBack()) {
@@ -155,9 +136,9 @@ class _InAppViewState extends State<InAppView> {
           },
         ),
       ),
-    );
+    );*/
 
-    /*return WillPopScope(
+    return WillPopScope(
       onWillPop: () async {
         if (!await webViewController!.canGoBack()) {
           /*Navigator.pushReplacement(
@@ -413,7 +394,7 @@ class _InAppViewState extends State<InAppView> {
         ),*/
         //),
       ),
-    );*/
+    );
   }
 
   Widget backButton() {

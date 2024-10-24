@@ -360,7 +360,7 @@ class _ProfilePageState extends State<ProfilePage> {
               },
             ),
           ),
-          /*GestureDetector(
+          GestureDetector(
             onTap: () {
               Provider.of<ControlNav>(context, listen: false).updateIndex(4, 5);
             },
@@ -374,7 +374,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
+                  /*SizedBox(
                     child: Image.asset(
                       "assets/icones/crown.png",
                       width: 20,
@@ -382,6 +382,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   widthSpace10,
+                  */
                   Text(
                     'Faça Parte',
                     style: blackBold18,
@@ -389,7 +390,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
             ),
-          )*/
+          )
         ],
       ),
     );
