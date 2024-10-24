@@ -14,10 +14,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
+import 'package:wp_json_api/wp_json_api.dart';
 
 AppStore appStore = AppStore();
 
 void main() async {
+  WPJsonAPI.instance.init(baseUrl: "https://site.tuddogramado.com.br");
+
   WidgetsFlutterBinding.ensureInitialized();
   await initialize(aLocaleLanguageList: languageList());
 

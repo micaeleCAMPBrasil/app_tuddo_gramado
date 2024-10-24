@@ -5,6 +5,9 @@ import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/data/php/config.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:wp_json_api/enums/wp_auth_type.dart';
+import 'package:wp_json_api/models/responses/wp_user_login_response.dart';
+import 'package:wp_json_api/wp_json_api.dart';
 
 class APIService {
   Future<bool> createCustomer(Usuario usuario, CustomerModel model) async {
@@ -36,7 +39,8 @@ class APIService {
     bool ret = false;
 
     // String email, String senha
-    Map? data = await getIdTG(Config.tokenURLTG, 'admin', 'K17s31D02@milenaepedro');
+    Map? data =
+        await getIdTG(Config.tokenURLTG, 'admin', 'K17s31D02@milenaepedro');
     String tokenadm = data!['token'];
 
     try {
@@ -71,11 +75,22 @@ class APIService {
     bool ret = false;
 
     // String email, String senha
-    Map? data = await getIdTG(Config.tokenURL, 'tuddoemdobro', 'K17s31D02@milenaepedro');
-    String tokenadm = data!['token'];
+    /*Map? data = await getIdTG(
+        Config.tokenURL, 'tuddoemdobro', 'K17s31D02@milenaepedro');
+    String tokenadm = data!['token'];*/
 
     try {
-      var response = await Dio().post(
+      WPUserLoginResponse wpUserLoginResponse = await WPJsonAPI.instance.api(
+        (request) => request.wpLogin(
+          username: model.email,
+          password: model.password!,
+          authType: WPAuthType.WpUsername,
+        ),
+      );
+
+      debugPrint('logando - ${wpUserLoginResponse.message}');
+
+      /*var response = await Dio().post(
         Config.url + Config.customerURL,
         data: model.toJson(),
         options: Options(
@@ -89,7 +104,7 @@ class APIService {
       if (response.statusCode == 201) {
         debugPrint('usuario do tuddo em dobro cadastrado');
         ret = true;
-      }
+      }*/
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
         debugPrint("Cadastro Erro Tuddo em dobro - ${e.message}");
@@ -106,8 +121,8 @@ class APIService {
     bool ret = false;
 
     // String email, String senha
-    Map? data =
-        await getIdTG(Config.tokenURLTransfer, 'tuddotransfer', 'K17s31D02@milenaepedro');
+    Map? data = await getIdTG(
+        Config.tokenURLTransfer, 'tuddotransfer', 'K17s31D02@milenaepedro');
     String tokenadm = data!['token'];
 
     try {

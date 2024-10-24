@@ -89,9 +89,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
     await apiService.criandonovousuarioTuddoGramado(model);
 
-    await apiService.criandonovousuarioTuddoDobro(model);
-
     await apiService.criandonovousuarioTransfer(model);
+
+    await apiService.criandonovousuarioTuddoDobro(model);
   }
 
   late InAppWebViewController webView;
