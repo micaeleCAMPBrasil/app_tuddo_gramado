@@ -1,7 +1,6 @@
 // ignore_for_file: file_names, deprecated_member_use, use_build_context_synchronously
 
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
@@ -16,7 +15,7 @@ import 'package:app_tuddo_gramado/utils/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
@@ -34,13 +33,11 @@ class _SVPostAddState extends State<SVPostAdd> {
   bool delay = true;
   bool loading = false;
 
-  File? _image;
-  final picker = ImagePicker();
+  String base64Image = '';
+  // ignore: prefer_typing_uninitialized_variables
+  var _fileBytes;
 
-  String? base64Image;
-  File? tmpFile;
-
-  Future getImageCamera() async {
+  /*Future getImageCamera() async {
     final pickedFile =
         await picker.pickImage(source: ImageSource.camera, imageQuality: 100);
     if (pickedFile != null) {
@@ -66,6 +63,7 @@ class _SVPostAddState extends State<SVPostAdd> {
       uploadImageFile();
     } else {}
   }
+  */
 
   postPost(String imagem, String texto) async {
     DateTime now = DateTime.now();
@@ -112,48 +110,42 @@ class _SVPostAddState extends State<SVPostAdd> {
 
   Dio dio = Dio();
 
+  Future<void> getMultipleImageInfos() async {
+    var fileBytes = await ImagePickerWeb.getImageAsBytes();
+
+    if (fileBytes!.isEmpty) {
+    } else {
+      setState(() {
+        _fileBytes = fileBytes;
+        base64Image = base64Encode(fileBytes);
+      });
+      uploadImageFile();
+    }
+  }
+
   void uploadImageFile() async {
     String url = "https://www.tuddo.org/upload_img.php";
 
     try {
-      /*String fileName = _image!.path.split('/').last;
+      final DateTime now = DateTime.now();
+      try {
+        //String
+        String fileName = '${widget.usuario.uid}-${now.day}:${now.hour}.jpg';
 
-      FormData data = FormData.fromMap({
-        "key": imgBBkey,
-        "image": await MultipartFile.fromFile(
-          _image!.path,
-          filename: fileName,
-        ),
-      });
+        http.post(Uri.parse(url), body: {
+          "image": base64Image,
+          "name": fileName,
+          "pasta": 'posts/',
+        }).then((value) {
+          debugPrint('upload ${value.body}');
 
-      Dio dio = Dio();
-      dio.post("https://api.imgbb.com/1/upload", data: data).then((response) {
-        var data = response.data;
-
-        debugPrint('Função - ${data['data']['url']}');
-
-        setState(() {
-          imgURL = data['data']['url'];
-        });
-
-        // ignore: invalid_return_type_for_catch_error
-      }).catchError((error) => debugPrint(error.toString()));
-      // ignore: empty_catches*/
-
-      String fileName = tmpFile!.path.split('/').last;
-
-      http.post(Uri.parse(url), body: {
-        "image": base64Image,
-        "name": fileName,
-        "pasta": 'posts/',
-      }).then((value) {
-        debugPrint('upload ${value.body}');
-        if (mounted) {
           setState(() {
             imgURL = value.body.toString();
           });
-        }
-      });
+        });
+      } catch (e) {
+        debugPrint("Error");
+      }
     } catch (e) {
       debugPrint("Error");
     }
@@ -267,15 +259,19 @@ class _SVPostAddState extends State<SVPostAdd> {
                     ],
                   ),
                   heightSpace15,
-                  _image == null
+                  _fileBytes == null
                       ? Image.asset(
                           'assets/social/no-camera.png',
                           height: 300,
                           width: context.width() - 32,
                           color: whiteColor,
                         ).cornerRadiusWithClipRRect(12).center()
-                      : Image.file(
-                          _image!,
+                      : Image(
+                          image: MemoryImage(
+                            base64Decode(
+                              base64Image.toString(),
+                            ),
+                          ),
                           height: 300,
                           width: context.width() - 32,
                           fit: BoxFit.cover,
@@ -287,27 +283,27 @@ class _SVPostAddState extends State<SVPostAdd> {
                         children: [
                           IconButton(
                             icon: Image.asset(
-                              'assets/icones/camera.png',
+                              'assets/icones/gallery.png',
                               height: 20,
                               width: 22,
                               fit: BoxFit.cover,
                             ),
                             onPressed: () async {
-                              await getImageCamera();
+                              await getMultipleImageInfos();
                             },
                           ),
-                          GestureDetector(
+                          /*GestureDetector(
                             onTap: () async {
                               await getImageGaleria();
                             },
                             child: Image.asset(
-                              'assets/icones/gallery.png',
+                              'assets/icones/camera.png',
                               height: 22,
                               width: 22,
                               fit: BoxFit.cover,
                             ),
                           ),
-                          widthSpace10,
+                          widthSpace10,*/
                         ],
                       ),
                     ],

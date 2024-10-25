@@ -1,8 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:convert';
-import 'dart:io';
-import 'package:app_tuddo_gramado/data/models/imgbbResponseModel.dart';
+
 import 'package:app_tuddo_gramado/data/php/api_service.dart';
 import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
 
@@ -11,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:provider/provider.dart';
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/data/php/functions.dart';
@@ -73,18 +73,30 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   ImagePicker picker = ImagePicker();
 
+  // ignore: prefer_typing_uninitialized_variables
+  var _fileBytes;
   String? base64Image;
-  File? tmpFile;
 
+  /*File? tmpFile;
   File? images;
-
   final imgBBkey = '4cd0e929ee9db86448e68f47e4a33931';
-
   String txt = '';
+  late ImgbbResponseModel imgbbResponse;*/
 
-  late ImgbbResponseModel imgbbResponse;
+  Future<void> getMultipleImageInfos() async {
+    var fileBytes = await ImagePickerWeb.getImageAsBytes();
 
-  Future pickGalleryImage() async {
+    if (fileBytes!.isEmpty) {
+    } else {
+      setState(() {
+        _fileBytes = fileBytes;
+        base64Image = base64Encode(fileBytes);
+      });
+      uploadImage();
+    }
+  }
+
+  /*Future pickGalleryImage() async {
     final pickedFile =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 100);
 
@@ -110,17 +122,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
       uploadImage();
     }
   }
+  */
 
   removerFoto() {
     setState(() {
-      images = null;
+      _fileBytes = null;
+      // images = null;
       widget.usuario.photo = '';
     });
   }
 
   openChangeProfilePhotoSheet(BuildContext context) {
     List sheetOptions = [
-      {'icon': 'assets/icones/camera.png', 'title': 'Câmera'},
+      //{'icon': 'assets/icones/camera.png', 'title': 'Câmera'},
       {'icon': 'assets/icones/gallery.png', 'title': 'Galeria'},
       {'icon': 'assets/icones/bin.png', 'title': 'Remover\nFoto'},
     ];
@@ -148,10 +162,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               GestureDetector(
                                 onTap: () {
                                   if (e['title'] == 'Galeria') {
-                                    pickGalleryImage();
-                                  } else if (e['title'] == 'Câmera') {
+                                    getMultipleImageInfos();
+                                  } /*else if (e['title'] == 'Câmera') {
                                     pickCameraImage();
-                                  } else {
+                                  } */
+                                  else {
                                     removerFoto();
                                   }
                                   Navigator.pop(context);
@@ -193,11 +208,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String imgURL = '';
 
   void uploadImage() async {
+    final DateTime now = DateTime.now();
     String url = "https://www.tuddo.org/upload_img.php";
     try {
       //String
-
-      String fileName = tmpFile!.path.split('/').last;
+      String fileName = '${widget.usuario.uid}-${now.day}:${now.hour}.jpg';
 
       http.post(Uri.parse(url), body: {
         "image": base64Image,
@@ -206,11 +221,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
       }).then((value) {
         debugPrint('upload ${value.body}');
 
-        if (mounted) {
-          setState(() {
-            imgURL = value.body.toString();
-          });
-        }
+        setState(() {
+          imgURL = value.body.toString();
+        });
       });
     } catch (e) {
       debugPrint("Error");
@@ -218,7 +231,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   void editarUsuario(Usuario usuario) async {
-    storeUser.update(
+    await storeUser.update(
       usuario,
     );
 
@@ -262,7 +275,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         widget.usuario.username = _userNameController.text;
                         widget.usuario.email = _emailController.text;
                         widget.usuario.telefone = _phoneNumberController.text;
-                        widget.usuario.photo = imgURL == ''
+                        widget.usuario.photo = _fileBytes == ''
                             ? widget.usuario.photo != ''
                                 ? widget.usuario.photo
                                 : ""
@@ -392,7 +405,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: images == null
+                      child: /*images == null
                           ? usuario.photo == ''
                               ? Image.asset(
                                   "assets/image/nopicture.png",
@@ -405,7 +418,24 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           : Image.file(
                               File(images!.path),
                               fit: BoxFit.cover,
-                            ),
+                            ),*/
+
+                          _fileBytes != null
+                              ? Image(
+                                  image: MemoryImage(
+                                    base64Decode(base64Image.toString()),
+                                  ),
+                                  fit: BoxFit.cover,
+                                )
+                              : usuario.photo == ''
+                                  ? Image.asset(
+                                      "assets/image/nopicture.png",
+                                      fit: BoxFit.fill,
+                                    )
+                                  : Image.network(
+                                      usuario.photo,
+                                      fit: BoxFit.cover,
+                                    ),
                     ),
                   ),
                 ),

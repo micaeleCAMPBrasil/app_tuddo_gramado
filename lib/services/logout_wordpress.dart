@@ -21,49 +21,43 @@ class _LogOutWordPressState extends State<LogOutWordPress> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
       children: [
-        InAppWebView(
-          initialUrlRequest: URLRequest(
-            url: WebUri('${Config.urltuddogramado}?is_api=true&acao=logout'),
+        SizedBox(
+          width: 1,
+          height: 1,
+          child: InAppWebView(
+            initialUrlRequest: URLRequest(
+              url: WebUri('${Config.urltuddogramado}?is_api=true&acao=logout'),
+            ),
+            onWebViewCreated: (controller) {
+              webView = controller;
+            },
           ),
-          onWebViewCreated: (controller) {
-            webView = controller;
-          },
-          onLoadStart: (InAppWebViewController controller, Uri? uri) async {},
-          onProgressChanged: (controller, progres) {
-            setState(() {
-              progress = progres / 100;
-            });
-          },
         ),
-        InAppWebView(
-          initialUrlRequest: URLRequest(
-            url: WebUri('${Config.urltuddoemdobro}?is_api=true&acao=logout'),
+        SizedBox(
+          width: 1,
+          height: 1,
+          child: InAppWebView(
+            initialUrlRequest: URLRequest(
+              url: WebUri('${Config.urltranfer}?is_api=true&acao=logout'),
+            ),
+            onWebViewCreated: (controller) {
+              webView = controller;
+            },
           ),
-          onWebViewCreated: (controller) {
-            webView = controller;
-          },
-          onLoadStart: (InAppWebViewController controller, Uri? uri) async {},
-          onProgressChanged: (controller, progres) {
-            setState(() {
-              progress = progres / 100;
-            });
-          },
         ),
-        InAppWebView(
-          initialUrlRequest: URLRequest(
-            url: WebUri('${Config.urltranfer}?is_api=true&acao=logout'),
+        SizedBox(
+          width: 1,
+          height: 1,
+          child: InAppWebView(
+            initialUrlRequest: URLRequest(
+              url: WebUri('${Config.urltuddoemdobro}?is_api=true&acao=logout'),
+            ),
+            onWebViewCreated: (controller) {
+              webView = controller;
+            },
           ),
-          onWebViewCreated: (controller) {
-            webView = controller;
-          },
-          onLoadStart: (InAppWebViewController controller, Uri? uri) async {},
-          onProgressChanged: (controller, progres) {
-            setState(() {
-              progress = progres / 100;
-            });
-          },
         ),
       ],
     );

@@ -24,100 +24,48 @@ class _LoginWordPressState extends State<LoginWordPress> {
 
   @override
   Widget build(BuildContext context) {
-    return /*!kIsWeb
-        ? */
-        Stack(
+    return Column(
       children: [
-        /*InAppWebView(
-          initialUrlRequest: URLRequest(
-            url: WebUri(
-                '${Config.urltuddogramado}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
+        SizedBox(
+          width: 1,
+          height: 1,
+          child: InAppWebView(
+            initialUrlRequest: URLRequest(
+              url: WebUri(
+                  '${Config.urltuddogramado}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
+            ),
+            onWebViewCreated: (controller) {
+              webView = controller;
+            },
           ),
-          onWebViewCreated: (controller) {
-            webView = controller;
-          },*/
-        /*onReceivedHttpAuthRequest:
-              (InAppWebViewController controller, challenge) async {
-            return HttpAuthResponse(
-              username: widget.usuario.email,
-              password: widget.usuario.uid,
-              action: HttpAuthResponseAction.PROCEED,
-            );
-          },
-          onLoadStart: (InAppWebViewController controller, Uri? uri) async {},
-          onProgressChanged: (controller, progres) {
-            setState(() {
-              progress = progres / 100;
-            });
-          },*/
-        //),
-        /*: Container(),
-          jalogou
-              ?*/
-        InAppWebView(
-          initialUrlRequest: URLRequest(
-            url: WebUri(
-                '${Config.urltuddoemdobro}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
-          ),
-          onWebViewCreated: (controller) {
-            webView = controller;
-          },
-          /*onReceivedHttpAuthRequest:
-              (InAppWebViewController controller, challenge) async {
-            return HttpAuthResponse(
-              username: widget.usuario.email,
-              password: widget.usuario.uid,
-              action: HttpAuthResponseAction.PROCEED,
-            );
-          },
-          onLoadStart: (InAppWebViewController controller, Uri? uri) async {},
-          onProgressChanged: (controller, progres) {
-            setState(() {
-              progress = progres / 100;
-            });
-          },*/
         ),
-        /*InAppWebView(
-          initialUrlRequest: URLRequest(
-            url: WebUri(
-                '${Config.urltranfer}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
+        SizedBox(
+          width: 1,
+          height: 1,
+          child: InAppWebView(
+            initialUrlRequest: URLRequest(
+              url: WebUri(
+                  '${Config.urltranfer}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
+            ),
+            onWebViewCreated: (controller) {
+              webView = controller;
+            },
           ),
-          onWebViewCreated: (controller) {
-            webView = controller;
-          },*/
-        /*onReceivedHttpAuthRequest:
-              (InAppWebViewController controller, challenge) async {
-            return HttpAuthResponse(
-              username: widget.usuario.email,
-              password: widget.usuario.uid,
-              action: HttpAuthResponseAction.PROCEED,
-            );
-          },
-          onLoadStart: (InAppWebViewController controller, Uri? uri) async {},
-          onProgressChanged: (controller, progres) {
-            setState(() {
-              progress = progres / 100;
-            });
-          },*/
-        //),
+        ),
+        SizedBox(
+          width: 1,
+          height: 1,
+          child: InAppWebView(
+            initialUrlRequest: URLRequest(
+              url: WebUri(
+                  '${Config.urltuddoemdobro}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
+            ),
+            onWebViewCreated: (controller) {
+              webView = controller;
+            },
+          ),
+        ),
       ],
     );
-    /*: Scaffold(
-            appBar: AppBar(title: const Text('Flutter Simple Example')),
-            body: Container(
-              color: Colors.yellow,
-              width: 100,
-              height: 100,
-              child: GestureDetector(
-                child: const Text('Button'),
-                onTap: () {
-                  html(
-                    '${Config.urltranfer}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}',
-                    '_self',
-                  );
-                },
-              ),
-            ),
-          );*/
   }
 }

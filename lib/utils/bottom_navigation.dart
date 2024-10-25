@@ -74,7 +74,11 @@ class _BottomNavigationState extends State<BottomNavigation> {
   cadastrousuario(Usuario usuario) async {
     List<String> split = usuario.nome.split(' ');
     String primeiroNome = split[0] == '' ? '' : split[0].toUpperCase();
-    String segundoNome = split[1] == '' ? '' : split[1].toUpperCase();
+    String segundoNome = split.length <= 1
+        ? ''
+        : split[1] == ''
+            ? ''
+            : split[1].toUpperCase();
 
     CustomerModel model = CustomerModel(
       email: usuario.email,
@@ -602,7 +606,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
           LoginWordPress(
             usuario: usuario,
           ),
-          //_widgetOptions[routa.page].elementAt(routa.index),
+          _widgetOptions[routa.page].elementAt(routa.index),
         ],
       ),
     );

@@ -5,10 +5,7 @@ import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/data/php/config.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:wp_json_api/enums/wp_auth_type.dart';
-import 'package:wp_json_api/models/responses/wp_nonce_response.dart';
-import 'package:wp_json_api/models/responses/wp_user_info_response.dart';
-import 'package:wp_json_api/models/responses/wp_user_login_response.dart';
+import 'package:wp_json_api/models/responses/wp_user_register_response.dart';
 import 'package:wp_json_api/wp_json_api.dart';
 
 class APIService {
@@ -75,37 +72,56 @@ class APIService {
 
   Future<bool> criandonovousuarioTuddoDobro(CustomerModel model) async {
     bool ret = false;
-    WPJsonAPI.instance.init(baseUrl: "https://site.tuddogramado.com.br");
+    WPJsonAPI.instance.init(
+      baseUrl: "https://site.tuddogramado.com.br",
+    );
 
     // String email, String senha
     /*Map? data = await getIdTG(
         Config.tokenURL, 'tuddoemdobro', 'K17s31D02@milenaepedro');
     String tokenadm = data!['token'];*/
 
-    try {
-      WPNonceResponse wpNonceResponse =
-          await WPJsonAPI.instance.api((request) => request.wpNonce());
-      if (wpNonceResponse.status == 200) {
-        print('sucesso nonce');
+    debugPrint('model - ${model.toJson()}');
 
-        WPUserLoginResponse wpUserLoginResponse = await WPJsonAPI.instance.api(
-          (request) => request.wpLogin(
-            email: model.email,
-            password: model.password!,
-            authType: WPAuthType.WpEmail,
+    try {
+      await WPJsonAPI.instance.api(
+        (request) => request.wpNonce(),
+      );
+      debugPrint('sucesso nonce');
+
+      try {
+        WPUserRegisterResponse wpUserRegisterResponse =
+            await WPJsonAPI.instance.api(
+          (request) => request.wpRegister(
+            email: model.email.toString(),
+            password: model.password.toString(),
+            saveTokenToLocalStorage: true,
           ),
         );
+        if (wpUserRegisterResponse.status == 200) {
+          debugPrint('login  - ${wpUserRegisterResponse.data?.email}');
 
-        if (wpUserLoginResponse.status == 200) {
-          print('login  - ${wpUserLoginResponse.data?.email}');
+          await WPJsonAPI.instance.api(
+            (request) => request.wpUpdateUserInfo(
+              firstName: model.firstName,
+              lastName: model.lastName,
+              displayName: model.displayName,
+            ),
+          );
+
+          await WPJsonAPI.instance.api(
+            (request) => request.wpUserAddRole(
+              role: "customer", // e.g. customer, subscriber
+            ),
+          );
         } else {
-          print("something went wrong 1");
+          debugPrint("something went wrong 1");
         }
-      } else {
-        print("something went wrong 2");
+      } catch (e) {
+        debugPrint('registrer $e');
       }
-    } on Exception catch (e) {
-      print('erro login - $e');
+    } catch (e) {
+      debugPrint('noce $e');
     }
 
     try {

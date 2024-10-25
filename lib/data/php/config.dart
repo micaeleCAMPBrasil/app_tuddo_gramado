@@ -1,13 +1,13 @@
 class Config {
-  static String key = "ck_83956fb1cd1e80f6aba01f5cad97ee2ed6026265";
-  static String screet = "cs_3f11ba5ee7a6400179647efc0796d346e5ae9605";
+  static String key = "ck_66523e32bf21600a5bfc6bee5e717cb5b4b49f66";
+  static String screet = "cs_1d72c1f239aca3c0ff30eb57467df5dfc17d862b";
   static String url = "https://site.tuddogramado.com.br/wp-json/wp/v2/";
 
   static String tokenURL =
       "https://site.tuddogramado.com.br/wp-json/jwt-auth/v1/token";
 
   static String urltuddoemdobro =
-      "https://site.tuddogramado.com.br/wp-login.php";
+      "https://site.tuddogramado.com.br/member-login";
 
   static String customerURL = "users";
 

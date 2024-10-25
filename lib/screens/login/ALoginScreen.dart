@@ -67,7 +67,7 @@ class _ALoginScreenState extends State<ALoginScreen> {
         ),
         body: Stack(
           children: [
-            //const LogOutWordPress(),
+            const LogOutWordPress(),
             Container(
               height: MediaQuery.of(context).size.height,
               padding: EdgeInsets.only(

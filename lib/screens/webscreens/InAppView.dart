@@ -223,7 +223,7 @@ class _InAppViewState extends State<InAppView> {
                 });
               },
             ),
-            progress < 100
+            /*progress < 100
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -238,7 +238,7 @@ class _InAppViewState extends State<InAppView> {
                       ),
                     ],
                   )
-                : Container(),
+                : Container(),*/
             loading
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,

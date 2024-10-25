@@ -258,12 +258,16 @@ class _RegisterPageState extends State<RegisterPage> {
 
                                     List<String> split =
                                         widget.usuario.nome.split(' ');
-                                    String primeiroNome = split[0] == ''
+                                    String primeiroNome =
+                                        split[0].toString() == ''
+                                            ? ''
+                                            : split[0].toUpperCase();
+
+                                    String segundoNome = split.length <= 1
                                         ? ''
-                                        : split[0].toUpperCase();
-                                    String segundoNome = split[1] == ''
-                                        ? ''
-                                        : split[1].toUpperCase();
+                                        : split[1].toString() == ''
+                                            ? ''
+                                            : split[1].toUpperCase();
 
                                     CustomerModel model = CustomerModel(
                                       email: widget.usuario.email,

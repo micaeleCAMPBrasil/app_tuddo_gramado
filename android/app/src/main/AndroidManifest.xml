@@ -9,7 +9,7 @@
     <uses-feature android:name="android.hardware.location.gps"/>
 
     <application
-        android:label="Tuddo Gramado"
+        android:label="Tuddo"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
