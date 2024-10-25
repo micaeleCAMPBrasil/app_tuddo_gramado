@@ -6,6 +6,8 @@ import 'package:app_tuddo_gramado/data/php/config.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:wp_json_api/enums/wp_auth_type.dart';
+import 'package:wp_json_api/models/responses/wp_nonce_response.dart';
+import 'package:wp_json_api/models/responses/wp_user_info_response.dart';
 import 'package:wp_json_api/models/responses/wp_user_login_response.dart';
 import 'package:wp_json_api/wp_json_api.dart';
 
@@ -73,6 +75,7 @@ class APIService {
 
   Future<bool> criandonovousuarioTuddoDobro(CustomerModel model) async {
     bool ret = false;
+    WPJsonAPI.instance.init(baseUrl: "https://site.tuddogramado.com.br");
 
     // String email, String senha
     /*Map? data = await getIdTG(
@@ -80,7 +83,33 @@ class APIService {
     String tokenadm = data!['token'];*/
 
     try {
-      WPUserLoginResponse wpUserLoginResponse = await WPJsonAPI.instance.api(
+      WPNonceResponse wpNonceResponse =
+          await WPJsonAPI.instance.api((request) => request.wpNonce());
+      if (wpNonceResponse.status == 200) {
+        print('sucesso nonce');
+
+        WPUserLoginResponse wpUserLoginResponse = await WPJsonAPI.instance.api(
+          (request) => request.wpLogin(
+            email: model.email,
+            password: model.password!,
+            authType: WPAuthType.WpEmail,
+          ),
+        );
+
+        if (wpUserLoginResponse.status == 200) {
+          print('login  - ${wpUserLoginResponse.data?.email}');
+        } else {
+          print("something went wrong 1");
+        }
+      } else {
+        print("something went wrong 2");
+      }
+    } on Exception catch (e) {
+      print('erro login - $e');
+    }
+
+    try {
+      /*WPUserLoginResponse wpUserLoginResponse = await WPJsonAPI.instance.api(
         (request) => request.wpLogin(
           username: model.email,
           password: model.password!,
@@ -88,7 +117,7 @@ class APIService {
         ),
       );
 
-      debugPrint('logando - ${wpUserLoginResponse.message}');
+      debugPrint('logando - ${wpUserLoginResponse.message}');*/
 
       /*var response = await Dio().post(
         Config.url + Config.customerURL,
