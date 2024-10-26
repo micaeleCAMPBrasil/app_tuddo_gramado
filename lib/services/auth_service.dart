@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService extends ChangeNotifier {
   static final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  static final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   static String verifyId = "";
 
@@ -35,7 +36,6 @@ class AuthService extends ChangeNotifier {
     });
   }
 
-  // verificar o otp
   static Future loginWithOtp({required String otp}) async {
     final cred =
         PhoneAuthProvider.credential(verificationId: verifyId, smsCode: otp);
@@ -53,9 +53,8 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  // function logout
   static Future logout() async {
-    await GoogleSignIn().signOut();
+    await _googleSignIn.signOut();
     await _firebaseAuth.signOut();
   }
 
@@ -69,40 +68,39 @@ class AuthService extends ChangeNotifier {
     return user != null;
   }
 
-  static signInWithGoogle() async {
-    //try {
-
-    //GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-    /*AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
-      //final user = await _firebaseAuth.signInWithCredential(credential);
-      //if (user.user != null) {
-        return "Sucess";
-      /*} else {
-        return "Erro";
-      }*/
-    } on FirebaseAuthException catch (e) {
-      return e.message.toString();*/
+  static Future<String> signInWithGoogle() async {
     try {
-      GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      debugPrint('fazendo login');
-      await _firebaseAuth.signInWithEmailAndPassword(
-          email: googleUser!.email, password: googleUser.email);
-      // ignore: unrelated_type_equality_checks
+      // Iniciar o processo de login
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      
+      if (googleUser == null) {
+        return "Cancelado pelo usuário";
+      }
 
-      /*if (cred.hashCode == '') {
-      await _firebaseAuth.createUserWithEmailAndPassword(
-          email: googleUser!.email, password: googleUser.email);
-    }*/
-      return 'Sucess';
-      // ignore: unused_catch_clause
+      // Obter os detalhes da autenticação
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      // Criar credencial do Firebase
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Fazer login no Firebase
+      final UserCredential userCredential = 
+          await _firebaseAuth.signInWithCredential(credential);
+
+      if (userCredential.user != null) {
+        return "Sucess";
+      } else {
+        return "Erro no login com Google";
+      }
     } on FirebaseAuthException catch (e) {
-      debugPrint('n_cadastrado');
-      return 'n_cadastrado';
+      debugPrint('Erro FirebaseAuth: ${e.message}');
+      return e.message ?? "Erro no login com Google";
     } catch (e) {
-      return "Você não escolheu um e-mail";
+      debugPrint('Erro geral: $e');
+      return "Erro no processo de login com Google";
     }
   }
 
@@ -114,8 +112,7 @@ class AuthService extends ChangeNotifier {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: email);
       return 'Sucess';
-      // ignore: unused_catch_clause
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException {
       debugPrint('cadastrando');
       await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: email);
