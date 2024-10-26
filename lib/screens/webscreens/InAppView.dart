@@ -1,11 +1,8 @@
 // ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously, deprecated_member_use, file_names
-import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
-import 'package:app_tuddo_gramado/utils/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class InAppView extends StatefulWidget {
@@ -67,11 +64,10 @@ class _InAppViewState extends State<InAppView> {
             },
           );
 
-    /*
+    // ########## -- Read here --- ####
+    // this is us creating a full fleged webview but headless
 
-// ########## -- Read here --- ####
-// this is us creating a full fleged webview but headless
-    headlessWebView = HeadlessInAppWebView(
+    /*headlessWebView = HeadlessInAppWebView(
       initialUrlRequest: URLRequest(url: WebUri(widget.url)),
       initialSettings: InAppWebViewSettings(isInspectable: kDebugMode),
       pullToRefreshController: pullToRefreshController,
@@ -107,8 +103,10 @@ class _InAppViewState extends State<InAppView> {
   @override
   void dispose() {
     super.dispose();
-    //headlessWebView?.dispose();
+    headlessWebView?.dispose();
   }
+
+  int page = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +138,7 @@ class _InAppViewState extends State<InAppView> {
 
     return WillPopScope(
       onWillPop: () async {
-        if (!await webViewController!.canGoBack()) {
+        /*if (!await webViewController!.canGoBack()) {
           /*Navigator.pushReplacement(
             context,
             widget.routa,
@@ -149,34 +147,35 @@ class _InAppViewState extends State<InAppView> {
               .updateIndex(widget.page, widget.index);
         } else {
           webViewController!.goBack();
-        }
+        }*/
+
+        webViewController!.goBack();
         return false;
       },
       child: Scaffold(
         key: scaffoldKey,
-        appBar: PreferredSize(
+        /*appBar: PreferredSize(
           preferredSize: const Size.fromHeight(56),
           child: MyAppBar(
             backgroundColor: color00,
             centerTitle: true,
             leading: GestureDetector(
               onTap: () async {
-                if (!await webViewController!.canGoBack()) {
+                /*if (!await webViewController!.canGoBack()) {
                   /*Navigator.pushReplacement(
                     context,
                     widget.routa,
                   );*/
 
-                  Provider.of<ControlNav>(context, listen: false)
-                      .updateIndex(widget.page, widget.index);
-                } else {
-                  webViewController!.goBack();
-                }
+                } else {}*/
+                /*Provider.of<ControlNav>(context, listen: false)
+                    .updateIndex(widget.page, widget.index);*/
+                //webViewController!.goBack();
               },
               child: const Icon(Icons.arrow_back_ios),
             ),
           ),
-        ),
+        ),*/
         body: Stack(
           children: [
             InAppWebView(
