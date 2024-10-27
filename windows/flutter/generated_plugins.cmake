@@ -11,7 +11,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   firebase_storage
   flutter_inappwebview_windows
   flutter_secure_storage_windows
-  geolocator_windows
   nb_utils
   share_plus
   url_launcher_windows
