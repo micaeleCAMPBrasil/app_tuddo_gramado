@@ -4,6 +4,8 @@ import 'package:app_tuddo_gramado/utils/ADataProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
+import 'package:pwa_install/pwa_install.dart';
+import 'dart:html' as html;
 
 class AWalkThroughScreen extends StatefulWidget {
   const AWalkThroughScreen({super.key});
@@ -15,7 +17,8 @@ class AWalkThroughScreen extends StatefulWidget {
 class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
   int initialValue = 0;
   int progressIndex = 0;
-
+  bool _isIOS = false;
+  bool _isIOSChrome = false;
   late PageController pageController;
 
   @override
@@ -24,6 +27,79 @@ class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
     super.initState();
     pageController = PageController(initialPage: 0);
     progressIndex = 0;
+    _checkPlatform();
+  }
+
+  void _checkPlatform() {
+    final userAgent = html.window.navigator.userAgent.toLowerCase();
+    setState(() {
+      _isIOS = userAgent.contains('iphone') || 
+               userAgent.contains('ipad') || 
+               userAgent.contains('ipod');
+      _isIOSChrome = _isIOS && userAgent.contains('chrome');
+    });
+  }
+
+  void _handleInstallClick() {
+    if (_isIOSChrome) {
+      _showChromeIOSDialog();
+    } else if (_isIOS) {
+      _showIOSInstructions();
+    } else if (PWAInstall().installPromptEnabled) {
+      PWAInstall().promptInstall_();
+    }
+  }
+
+  void _showChromeIOSDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          'Abrir no Safari',
+          style: TextStyle(color: Colors.black),
+        ),
+        content: const Text(
+          'Para instalar o app, por favor abra app.tuddogramado.com.br no Safari.',
+          style: TextStyle(color: Colors.black),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'OK',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showIOSInstructions() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          'Como instalar o app',
+          style: TextStyle(color: Colors.black),
+        ),
+        content: const Text(
+          '1. Toque no botão de compartilhamento (ícone ⌵)\n'
+          '2. Role a tela e selecione "Adicionar à Tela Inicial"\n'
+          '3. Toque em "Adicionar" para confirmar',
+          style: TextStyle(color: Colors.black),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'Entendi',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   double containerWidth() {
@@ -47,7 +123,6 @@ class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
             children: modal.map((e) {
               return Stack(
                 children: [
-                  //Image
                   Image.asset(
                     e.image.toString(),
                     fit: BoxFit.cover,
@@ -56,7 +131,6 @@ class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height,
                   ),
-                  // DataEntry
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -69,17 +143,8 @@ class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
                               ? Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    /*Container(
-                                alignment: Alignment.centerRight,
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                child: Text(
-                                  (e.heading ?? ""),
-                                  style: whiteBold18,
-                                ),
-                              ),*/
                                     Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.25,
+                                      width: MediaQuery.of(context).size.width * 0.25,
                                       margin: const EdgeInsets.all(10),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(5),
@@ -127,7 +192,28 @@ class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
                               style: whiteMedium16,
                               textAlign: TextAlign.start,
                             ),
-                            const SizedBox(height: 80),
+                            const SizedBox(height: 24),
+                            // Botão de instalação
+                            if (_isIOS || _isIOSChrome || PWAInstall().installPromptEnabled)
+                              Container(
+                                width: double.infinity,
+                                height: 56,
+                                margin: const EdgeInsets.symmetric(horizontal: 16),
+                                child: ElevatedButton(
+                                  onPressed: _handleInstallClick,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: primaryColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(32),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Instalar App',
+                                    style: blackBold18,
+                                  ),
+                                ),
+                              ),
+                            const SizedBox(height: 56),
                           ],
                         ),
                       ),
@@ -137,7 +223,6 @@ class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
               );
             }).toList(),
           ),
-          //Determinate LinearProgressIndicator & FAB
           Positioned(
             bottom: 16,
             left: 16,
@@ -166,7 +251,6 @@ class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
                     ),
                   ],
                 ),
-                // Spacer(),
                 Container(
                   decoration: BoxDecoration(
                     color: primaryColor,
@@ -184,8 +268,7 @@ class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                const CheckUserLoggedInOrNot(),
+                            builder: (context) => const CheckUserLoggedInOrNot(),
                           ),
                         );
                       }

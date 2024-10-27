@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
+import 'package:pwa_install/pwa_install.dart';
+
 
 AppStore appStore = AppStore();
 
@@ -51,6 +53,11 @@ void main() async {
   appStore.toggleDarkMode(value: getBoolAsync(isDarkModeOnPref));
 
   defaultToastGravityGlobal = ToastGravity.BOTTOM;
+
+    // Add this
+  PWAInstall().setup(installCallback: () {
+    debugPrint('APP INSTALLED!');
+  });
 
   runApp(
     MultiProvider(
