@@ -276,7 +276,9 @@ class _AHomeScreenState extends State<AHomeScreen> {
                 } else if (item.route == 7) {
                   // Faça Parte
                   Provider.of<ControlNav>(context, listen: false)
-                      .updateIndex(0, 5);
+                      .updateIndex(1, 0);
+                  /*Provider.of<ControlNav>(context, listen: false)
+                      .updateIndex(0, 5);*/
                 }
               },
               child: Stack(

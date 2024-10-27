@@ -193,7 +193,7 @@ class _ALoginScreenState extends State<ALoginScreen> {
                           },
                         ),
                         heightSpace20,
-                        Text(
+                        /*Text(
                           'Faça Login usando:',
                           style: whiteRegular15,
                           textAlign: TextAlign.center,
@@ -336,7 +336,7 @@ class _ALoginScreenState extends State<ALoginScreen> {
                               ),
                             ),
                           ],
-                        ),
+                        ),*/
                         heightSpace100,
                       ],
                     ),

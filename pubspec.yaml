@@ -52,7 +52,7 @@ dependencies:
   get: ^4.6.6
   google_fonts: ^6.2.1
   google_sign_in: ^6.2.1
-  google_sign_in_web: 0.12.4+2 
+  google_sign_in_web: 0.12.4+2
   html: ^0.15.4
   http: ^1.2.1
   http_parser: ^4.0.2
