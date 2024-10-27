@@ -114,10 +114,10 @@ class APIService {
               role: "customer", // e.g. customer, subscriber
             ),
           );
-        ret = true;
+          ret = true;
         } else {
           debugPrint("something went wrong 1");
-        ret = false;
+          ret = false;
         }
       } catch (e) {
         debugPrint('registrer $e');
@@ -125,42 +125,7 @@ class APIService {
       }
     } catch (e) {
       debugPrint('noce $e');
-        ret = false;
-    }
-
-    try {
-      /*WPUserLoginResponse wpUserLoginResponse = await WPJsonAPI.instance.api(
-        (request) => request.wpLogin(
-          username: model.email,
-          password: model.password!,
-          authType: WPAuthType.WpUsername,
-        ),
-      );
-
-      debugPrint('logando - ${wpUserLoginResponse.message}');*/
-
-      /*var response = await Dio().post(
-        Config.url + Config.customerURL,
-        data: model.toJson(),
-        options: Options(
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $tokenadm',
-            HttpHeaders.contentTypeHeader: "application/json",
-          },
-        ),
-      );
-
-      if (response.statusCode == 201) {
-        debugPrint('usuario do tuddo em dobro cadastrado');
-        ret = true;
-      }*/
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 400) {
-        debugPrint("Cadastro Erro Tuddo em dobro - ${e.message}");
-        ret = false;
-      } else {
-        ret = false;
-      }
+      ret = false;
     }
 
     return ret;
