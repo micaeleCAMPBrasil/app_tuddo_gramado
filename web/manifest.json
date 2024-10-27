@@ -1,11 +1,11 @@
 {
-    "name": "app_tuddo_gramado",
-    "short_name": "app_tuddo_gramado",
-    "start_url": ".",
+    "name": "Tuddo Gramado",
+    "short_name": "Tuddo Gramado",
+    "start_url": "/",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#121212",
+    "theme_color": "#121212",
+    "description": "Aplicativo Tuddo Gramado!",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
