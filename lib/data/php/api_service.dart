@@ -114,14 +114,18 @@ class APIService {
               role: "customer", // e.g. customer, subscriber
             ),
           );
+        ret = true;
         } else {
           debugPrint("something went wrong 1");
+        ret = false;
         }
       } catch (e) {
         debugPrint('registrer $e');
+        ret = false;
       }
     } catch (e) {
       debugPrint('noce $e');
+        ret = false;
     }
 
     try {
