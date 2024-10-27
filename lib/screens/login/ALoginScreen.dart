@@ -193,13 +193,13 @@ class _ALoginScreenState extends State<ALoginScreen> {
                           },
                         ),
                         heightSpace20,
-                        Text(
+                        /*Text(
                           'Faça Login usando:',
                           style: whiteRegular15,
                           textAlign: TextAlign.center,
                         ),
-                        heightSpace20,
-                        Row(
+                        heightSpace20,*/
+                        /*Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             /*Expanded(
@@ -227,7 +227,7 @@ class _ALoginScreenState extends State<ALoginScreen> {
                               ),
                             ),
                             widthSpace20,*/
-                            Expanded(
+                            /*Expanded(
                               child: GestureDetector(
                                 onTap: () =>
                                     AuthService.signInWithGoogle().then(
@@ -334,9 +334,9 @@ class _ALoginScreenState extends State<ALoginScreen> {
                                   ),
                                 ),
                               ),
-                            ),
+                            ),*/
                           ],
-                        ),
+                        ),*/
                         heightSpace100,
                       ],
                     ),

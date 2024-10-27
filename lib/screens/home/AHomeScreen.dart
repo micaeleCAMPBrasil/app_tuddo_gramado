@@ -275,8 +275,10 @@ class _AHomeScreenState extends State<AHomeScreen> {
                       .updateIndex(1, 0);
                 } else if (item.route == 7) {
                   // Faça Parte
+                  /*Provider.of<ControlNav>(context, listen: false)
+                      .updateIndex(0, 5);*/
                   Provider.of<ControlNav>(context, listen: false)
-                      .updateIndex(0, 5);
+                      .updateIndex(1, 0);
                 }
               },
               child: Stack(

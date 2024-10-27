@@ -86,7 +86,14 @@ class AuthService extends ChangeNotifier {
     } on FirebaseAuthException catch (e) {
       return e.message.toString();*/
     try {
-      GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      const List<String> scopes = <String>[
+        'email',
+        'https://www.googleapis.com/auth/contacts.readonly',
+      ];
+      GoogleSignInAccount? googleUser = await GoogleSignIn(
+        scopes: scopes,
+      ).signIn();
+
       debugPrint('fazendo login');
       await _firebaseAuth.signInWithEmailAndPassword(
           email: googleUser!.email, password: googleUser.email);
@@ -102,6 +109,7 @@ class AuthService extends ChangeNotifier {
       debugPrint('n_cadastrado');
       return 'n_cadastrado';
     } catch (e) {
+      debugPrint('erro gmail - $e');
       return "Você não escolheu um e-mail";
     }
   }

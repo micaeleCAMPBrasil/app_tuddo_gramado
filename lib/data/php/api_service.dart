@@ -5,6 +5,8 @@ import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/data/php/config.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:wp_json_api/models/responses/wp_user_register_response.dart';
+import 'package:wp_json_api/wp_json_api.dart';
 
 class APIService {
   Future<bool> createCustomer(Usuario usuario, CustomerModel model) async {
@@ -36,7 +38,8 @@ class APIService {
     bool ret = false;
 
     // String email, String senha
-    Map? data = await getIdTG(Config.tokenURLTG, 'admin', 'K17s31D02@milenaepedro');
+    Map? data =
+        await getIdTG(Config.tokenURLTG, 'admin', 'K17s31D02@milenaepedro');
     String tokenadm = data!['token'];
 
     try {
@@ -69,34 +72,60 @@ class APIService {
 
   Future<bool> criandonovousuarioTuddoDobro(CustomerModel model) async {
     bool ret = false;
+    WPJsonAPI.instance.init(
+      baseUrl: "https://site.tuddogramado.com.br",
+    );
 
     // String email, String senha
-    Map? data = await getIdTG(Config.tokenURL, 'tuddoemdobro', 'K17s31D02@milenaepedro');
-    String tokenadm = data!['token'];
+    /*Map? data = await getIdTG(
+        Config.tokenURL, 'tuddoemdobro', 'K17s31D02@milenaepedro');
+    String tokenadm = data!['token'];*/
+
+    debugPrint('model - ${model.toJson()}');
 
     try {
-      var response = await Dio().post(
-        Config.url + Config.customerURL,
-        data: model.toJson(),
-        options: Options(
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $tokenadm',
-            HttpHeaders.contentTypeHeader: "application/json",
-          },
-        ),
+      await WPJsonAPI.instance.api(
+        (request) => request.wpNonce(),
       );
+      debugPrint('sucesso nonce');
 
-      if (response.statusCode == 201) {
-        debugPrint('usuario do tuddo em dobro cadastrado');
-        ret = true;
-      }
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 400) {
-        debugPrint("Cadastro Erro Tuddo em dobro - ${e.message}");
+      try {
+        WPUserRegisterResponse wpUserRegisterResponse =
+            await WPJsonAPI.instance.api(
+          (request) => request.wpRegister(
+            email: model.email.toString(),
+            password: model.password.toString(),
+            saveTokenToLocalStorage: true,
+          ),
+        );
+        if (wpUserRegisterResponse.status == 200) {
+          debugPrint('login  - ${wpUserRegisterResponse.data?.email}');
+
+          await WPJsonAPI.instance.api(
+            (request) => request.wpUpdateUserInfo(
+              firstName: model.firstName,
+              lastName: model.lastName,
+              displayName: model.displayName,
+            ),
+          );
+
+          await WPJsonAPI.instance.api(
+            (request) => request.wpUserAddRole(
+              role: "customer", // e.g. customer, subscriber
+            ),
+          );
+          ret = true;
+        } else {
+          debugPrint("something went wrong 1");
+          ret = false;
+        }
+      } catch (e) {
+        debugPrint('registrer $e');
         ret = false;
-      } else {
-        ret = false;
       }
+    } catch (e) {
+      debugPrint('noce $e');
+      ret = false;
     }
 
     return ret;
@@ -106,8 +135,8 @@ class APIService {
     bool ret = false;
 
     // String email, String senha
-    Map? data =
-        await getIdTG(Config.tokenURLTransfer, 'tuddotransfer', 'K17s31D02@milenaepedro');
+    Map? data = await getIdTG(
+        Config.tokenURLTransfer, 'tuddotransfer', 'K17s31D02@milenaepedro');
     String tokenadm = data!['token'];
 
     try {

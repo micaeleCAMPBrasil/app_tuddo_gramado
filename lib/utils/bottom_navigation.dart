@@ -224,7 +224,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         ),
         // 6 - top ofertas
         InAppView(
-          url: "https://site.tuddogramado.com.br/",
+          url: "https://site.tuddogramado.com.br/ajax-boxed/",
           page: 0,
           index: 0,
           data: {

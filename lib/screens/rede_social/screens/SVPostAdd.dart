@@ -359,7 +359,8 @@ class _SVPostAddState extends State<SVPostAdd> {
                           onPressed: () {
                             if (mykey.currentState!.validate()) {
                               postPost(
-                                imgURL == ''
+                                // ignore: unrelated_type_equality_checks
+                                tmpFile == ''
                                     ? ''
                                     : "https://www.tuddo.org/$imgURL",
                                 _descriptionTextController.text,
