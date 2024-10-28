@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:app_tuddo_gramado/data/models/imgbbResponseModel.dart';
 import 'package:app_tuddo_gramado/data/php/api_service.dart';
 import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
-import 'package:get/get_common/get_reset.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -263,6 +262,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         widget.usuario.username = _userNameController.text;
                         widget.usuario.email = _emailController.text;
                         widget.usuario.telefone = _phoneNumberController.text;
+                        // ignore: unrelated_type_equality_checks
                         widget.usuario.photo = tmpFile == ''
                             ? widget.usuario.photo != ''
                                 ? widget.usuario.photo

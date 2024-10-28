@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/helper/ui_helper.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
 class ProfilePage extends StatefulWidget {
@@ -184,6 +185,14 @@ class _ProfilePageState extends State<ProfilePage> {
     ];
   }
 
+  var whatsappUrl = "whatsapp://send?phone=5554997148890&text=Olá,tudo bem?";
+
+  Future<void> abrirwhatsapp(Uri url) async {
+    if (!await launchUrl(url)) {
+      debugPrint('Could not launch $url');
+    }
+  }
+
   List<Widget> tapablePanels(BuildContext context, Usuario usuario) {
     List tapableItems = [
       {
@@ -218,8 +227,8 @@ class _ProfilePageState extends State<ProfilePage> {
         (e) => ListTile(
           onTap: () {
             if (e['navigate'] == "/SupportPage") {
-              Provider.of<ControlNav>(context, listen: false).updateIndex(4, 1);
-
+              //Provider.of<ControlNav>(context, listen: false).updateIndex(4, 1);
+              abrirwhatsapp(Uri.parse(whatsappUrl));
               /*Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(

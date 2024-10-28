@@ -3,7 +3,6 @@ import 'package:app_tuddo_gramado/screens/inicio/ASplashScreen.dart';
 import 'package:app_tuddo_gramado/services/firebase_messaging_service.dart';
 import 'package:app_tuddo_gramado/services/notification_service.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/firebase_options.dart';
@@ -40,10 +39,10 @@ void main() async {
     await InAppWebViewController.setWebContentsDebuggingEnabled(kDebugMode);
   }*/
 
-  LocationPermission permission = await Geolocator.checkPermission();
-  debugPrint('$permission');
-  await Geolocator.requestPermission();
-  await Geolocator.getCurrentPosition();
+  //LocationPermission permission = await Geolocator.checkPermission();
+  //debugPrint('$permission');
+  /*await Geolocator.requestPermission();
+  await Geolocator.getCurrentPosition();*/
   //await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
   appStore.toggleDarkMode(value: getBoolAsync(isDarkModeOnPref));

@@ -82,6 +82,7 @@ class _WordPressScreenState extends State<WordPressScreen> {
     return widgets;
   }
 
+  // ignore: unused_element
   List<Widget> _buildContentWidgets(String content) {
     final document = parse(content);
     final List<Widget> widgets = [];
