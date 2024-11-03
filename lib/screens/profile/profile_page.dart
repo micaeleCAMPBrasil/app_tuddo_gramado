@@ -220,6 +220,11 @@ class _ProfilePageState extends State<ProfilePage> {
         'title': 'Painel de Afiliado',
         'navigate': '/PaineldeAfiliado',
       },
+      {
+        'icon': 'assets/icones/tickets-icon.svg',
+        'title': 'Seja Parceiro',
+        'navigate': '/SejaParceiroTransfer',
+      },
     ];
 
     return [
@@ -229,82 +234,16 @@ class _ProfilePageState extends State<ProfilePage> {
             if (e['navigate'] == "/SupportPage") {
               //Provider.of<ControlNav>(context, listen: false).updateIndex(4, 1);
               abrirwhatsapp(Uri.parse(whatsappUrl));
-              /*Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => InAppView(
-                    url: "https://www.google.com/",
-                    index: 4,
-                    data: {
-                      "token": widget.usuario.token,
-                      "usuario": widget.usuario.email,
-                      "senha": widget.usuario.uid,
-                    },
-                    routa: MaterialPageRoute(
-                      builder: (context) => BottomNavigation(
-                        selectedIndex: 4,
-                      ),
-                    ),
-                  ),
-                ),
-              );*/
             } else if (e['navigate'] == "/FavoritesListPage") {
               Provider.of<ControlNav>(context, listen: false).updateIndex(4, 2);
-              /*Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => InAppView(
-                    url:
-                        "https://d.tuddogramado.com.br/member-account/?vendor=wishlist",
-                    index: 4,
-                    data: {
-                      "token": widget.usuario.token,
-                      "usuario": widget.usuario.email,
-                      "senha": widget.usuario.uid,
-                    },
-                    routa: MaterialPageRoute(
-                      builder: (context) => BottomNavigation(
-                        selectedIndex: 4,
-                      ),
-                    ),
-                  ),
-                ),
-              );*/
             } else if (e['navigate'] == "/EditProfilePage") {
               Provider.of<ControlNav>(context, listen: false).updateIndex(4, 4);
-              /*Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditProfilePage(
-                    index: 4,
-                    usuario: usuario,
-                  ),
-                ),
-              );*/
             } else if (e['navigate'] == "/MeusPedidosTuddoEmDobro") {
               Provider.of<ControlNav>(context, listen: false).updateIndex(4, 3);
-              /*Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => InAppView(
-                    url:
-                        "https://d.tuddogramado.com.br/member-account/?vendor=mybookings",
-                    index: 4,
-                    data: {
-                      "token": widget.usuario.token,
-                      "usuario": widget.usuario.email,
-                      "senha": widget.usuario.uid,
-                    },
-                    routa: MaterialPageRoute(
-                      builder: (context) => BottomNavigation(
-                        selectedIndex: 4,
-                      ),
-                    ),
-                  ),
-                ),
-              );*/
             } else if (e['navigate'] == "/PaineldeAfiliado") {
               Provider.of<ControlNav>(context, listen: false).updateIndex(4, 7);
+            } else if (e['navigate'] == "/SejaParceiroTransfer") {
+              Provider.of<ControlNav>(context, listen: false).updateIndex(4, 8);
             }
           },
           leading: SizedBox(
@@ -321,12 +260,18 @@ class _ProfilePageState extends State<ProfilePage> {
                         color: color94,
                         size: 30,
                       )
-                    : Image.asset(
-                        e['icon'],
-                        color: color94,
-                        width: 30,
-                        height: 30,
-                      ),
+                    : e['navigate'] == '/SejaParceiroTransfer'
+                        ? Icon(
+                            Icons.handshake_rounded,
+                            color: color94,
+                            size: 30,
+                          )
+                        : Image.asset(
+                            e['icon'],
+                            color: color94,
+                            width: 30,
+                            height: 30,
+                          ),
           ),
           title: Text(
             e['title'],

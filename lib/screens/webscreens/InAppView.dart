@@ -107,7 +107,8 @@ class _InAppViewState extends State<InAppView> {
   @override
   void dispose() {
     super.dispose();
-    //headlessWebView?.dispose();
+    headlessWebView?.dispose();
+    webViewController?.dispose();
   }
 
   @override
