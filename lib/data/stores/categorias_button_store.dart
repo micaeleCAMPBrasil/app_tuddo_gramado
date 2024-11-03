@@ -5,17 +5,20 @@ class CategoriasButoonStore {
     CategoriasButoon(
       name: 'Assine',
       backgroundImage: 'assets/image/a6.png',
-      route: 6,
+      route: 3,
+      //route: 6,
     ),
     CategoriasButoon(
       name: 'Top Ofertas',
       backgroundImage: 'assets/image/a1.png',
-      route: 1,
+      route: 3,
+      //route: 1,
     ),
     CategoriasButoon(
       name: 'Tuddo em Dobro',
       backgroundImage: 'assets/image/a2.png',
-      route: 2,
+      route: 3,
+      //route: 2,
     ),
     CategoriasButoon(
       name: 'Transfer',
@@ -25,17 +28,20 @@ class CategoriasButoonStore {
     CategoriasButoon(
       name: 'Hospedagem',
       backgroundImage: 'assets/image/a4.png',
-      route: 4,
+      route: 3,
+      //route: 4,
     ),
     CategoriasButoon(
       name: 'Dicas e Roteiros',
       backgroundImage: 'assets/image/a5.png',
-      route: 5,
+      route: 3,
+      //route: 5,
     ),
     CategoriasButoon(
       name: 'Faça Parte',
       backgroundImage: 'assets/image/a7.png',
-      route: 7,
+      //route: 7,
+      route: 3,
     ),
   ];
 

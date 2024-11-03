@@ -231,7 +231,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ...tapableItems.map(
         (e) => ListTile(
           onTap: () {
-            if (e['navigate'] == "/SupportPage") {
+            /*if (e['navigate'] == "/SupportPage") {
               //Provider.of<ControlNav>(context, listen: false).updateIndex(4, 1);
               abrirwhatsapp(Uri.parse(whatsappUrl));
             } else if (e['navigate'] == "/FavoritesListPage") {
@@ -244,6 +244,20 @@ class _ProfilePageState extends State<ProfilePage> {
               Provider.of<ControlNav>(context, listen: false).updateIndex(4, 7);
             } else if (e['navigate'] == "/SejaParceiroTransfer") {
               Provider.of<ControlNav>(context, listen: false).updateIndex(4, 8);
+            }*/
+
+            if (e['navigate'] == "/SupportPage") {
+              Provider.of<ControlNav>(context, listen: false).updateIndex(1, 0);
+            } else if (e['navigate'] == "/FavoritesListPage") {
+              Provider.of<ControlNav>(context, listen: false).updateIndex(1, 0);
+            } else if (e['navigate'] == "/EditProfilePage") {
+              Provider.of<ControlNav>(context, listen: false).updateIndex(1, 0);
+            } else if (e['navigate'] == "/MeusPedidosTuddoEmDobro") {
+              Provider.of<ControlNav>(context, listen: false).updateIndex(1, 0);
+            } else if (e['navigate'] == "/PaineldeAfiliado") {
+              Provider.of<ControlNav>(context, listen: false).updateIndex(1, 0);
+            } else if (e['navigate'] == "/SejaParceiroTransfer") {
+              Provider.of<ControlNav>(context, listen: false).updateIndex(1, 0);
             }
           },
           leading: SizedBox(

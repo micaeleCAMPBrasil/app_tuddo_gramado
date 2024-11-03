@@ -341,7 +341,7 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        item.isLinkExterno!
+                        /*item.isLinkExterno!
                             ? mudarRouta(item.link)
                             : _launchUrl(
                                 Uri.parse(
@@ -349,7 +349,7 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
                                       ? widget.patrocinador.linkWebSite
                                       : item.link,
                                 ),
-                              );
+                              );*/
                       },
                       child: SizedBox(
                         height: 90,

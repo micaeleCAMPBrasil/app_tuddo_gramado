@@ -243,7 +243,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
       // tuddo em dobro // 1
       [
         InAppView(
-          url: 'https://site.tuddogramado.com.br/tuddo-em-dobro/',
+          url: 'https://transfer.tuddogramado.com.br',
+          //url: 'https://site.tuddogramado.com.br/tuddo-em-dobro/',
           data: {
             "usuario": usuario.email,
             "senha": usuario.uid,
