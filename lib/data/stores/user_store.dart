@@ -67,4 +67,9 @@ class UsuarioStore {
     final result = await repository.updateUser(usuario);
     isEditable.value = result;
   }
+
+  Future updatenew(Usuario usuario) async {
+    final result = await repository.updateUserNew(usuario);
+    isEditable.value = result;
+  }
 }
