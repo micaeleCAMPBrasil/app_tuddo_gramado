@@ -220,6 +220,11 @@ class _ProfilePageState extends State<ProfilePage> {
         'title': 'Painel de Afiliado',
         'navigate': '/PaineldeAfiliado',
       },
+      {
+        'icon': 'assets/icones/tickets-icon.svg',
+        'title': 'Seja Parceiro',
+        'navigate': '/SejaParceiroTransfer',
+      },
     ];
 
     return [
@@ -305,6 +310,8 @@ class _ProfilePageState extends State<ProfilePage> {
               );*/
             } else if (e['navigate'] == "/PaineldeAfiliado") {
               Provider.of<ControlNav>(context, listen: false).updateIndex(4, 7);
+            } else if (e['navigate'] == "/SejaParceiroTransfer") {
+              Provider.of<ControlNav>(context, listen: false).updateIndex(4, 8);
             }
           },
           leading: SizedBox(
@@ -321,12 +328,18 @@ class _ProfilePageState extends State<ProfilePage> {
                         color: color94,
                         size: 30,
                       )
-                    : Image.asset(
-                        e['icon'],
-                        color: color94,
-                        width: 30,
-                        height: 30,
-                      ),
+                    : e['navigate'] == '/SejaParceiroTransfer'
+                        ? Icon(
+                            Icons.handshake_rounded,
+                            color: color94,
+                            size: 30,
+                          )
+                        : Image.asset(
+                            e['icon'],
+                            color: color94,
+                            width: 30,
+                            height: 30,
+                          ),
           ),
           title: Text(
             e['title'],

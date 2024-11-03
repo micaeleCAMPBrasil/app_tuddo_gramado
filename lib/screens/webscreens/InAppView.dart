@@ -104,6 +104,7 @@ class _InAppViewState extends State<InAppView> {
   void dispose() {
     super.dispose();
     headlessWebView?.dispose();
+    webViewController?.dispose();
   }
 
   int page = 0;

@@ -228,7 +228,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         ),
         // 6 - top ofertas
         InAppView(
-          url: "https://site.tuddogramado.com.br/ajax-boxed/",
+          url: "https://site.tuddogramado.com.br/busca-top-ofertas/",
           page: 0,
           index: 0,
           data: {
@@ -518,6 +518,21 @@ class _BottomNavigationState extends State<BottomNavigation> {
         // 7
         InAppView(
           url: "https://site.tuddogramado.com.br/area-afiliado-2/",
+          page: 4,
+          index: 0,
+          data: {
+            "usuario": usuario.email,
+            "senha": usuario.uid,
+          },
+          /*routa: MaterialPageRoute(
+            builder: (context) => const BottomNavigation(
+                //selectedIndex: 4,
+                ),
+          ),*/
+        ),
+        // 8
+        InAppView(
+          url: "https://transfer.tuddogramado.com.br/oferta-tuddo-em-dobro/",
           page: 4,
           index: 0,
           data: {
