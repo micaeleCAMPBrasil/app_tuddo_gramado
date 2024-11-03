@@ -19,6 +19,7 @@ import 'package:app_tuddo_gramado/services/auth_service.dart';
 
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:provider/provider.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class ALoginScreen extends StatefulWidget {
   const ALoginScreen({super.key});
@@ -48,6 +49,9 @@ class _ALoginScreenState extends State<ALoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // get auth service
+    final authService = AuthService();
+
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -193,6 +197,9 @@ class _ALoginScreenState extends State<ALoginScreen> {
                           },
                         ),
                         heightSpace20,
+                        // botao para login com apple
+                        SignInWithAppleButton(
+                            onPressed: () => authService.signInWithApple()),
                         /*Text(
                           'Faça Login usando:',
                           style: whiteRegular15,

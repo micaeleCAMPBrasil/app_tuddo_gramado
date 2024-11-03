@@ -1,9 +1,41 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthService extends ChangeNotifier {
   static final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  // apple sign in - inicio
+
+  // listen to auth changes
+  Stream<User?> authStateChanges() => _firebaseAuth.authStateChanges();
+
+  // get user email
+  String getUserEmail() => _firebaseAuth.currentUser?.email ?? "User";
+
+  // apple login method
+  Future<UserCredential?> signInWithApple() async {
+    try {
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      final oAuthCredential = OAuthProvider("apple.com").credential(
+        idToken: appleCredential.identityToken,
+        accessToken: appleCredential.authorizationCode,
+      );
+
+      return await _firebaseAuth.signInWithCredential(oAuthCredential);
+    } catch (e) {
+      print("Erro no Login com Apple: $e");
+      return null;
+    }
+  }
+  // apple sign in - final
 
   static String verifyId = "";
 
