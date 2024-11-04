@@ -69,7 +69,13 @@ class UsuarioStore {
   }
 
   Future updatenew(Usuario usuario) async {
-    final result = await repository.updateUserNew(usuario);
-    isEditable.value = result;
+    try {
+      final result = await repository.updateUserNew(usuario);
+      isEditable.value = result;
+    } catch (e) {
+      erro.value = "Erro no update: ${e.toString()}";
+      debugPrint('Erro ao atualizar usuário: $e');
+      isEditable.value = false;
+    }
   }
 }

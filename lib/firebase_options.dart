@@ -60,11 +60,13 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAAkkiHmBMDG-mFHaQEVcIf2iEzNLj3jgU',
-    appId: '1:111160179496:ios:0411e930da9ae077812e1d',
+    appId: '1:111160179496:ios:330168724e9e6dbc812e1d',
     messagingSenderId: '111160179496',
     projectId: 'tuddo-gramado-app',
     storageBucket: 'tuddo-gramado-app.appspot.com',
-    iosBundleId: 'com.example.appTuddoGramado',
+    androidClientId: '111160179496-o4sog4tf47tjlug2s15pdhpsdekj22o1.apps.googleusercontent.com',
+    iosClientId: '111160179496-jr2oh7o5bdomidchrt8l04mqfs3akt06.apps.googleusercontent.com',
+    iosBundleId: 'com.tuddo.tuddo',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
