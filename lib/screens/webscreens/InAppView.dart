@@ -28,7 +28,6 @@ class InAppView extends StatefulWidget {
 class _InAppViewState extends State<InAppView> {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  HeadlessInAppWebView? headlessWebView;
   PullToRefreshController? pullToRefreshController;
   InAppWebViewController? webViewController;
 
@@ -107,7 +106,7 @@ class _InAppViewState extends State<InAppView> {
   @override
   void dispose() {
     super.dispose();
-    headlessWebView?.dispose();
+    widget.url = '';
     webViewController?.dispose();
   }
 
@@ -154,7 +153,7 @@ class _InAppViewState extends State<InAppView> {
         return false;
       },
       child: Scaffold(
-        key: scaffoldKey,
+        key: ValueKey(widget.url),
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(56),
           child: MyAppBar(

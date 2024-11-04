@@ -54,7 +54,7 @@ class _NewPatrocinadoresScreenState extends State<NewPatrocinadoresScreen> {
             color: color00,
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
                   padding: EdgeInsets.only(
@@ -70,6 +70,22 @@ class _NewPatrocinadoresScreenState extends State<NewPatrocinadoresScreen> {
                         width: MediaQuery.of(context).size.width * 0.3,
                       ),
                     ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 18.0),
+                  child: IconButton(
+                    onPressed: () {
+                      Provider.of<ControlNav>(context, listen: false)
+                          .updateidcategori(0);
+                      Provider.of<ControlNav>(context, listen: false)
+                          .updateIndex(2, 1);
+                    },
+                    icon: const Icon(
+                      size: 30,
+                      color: Colors.white,
+                      Icons.search,
+                    ),
                   ),
                 ),
               ],
@@ -455,7 +471,8 @@ class _PatrocinadoresScreenState extends State<PatrocinadoresScreen> {
 
     return WillPopScope(
       onWillPop: () async {
-        Provider.of<ControlNav>(context, listen: false).updateIndex(0, 0);
+        Provider.of<ControlNav>(context, listen: false)
+            .updateIndex(widget.index, 0);
         /*Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -474,7 +491,7 @@ class _PatrocinadoresScreenState extends State<PatrocinadoresScreen> {
         ),
         //appBar: getAppBar("Select #Hashtag", backWidget: BackButton(color: white)),
         body: ValueListenableBuilder<List<Patrocinadores>>(
-          valueListenable: controller!.listPatrocinadoresCategories,
+          valueListenable: controller!.listPatrocinadores,
           builder: (context, list, child) {
             return SingleChildScrollView(
               child: Column(
@@ -682,29 +699,31 @@ class _PatrocinadoresScreenState extends State<PatrocinadoresScreen> {
                 borderRadius: BorderRadius.circular(5),
                 color: color28,
               ),
-              child: Row(children: [
-                SizedBox(
-                  height: 25,
-                  child: SvgPicture.asset(
-                    'assets/icones/search.svg',
-                    color: primaryColor,
-                    width: 27,
-                    height: 27,
-                  ),
-                ),
-                widthSpace10,
-                Expanded(
-                  child: TextField(
-                    cursorColor: primaryColor,
-                    onChanged: controller!.onChange,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Digite...',
-                      hintStyle: color94Regular15,
+              child: Row(
+                children: [
+                  SizedBox(
+                    height: 25,
+                    child: SvgPicture.asset(
+                      'assets/icones/search.svg',
+                      color: primaryColor,
+                      width: 27,
+                      height: 27,
                     ),
                   ),
-                )
-              ]),
+                  widthSpace10,
+                  Expanded(
+                    child: TextField(
+                      cursorColor: primaryColor,
+                      onChanged: controller!.onChange,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Digite...',
+                        hintStyle: color94Regular15,
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
             heightSpace15,
           ],

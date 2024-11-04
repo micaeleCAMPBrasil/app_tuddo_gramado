@@ -410,6 +410,8 @@ class IFuncoesPHP implements IFuncoes {
       }
     } else if (response.statusCode == 404) {
       throw NotFoundException("A url informada não é válida.");
+    } else if (response.statusCode == 500) {
+      throw NotFoundException("A url informada não é válida.");
     } else {
       throw Exception("Não foi possível carregar os usuários.");
     }
