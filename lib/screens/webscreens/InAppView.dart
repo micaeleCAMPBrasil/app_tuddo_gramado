@@ -154,7 +154,7 @@ class _InAppViewState extends State<InAppView> {
         return false;
       },
       child: Scaffold(
-        key: scaffoldKey,
+        key: ValueKey(widget.url),
         /*appBar: PreferredSize(
           preferredSize: const Size.fromHeight(56),
           child: MyAppBar(
