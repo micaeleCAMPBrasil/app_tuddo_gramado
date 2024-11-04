@@ -199,7 +199,86 @@ class _ALoginScreenState extends State<ALoginScreen> {
                         heightSpace20,
                         // botao para login com apple
                         SignInWithAppleButton(
-                            onPressed: () => authService.signInWithApple()),
+                            onPressed: () => authService.signInWithApple().then(
+                                  (value) async {
+                                    if (value == "Sucess") {
+                                      User user =
+                                          AuthService.gerarUserFirebase();
+                                      String uid = user.uid;
+                                      String? emailEscolhido = user.email;
+
+                                      await storeUser.getUID(uid);
+
+                                      Usuario usuarioBase =
+                                          storeUser.state.value;
+
+                                      if (usuarioBase.nome == '' ||
+                                          usuarioBase.email == '' ||
+                                          usuarioBase.telefone == '') {
+                                        Timer(
+                                          const Duration(seconds: 1),
+                                          () {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RegisterPage(
+                                                  uid: uid,
+                                                  email: emailEscolhido!,
+                                                  usuario: usuarioBase,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        setState(() {
+                                          isApiCallProcess = true;
+                                        });
+
+                                        Provider.of<UsuarioProvider>(context,
+                                                listen: false)
+                                            .updateUsuario(usuarioBase);
+
+                                        Timer(
+                                          const Duration(seconds: 1),
+                                          () {
+                                            /*Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => LoginWP(
+                                                  usuario: usuarioBase.email,
+                                                  senha: usuarioBase.uid,
+                                                ),
+                                              ),
+                                            );*/
+
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const CheckUserLoggedInOrNot(),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            value!,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          backgroundColor: primaryColor,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                )),
                         /*Text(
                           'Faça Login usando:',
                           style: whiteRegular15,

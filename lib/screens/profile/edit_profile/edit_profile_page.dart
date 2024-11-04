@@ -394,7 +394,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: images == null
-                          ? usuario.photo == ''
+                          ? usuario.photo == '' || usuario.photo == 'https://tuddo.org/'
                               ? Image.asset(
                                   "assets/image/nopicture.png",
                                   fit: BoxFit.fill,

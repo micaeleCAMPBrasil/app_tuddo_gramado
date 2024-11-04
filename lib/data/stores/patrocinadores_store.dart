@@ -37,19 +37,62 @@ class PatrocinadoresStore {
         .toList()
       ..shuffle();
 
-    listPatrocinadoresCategories.value = listPatrocinadores.value
-        .where((element) => element.idCategoria.contains(idCategoria))
-        .toList()
+    listPatrocinadores.value = idCategoria == 0
+        ? listPatrocinadores.value
+        : listPatrocinadores.value
+            .where((element) => element.idCategoria.contains(idCategoria))
+            .toList()
       ..shuffle();
 
     _chachedPatrocinadores = listPatrocinadores.value;
   }
 
   onChange(String value) {
-    List<Patrocinadores> list = _chachedPatrocinadores!
-        .where((element) =>
-            element.nome.toString().toLowerCase().contains(value.toLowerCase()))
+    List<CategoriasButoon> categoria = listCategorias.value
+        .where(
+          (element) => element.name
+              .toString()
+              .toLowerCase()
+              .contains(value.toLowerCase()),
+        )
         .toList();
+
+    List<int> ids = [];
+
+    for (var element in categoria) {
+      if (!ids.contains(element.route)) {
+        ids.add(element.route);
+      }
+    }
+
+    int idPatrocinador = ids.isEmpty ? 0 : ids.first;
+
+    /*List<Patrocinadores> list = _chachedPatrocinadores!
+        .where((element) => element.nome.toString().toLowerCase().contains(
+              value.toLowerCase(),
+            ))
+        .toList();*/
+
+    List<Patrocinadores> list1 = _chachedPatrocinadores!
+        .where((element) => element.idCategoria.contains(idPatrocinador))
+        .toList();
+
+    List<Patrocinadores> list2 = _chachedPatrocinadores!
+        .where(
+          (element) => element.nome.toString().toLowerCase().contains(
+                value.toLowerCase(),
+              ),
+        )
+        .toList();
+
+    List<Patrocinadores> list = [];
+
+    if (idPatrocinador != 0) {
+      list = list1 + list2;
+    } else {
+      list = list2;
+    }
+
     listPatrocinadores.value = list;
   }
 }

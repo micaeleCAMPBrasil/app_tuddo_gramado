@@ -1,11 +1,6 @@
-import 'package:app_tuddo_gramado/data/models/usuario.dart';
-import 'package:app_tuddo_gramado/data/php/functions.dart';
-import 'package:app_tuddo_gramado/data/php/http_client.dart';
-import 'package:app_tuddo_gramado/data/stores/user_store.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:provider/provider.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthService extends ChangeNotifier {
@@ -20,13 +15,7 @@ class AuthService extends ChangeNotifier {
   String getUserEmail() => _firebaseAuth.currentUser?.email ?? "User";
 
   // apple login method
-  Future<UserCredential?> signInWithApple() async {
-    final UsuarioStore storeUser = UsuarioStore(
-      repository: IFuncoesPHP(
-        client: HttpClient(),
-      ),
-    );
-
+  Future<String?> signInWithApple() async {
     try {
       final appleCredential = await SignInWithApple.getAppleIDCredential(
         scopes: [
@@ -40,26 +29,11 @@ class AuthService extends ChangeNotifier {
         accessToken: appleCredential.authorizationCode,
       );
 
-      UserCredential usercred =
-          await _firebaseAuth.signInWithCredential(oAuthCredential);
-
-      User? user = usercred.user;
-
-      Usuario usuario = Usuario(
-          uid: user!.uid,
-          tokenAlert: '',
-          nome: user.displayName.toString(),
-          username: user.email.toString(),
-          email: user.email.toString(),
-          telefone: '',
-          photo: '',
-          data: '');
-
-      await storeUser.updatenew(usuario);
-      return await _firebaseAuth.signInWithCredential(oAuthCredential);
+      return 'Sucess';
+      //return await _firebaseAuth.signInWithCredential(oAuthCredential);
     } catch (e) {
       print("Erro no Login com Apple: $e");
-      return null;
+      return "Erro no Login com Apple: $e";
     }
   }
   // apple sign in - final
