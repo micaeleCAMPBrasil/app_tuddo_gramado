@@ -111,7 +111,7 @@ class APIService {
 
           await WPJsonAPI.instance.api(
             (request) => request.wpUserAddRole(
-              role: "customer", // e.g. customer, subscriber
+              role: "subscriber", // e.g. customer, subscriber
             ),
           );
           ret = true;

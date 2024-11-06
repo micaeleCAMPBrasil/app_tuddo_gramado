@@ -209,7 +209,8 @@ class _SVPostAddState extends State<SVPostAdd> {
                         margin: const EdgeInsets.only(left: 10),
                         child: Row(
                           children: [
-                            widget.usuario.photo == ''
+                            widget.usuario.photo == '' ||
+                                    widget.usuario.photo == 'https://tuddo.org/'
                                 ? Image.asset(
                                     'assets/image/nopicture.png',
                                     height: 56,

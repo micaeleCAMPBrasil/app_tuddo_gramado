@@ -165,7 +165,9 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                         margin: const EdgeInsets.only(left: 10),
                                         child: Row(
                                           children: [
-                                            usuarioQPublicou.photo == ''
+                                            usuarioQPublicou.photo == '' ||
+                                                    usuarioQPublicou.photo ==
+                                                        'https://tuddo.org/'
                                                 ? Image.asset(
                                                     'assets/image/nopicture.png',
                                                     height: 56,
@@ -437,7 +439,9 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                         margin: const EdgeInsets.only(left: 10),
                                         child: Row(
                                           children: [
-                                            usuarioQPublicou.photo == ''
+                                            usuarioQPublicou.photo == '' ||
+                                                    usuarioQPublicou.photo ==
+                                                        'https://tuddo.org/'
                                                 ? Image.asset(
                                                     'assets/image/nopicture.png',
                                                     height: 56,
@@ -870,7 +874,10 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                       width: 2),
                                                   borderRadius: radius(100),
                                                 ),
-                                                child: userdata[0].photo == ''
+                                                child: userdata[0].photo ==
+                                                            '' ||
+                                                        userdata[0].photo ==
+                                                            'https://tuddo.org/'
                                                     ? Image.asset(
                                                         'assets/image/nopicture.png',
                                                         height: 24,
@@ -964,7 +971,9 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                       borderRadius: radius(100),
                                                     ),
                                                     child: userdata[0].photo ==
-                                                            ''
+                                                                '' ||
+                                                            userdata[0].photo ==
+                                                                'https://tuddo.org/'
                                                         ? Image.asset(
                                                             'assets/image/nopicture.png',
                                                             height: 24,
@@ -1019,7 +1028,9 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                       borderRadius: radius(100),
                                                     ),
                                                     child: userdata[1].photo ==
-                                                            ''
+                                                                '' ||
+                                                            userdata[1].photo ==
+                                                                'https://tuddo.org/'
                                                         ? Image.asset(
                                                             'assets/image/nopicture.png',
                                                             height: 24,
@@ -1129,7 +1140,9 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                       borderRadius: radius(100),
                                                     ),
                                                     child: userdata[0].photo ==
-                                                            ''
+                                                                '' ||
+                                                            userdata[0].photo ==
+                                                                'https://tuddo.org/'
                                                         ? Image.asset(
                                                             'assets/image/nopicture.png',
                                                             height: 24,
@@ -1185,7 +1198,9 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                       borderRadius: radius(100),
                                                     ),
                                                     child: userdata[1].photo ==
-                                                            ''
+                                                                '' ||
+                                                            userdata[1].photo ==
+                                                                'https://tuddo.org/'
                                                         ? Image.asset(
                                                             'assets/image/nopicture.png',
                                                             height: 24,
@@ -1240,7 +1255,9 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                       borderRadius: radius(100),
                                                     ),
                                                     child: userdata[2].photo ==
-                                                            ''
+                                                                '' ||
+                                                            userdata[2].photo ==
+                                                                'https://tuddo.org/'
                                                         ? Image.asset(
                                                             'assets/image/nopicture.png',
                                                             height: 24,
@@ -1359,7 +1376,9 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                       borderRadius: radius(100),
                                                     ),
                                                     child: userdata[0].photo ==
-                                                            ''
+                                                                '' ||
+                                                            userdata[0].photo ==
+                                                                'https://tuddo.org/'
                                                         ? Image.asset(
                                                             'assets/image/nopicture.png',
                                                             height: 24,
@@ -1415,7 +1434,9 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                       borderRadius: radius(100),
                                                     ),
                                                     child: userdata[1].photo ==
-                                                            ''
+                                                                '' ||
+                                                            userdata[1].photo ==
+                                                                'https://tuddo.org/'
                                                         ? Image.asset(
                                                             'assets/image/nopicture.png',
                                                             height: 24,
@@ -1470,7 +1491,9 @@ class _SVPostComponentState extends State<SVPostComponent> {
                                                       borderRadius: radius(100),
                                                     ),
                                                     child: userdata[2].photo ==
-                                                            ''
+                                                                '' ||
+                                                            userdata[2].photo ==
+                                                                'https://tuddo.org/'
                                                         ? Image.asset(
                                                             'assets/image/nopicture.png',
                                                             height: 24,

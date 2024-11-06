@@ -9,7 +9,6 @@ import 'package:app_tuddo_gramado/data/stores/categorias_button_store.dart';
 import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
 import 'package:app_tuddo_gramado/data/stores/patrocinadores_store.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
-import 'package:app_tuddo_gramado/utils/widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +72,7 @@ class _NewPatrocinadoresScreenState extends State<NewPatrocinadoresScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 18.0),
+                  padding: const EdgeInsets.only(top: 25.0),
                   child: IconButton(
                     onPressed: () {
                       Provider.of<ControlNav>(context, listen: false)
@@ -484,10 +483,9 @@ class _PatrocinadoresScreenState extends State<PatrocinadoresScreen> {
         return true;
       },
       child: Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: const PreferredSize(
-          preferredSize: Size.fromHeight(56),
-          child: MyAppBar(),
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(56),
+          child: appBarLikeMethod(),
         ),
         //appBar: getAppBar("Select #Hashtag", backWidget: BackButton(color: white)),
         body: ValueListenableBuilder<List<Patrocinadores>>(
@@ -498,7 +496,6 @@ class _PatrocinadoresScreenState extends State<PatrocinadoresScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  appBarLikeMethod(),
                   Column(
                     children: [
                       SizedBox(
@@ -684,23 +681,22 @@ class _PatrocinadoresScreenState extends State<PatrocinadoresScreen> {
   }
 
   Widget appBarLikeMethod() {
-    return Container(
-      height: 120,
-      color: color00,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: color28,
-              ),
-              child: Row(
-                children: [
+    return SafeArea(
+      child: Container(
+        color: color00,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: color28,
+                ),
+                child: Row(children: [
                   SizedBox(
                     height: 25,
                     child: SvgPicture.asset(
@@ -722,11 +718,10 @@ class _PatrocinadoresScreenState extends State<PatrocinadoresScreen> {
                       ),
                     ),
                   )
-                ],
+                ]),
               ),
-            ),
-            heightSpace15,
-          ],
+            ],
+          ),
         ),
       ),
     );
