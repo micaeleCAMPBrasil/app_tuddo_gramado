@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>111160179496-jr2oh7o5bdomidchrt8l04mqfs3akt06.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.111160179496-jr2oh7o5bdomidchrt8l04mqfs3akt06</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>111160179496-o4sog4tf47tjlug2s15pdhpsdekj22o1.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAAkkiHmBMDG-mFHaQEVcIf2iEzNLj3jgU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>111160179496</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.tuddo.tuddo</string>
+	<key>PROJECT_ID</key>
+	<string>tuddo-gramado-app</string>
+	<key>STORAGE_BUCKET</key>
+	<string>tuddo-gramado-app.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:111160179496:ios:330168724e9e6dbc812e1d</string>
+</dict>
+</plist>
