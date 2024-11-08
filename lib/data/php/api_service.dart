@@ -110,7 +110,7 @@ class APIService {
           );
 
           await WPJsonAPI.instance.api(
-            (request) => request.wpUserAddRole(
+            (request) => request.wpUserRemoveRole(
               role: "subscriber", // e.g. customer, subscriber
             ),
           );

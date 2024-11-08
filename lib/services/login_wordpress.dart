@@ -58,7 +58,8 @@ class _LoginWordPressState extends State<LoginWordPress> {
           child: InAppWebView(
             initialUrlRequest: URLRequest(
               url: WebUri(
-                  '${Config.urltuddoemdobro}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}'),
+                '${Config.urltuddoemdobro}?is_api=true&acao=login&user=${widget.usuario.email}&pass=${widget.usuario.uid}',
+              ),
             ),
             onWebViewCreated: (controller) {
               webView = controller;

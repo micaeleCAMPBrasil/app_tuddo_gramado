@@ -7,7 +7,7 @@ class Config {
       "https://site.tuddogramado.com.br/wp-json/jwt-auth/v1/token";
 
   static String urltuddoemdobro =
-      "https://site.tuddogramado.com.br/member-login";
+      "https://site.tuddogramado.com.br/wp-login.php";
 
   static String customerURL = "users";
 

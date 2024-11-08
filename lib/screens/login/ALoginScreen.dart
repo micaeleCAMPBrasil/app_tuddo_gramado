@@ -109,12 +109,13 @@ class _ALoginScreenState extends State<ALoginScreen> {
                           text: 'Continue',
                           onTap: () {
                             if (mykey.currentState!.validate()) {
-                              UiHelper.showLoadingDialog(context, 'Aguarde...');
                               AuthService.signInWithEmail(
                                       _emailTextController.text)
                                   .then(
                                 (value) async {
                                   if (value == "Sucess") {
+                                    UiHelper.showLoadingDialog(
+                                        context, 'Aguarde...');
                                     User user = AuthService.gerarUserFirebase();
                                     String uid = user.uid;
                                     String? emailEscolhido = user.email;

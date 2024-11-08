@@ -86,7 +86,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
       firstName: primeiroNome,
       lastName: segundoNome,
       password: usuario.uid,
-      roles: ['subscriber'],
+      roles: [''],
     );
 
     //await apiService.getIdTG(Config.tokenURLTG, usuario.email, usuario.uid);
