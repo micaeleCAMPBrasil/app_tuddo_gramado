@@ -341,13 +341,14 @@ class _PatrocinadoresDetailPageState extends State<PatrocinadoresDetailPage> {
                   children: [
                     GestureDetector(
                       onTap: () {
+                        item.link == '' ? null : 
                         item.isLinkExterno!
-                            ? mudarRouta(item.link)
+                            ? mudarRouta(item.link!)
                             : _launchUrl(
                                 Uri.parse(
-                                  item.link == ''
+                                  item.link! == ''
                                       ? widget.patrocinador.linkWebSite
-                                      : item.link,
+                                      : item.link!,
                                 ),
                               );
                       },

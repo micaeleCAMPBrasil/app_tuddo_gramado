@@ -113,12 +113,14 @@ class _ALoginScreenState extends State<ALoginScreen> {
                           text: 'Continue',
                           onTap: () {
                             if (mykey.currentState!.validate()) {
-                              UiHelper.showLoadingDialog(context, 'Aguarde...');
                               AuthService.signInWithEmail(
                                       _emailTextController.text)
                                   .then(
                                 (value) async {
                                   if (value == "Sucess") {
+
+                                    UiHelper.showLoadingDialog(context, 'Aguarde...');
+                                    
                                     User user = AuthService.gerarUserFirebase();
                                     String uid = user.uid;
                                     String? emailEscolhido = user.email;
@@ -201,16 +203,17 @@ class _ALoginScreenState extends State<ALoginScreen> {
                         SignInWithAppleButton(
                             onPressed: () => authService.signInWithApple().then(
                                   (value) async {
-                                    if (value == "Sucess") {
-                                      User user =
-                                          AuthService.gerarUserFirebase();
-                                      String uid = user.uid;
+                                    if (value != null) {
+                                      User? user = value.user;
+                                      String uid = user!.uid;
                                       String? emailEscolhido = user.email;
 
                                       await storeUser.getUID(uid);
 
                                       Usuario usuarioBase =
                                           storeUser.state.value;
+
+                                      print('User $usuarioBase');
 
                                       if (usuarioBase.nome == '' ||
                                           usuarioBase.email == '' ||
@@ -267,9 +270,9 @@ class _ALoginScreenState extends State<ALoginScreen> {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         SnackBar(
-                                          content: Text(
-                                            value!,
-                                            style: const TextStyle(
+                                          content: const Text(
+                                            'Desculpe, aconteceu algum erro',
+                                            style: TextStyle(
                                               color: Colors.white,
                                             ),
                                           ),

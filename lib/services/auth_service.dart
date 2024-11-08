@@ -15,7 +15,7 @@ class AuthService extends ChangeNotifier {
   String getUserEmail() => _firebaseAuth.currentUser?.email ?? "User";
 
   // apple login method
-  Future<String?> signInWithApple() async {
+  Future<UserCredential?> signInWithApple() async {
     try {
       final appleCredential = await SignInWithApple.getAppleIDCredential(
         scopes: [
@@ -29,11 +29,15 @@ class AuthService extends ChangeNotifier {
         accessToken: appleCredential.authorizationCode,
       );
 
-      return 'Sucess';
+      UserCredential user = await _firebaseAuth.signInWithCredential(oAuthCredential);
+     //print('user - ${user.user}');
+      
+      return user;
       //return await _firebaseAuth.signInWithCredential(oAuthCredential);
     } catch (e) {
       print("Erro no Login com Apple: $e");
-      return "Erro no Login com Apple: $e";
+      //return "Erro no Login com Apple: $e";
+      return null;
     }
   }
   // apple sign in - final
