@@ -120,8 +120,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(100),
-                    child: user.photo == '' ||
-                            user.photo == 'https://tuddo.org/'
+                    child: user.photo == '' || user.photo == 'https://tuddo.org/'
                         ? Image.asset(
                             "assets/image/nopicture.png",
                             fit: BoxFit.fill,

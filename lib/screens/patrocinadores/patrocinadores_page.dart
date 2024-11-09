@@ -691,7 +691,8 @@ class _PatrocinadoresScreenState extends State<PatrocinadoresScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
                   color: color28,

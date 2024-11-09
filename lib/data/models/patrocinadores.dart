@@ -113,7 +113,8 @@ class Patrocinadores {
 
 class GaleriaPatrocinador {
   int idPatrocinador;
-  String img, link;
+  String img;
+  String? link;
   bool? isLinkExterno;
 
   GaleriaPatrocinador({

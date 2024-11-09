@@ -28,6 +28,7 @@ class InAppView extends StatefulWidget {
 class _InAppViewState extends State<InAppView> {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
+  HeadlessInAppWebView? headlessWebView;
   PullToRefreshController? pullToRefreshController;
   InAppWebViewController? webViewController;
 
@@ -106,7 +107,7 @@ class _InAppViewState extends State<InAppView> {
   @override
   void dispose() {
     super.dispose();
-    widget.url = '';
+    headlessWebView?.dispose();
     webViewController?.dispose();
   }
 

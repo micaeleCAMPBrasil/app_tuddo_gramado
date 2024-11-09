@@ -1,4 +1,8 @@
+import 'package:app_tuddo_gramado/data/models/usuario.dart';
+import 'package:app_tuddo_gramado/data/php/functions.dart';
+import 'package:app_tuddo_gramado/data/php/http_client.dart';
 import 'package:app_tuddo_gramado/data/stores/control_nav.dart';
+import 'package:app_tuddo_gramado/data/stores/user_store.dart';
 import 'package:flutter/material.dart';
 import 'package:app_tuddo_gramado/screens/login/ALoginScreen.dart';
 import 'package:app_tuddo_gramado/services/auth_service.dart';
@@ -7,6 +11,12 @@ import 'package:provider/provider.dart';
 import '../utils/constant.dart';
 
 class UiHelper {
+  final UsuarioStore storeUser = UsuarioStore(
+    repository: IFuncoesPHP(
+      client: HttpClient(),
+    ),
+  );
+
   static void showLogOutDialog(
     BuildContext context,
   ) {
@@ -126,5 +136,103 @@ class UiHelper {
         ),
       ),
     );
+  }
+
+  void showExcluirContaDialog(
+    BuildContext context,
+  ) {
+    Usuario user =
+        Provider.of<UsuarioProvider>(context, listen: false).getUsuario;
+
+    AlertDialog logoutDialog = AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+        titlePadding: EdgeInsets.zero,
+        contentPadding: EdgeInsets.zero,
+        actionsPadding: EdgeInsets.zero,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              width: MediaQuery.of(context).size.width,
+              height: 50,
+              decoration: BoxDecoration(
+                color: primaryColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(5),
+                  topRight: Radius.circular(5),
+                ),
+              ),
+              child: Text(
+                'Sair',
+                style: whiteSemiBold20,
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 13),
+              width: MediaQuery.of(context).size.width,
+              height: 130,
+              decoration: const BoxDecoration(
+                color: appTextColorPrimary,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(5),
+                  bottomRight: Radius.circular(5),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Tem certeza que deseja excluir a conta?',
+                    style: whiteRegular16,
+                  ),
+                  heightSpace15,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          'Cancelar',
+                          style: primaryBold18,
+                        ),
+                      ),
+                      widthSpace20,
+                      GestureDetector(
+                        onTap: () async {
+                          storeUser.excluirConta(user);
+
+                          AuthService.logout();
+                          Provider.of<ControlNav>(context, listen: false)
+                              .updateIndex(
+                            0,
+                            0,
+                          );
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ALoginScreen(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Sair',
+                          style: primaryBold18,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ],
+        ));
+    showDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (context) => logoutDialog);
   }
 }

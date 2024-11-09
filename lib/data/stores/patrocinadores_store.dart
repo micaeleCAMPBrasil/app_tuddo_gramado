@@ -63,12 +63,9 @@ class PatrocinadoresStore {
       if (!ids.contains(element.route)) {
         ids.add(element.route);
       }
-      debugPrint('Lista de ID ${element.name}');
     }
 
     int idPatrocinador = ids.isEmpty ? 0 : ids.first;
-
-    debugPrint('IDS $idPatrocinador');
 
     /*List<Patrocinadores> list = _chachedPatrocinadores!
         .where((element) => element.nome.toString().toLowerCase().contains(

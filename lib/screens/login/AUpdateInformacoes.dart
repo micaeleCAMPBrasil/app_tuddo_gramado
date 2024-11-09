@@ -224,7 +224,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                               heightSpace20,
                               PrimaryTextfieldTelefone(
-                                lableText: 'Telefone',
+                                lableText: 'Telefone (Não obrigatório)',
                                 keyboardType: TextInputType.phone,
                                 controller: telefoneController,
                                 textInputAction: TextInputAction.go,
@@ -239,14 +239,18 @@ class _RegisterPageState extends State<RegisterPage> {
 
                                     setState(() {
                                       widget.usuario.uid = widget.uid;
-                                      widget.usuario.nome =
-                                          nomeController.text.toUpperCase();
+                                      widget.usuario.nome = nomeController
+                                              .text.isEmpty
+                                          ? 'Usuário Tuddo'
+                                          : nomeController.text.toUpperCase();
                                       widget.usuario.username =
                                           userNameController.text;
                                       widget.usuario.email =
                                           emailController.text;
                                       widget.usuario.telefone =
-                                          telefoneController.text;
+                                          telefoneController.text.isEmpty
+                                              ? ' '
+                                              : telefoneController.text;
                                       widget.usuario.tokenAlert = tokenAlert;
                                     });
 
@@ -258,30 +262,53 @@ class _RegisterPageState extends State<RegisterPage> {
 
                                     List<String> split =
                                         widget.usuario.nome.split(' ');
+                                    print("tamanho nome: ${split.length}");
                                     String primeiroNome = split[0] == ''
                                         ? ''
                                         : split[0].toUpperCase();
-                                    String segundoNome = split[1] == ''
-                                        ? ''
-                                        : split[1].toUpperCase();
 
-                                    CustomerModel model = CustomerModel(
-                                      email: widget.usuario.email,
-                                      displayName: widget.usuario.nome,
-                                      firstName: primeiroNome,
-                                      lastName: segundoNome,
-                                      password: widget.usuario.uid,
-                                      roles: ['subscriber'],
-                                    );
+                                    if (split.length > 1) {
+                                      String segundoNome = split[1] == ''
+                                          ? ''
+                                          : split[1].toUpperCase();
 
-                                    await apiService
-                                        .criandonovousuarioTuddoGramado(model);
+                                      CustomerModel model = CustomerModel(
+                                        email: widget.usuario.email,
+                                        displayName: widget.usuario.nome,
+                                        firstName: primeiroNome,
+                                        lastName: segundoNome,
+                                        password: widget.usuario.uid,
+                                        roles: ['subscriber'],
+                                      );
 
-                                    await apiService
-                                        .criandonovousuarioTuddoDobro(model);
+                                      await apiService
+                                          .criandonovousuarioTuddoGramado(
+                                              model);
 
-                                    await apiService
-                                        .criandonovousuarioTransfer(model);
+                                      await apiService
+                                          .criandonovousuarioTuddoDobro(model);
+
+                                      await apiService
+                                          .criandonovousuarioTransfer(model);
+                                    } else {
+                                      CustomerModel model = CustomerModel(
+                                        email: widget.usuario.email,
+                                        displayName: widget.usuario.nome,
+                                        firstName: primeiroNome,
+                                        password: widget.usuario.uid,
+                                        roles: ['subscriber'],
+                                      );
+
+                                      await apiService
+                                          .criandonovousuarioTuddoGramado(
+                                              model);
+
+                                      await apiService
+                                          .criandonovousuarioTuddoDobro(model);
+
+                                      await apiService
+                                          .criandonovousuarioTransfer(model);
+                                    }
 
                                     debugPrint('check cadastro - $check');
 

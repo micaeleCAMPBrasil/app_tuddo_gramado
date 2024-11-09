@@ -19,6 +19,7 @@ import 'package:app_tuddo_gramado/services/auth_service.dart';
 
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:provider/provider.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class ALoginScreen extends StatefulWidget {
   const ALoginScreen({super.key});
@@ -48,6 +49,9 @@ class _ALoginScreenState extends State<ALoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // get auth service
+    final authService = AuthService();
+
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -109,12 +113,14 @@ class _ALoginScreenState extends State<ALoginScreen> {
                           text: 'Continue',
                           onTap: () {
                             if (mykey.currentState!.validate()) {
-                              UiHelper.showLoadingDialog(context, 'Aguarde...');
                               AuthService.signInWithEmail(
                                       _emailTextController.text)
                                   .then(
                                 (value) async {
                                   if (value == "Sucess") {
+
+                                    UiHelper.showLoadingDialog(context, 'Aguarde...');
+                                    
                                     User user = AuthService.gerarUserFirebase();
                                     String uid = user.uid;
                                     String? emailEscolhido = user.email;
@@ -193,6 +199,89 @@ class _ALoginScreenState extends State<ALoginScreen> {
                           },
                         ),
                         heightSpace20,
+                        // botao para login com apple
+                        SignInWithAppleButton(
+                            onPressed: () => authService.signInWithApple().then(
+                                  (value) async {
+                                    if (value != null) {
+                                      User? user = value.user;
+                                      String uid = user!.uid;
+                                      String? emailEscolhido = user.email;
+
+                                      await storeUser.getUID(uid);
+
+                                      Usuario usuarioBase =
+                                          storeUser.state.value;
+
+                                      print('User $usuarioBase');
+
+                                      if (usuarioBase.nome == '' ||
+                                          usuarioBase.email == '' ||
+                                          usuarioBase.telefone == '') {
+                                        Timer(
+                                          const Duration(seconds: 1),
+                                          () {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RegisterPage(
+                                                  uid: uid,
+                                                  email: emailEscolhido!,
+                                                  usuario: usuarioBase,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        setState(() {
+                                          isApiCallProcess = true;
+                                        });
+
+                                        Provider.of<UsuarioProvider>(context,
+                                                listen: false)
+                                            .updateUsuario(usuarioBase);
+
+                                        Timer(
+                                          const Duration(seconds: 1),
+                                          () {
+                                            /*Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => LoginWP(
+                                                  usuario: usuarioBase.email,
+                                                  senha: usuarioBase.uid,
+                                                ),
+                                              ),
+                                            );*/
+
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const CheckUserLoggedInOrNot(),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: const Text(
+                                            'Desculpe, aconteceu algum erro',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          backgroundColor: primaryColor,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                )),
                         /*Text(
                           'Faça Login usando:',
                           style: whiteRegular15,

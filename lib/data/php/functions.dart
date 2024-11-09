@@ -11,11 +11,13 @@ abstract class IFuncoes {
   Future<List<Usuario>> getAllUsuario();
   Future<Usuario> getUsuarioUID(String uid);
   Future<bool> updateUser(Usuario usuario);
+  Future<bool> updateUserNew(Usuario usuario);
 
   Future<List<Patrocinadores>> getListPatrocinadores();
   Future<List<CategoriasButoon>> getCategorias();
 
   Future<List<Usuario>> getListUsersLikes(List<String> uidUsers, String uid);
+  Future<bool> deleteUsuario(Usuario usuario);
 }
 
 class IFuncoesPHP implements IFuncoes {
@@ -410,7 +412,77 @@ class IFuncoesPHP implements IFuncoes {
       }
     } else if (response.statusCode == 404) {
       throw NotFoundException("A url informada não é válida.");
-    } else if (response.statusCode == 500) {
+    } else {
+      throw Exception("Não foi possível carregar os usuários.");
+    }
+  }
+
+  @override
+  Future<bool> deleteUsuario(Usuario usuario) async {
+    final response = await Dio().get(
+      "https://www.tuddo.org/php/deleteUser.php?user=${usuario.uid}",
+    );
+    bool resposta = false;
+
+    if (response.statusCode == 200) {
+      final body = jsonDecode(response.data);
+
+      if (body == 'dados_vazios') {
+        resposta = false;
+      } else if (body == 'Database erro') {
+        resposta = false;
+      } else if (body == 'Error') {
+        resposta = false;
+      } else if (body == 'Sucesso') {
+        resposta = true;
+      }
+    } else if (response.statusCode == 404) {
+      throw NotFoundException("A url informada não é válida.");
+    } else {
+      throw Exception("Não foi possível carregar os usuários.");
+    }
+
+    return resposta;
+  }
+
+  @override
+  Future<bool> updateUserNew(Usuario usuario) async {
+    String uid = usuario.uid;
+    String nome = usuario.nome;
+    String email = usuario.email;
+    String phone = usuario.telefone;
+    String userName = usuario.username;
+    String foto = usuario.photo;
+    String token = usuario.tokenAlert;
+
+    /*final response =
+        await Dio().get("https://www.tuddo.org/php/updateUser.php", data: {
+          "uid":
+        });*/
+
+    /*final response = await client.get(
+      url:
+          "https://www.tuddo.org/php/updateUser.php?uid=$uid&nome=$nome&email=$email&phone=$phone&username=$userName&photo=$foto&token=$token",
+    );*/
+
+    final response = await Dio().get(
+      "https://www.tuddo.org/php/updateUser.php?uid=$uid&nome=$nome&email=$email&phone=$phone&username=$userName&photo=$foto&token=$token&is_cadastrar=sim",
+    );
+
+    if (response.statusCode == 200) {
+      final body = jsonDecode(response.data);
+
+      debugPrint('Body - $body');
+
+      debugPrint("resposta - $body");
+      if (body == 'dados_vazios') {
+        return false;
+      } else if (body == 'Database erro') {
+        return false;
+      } else {
+        return true;
+      }
+    } else if (response.statusCode == 404) {
       throw NotFoundException("A url informada não é válida.");
     } else {
       throw Exception("Não foi possível carregar os usuários.");

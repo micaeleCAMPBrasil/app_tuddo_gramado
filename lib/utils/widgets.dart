@@ -66,9 +66,7 @@ class PrimaryTextfieldTelefone extends StatelessWidget {
       style: whiteMedium16,
       maxLength: maxLength,
       validator: (value) {
-        if (value!.isEmpty) {
-          return 'Digite um telefone válido';
-        } else if (value.length < 10) {
+        if (value!.length < 10 && value.isNotEmpty) {
           return 'Digite um telefone válido';
         } else {
           return null;
