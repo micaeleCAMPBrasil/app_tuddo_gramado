@@ -118,9 +118,9 @@ class _ALoginScreenState extends State<ALoginScreen> {
                                   .then(
                                 (value) async {
                                   if (value == "Sucess") {
+                                    UiHelper.showLoadingDialog(
+                                        context, 'Aguarde...');
 
-                                    UiHelper.showLoadingDialog(context, 'Aguarde...');
-                                    
                                     User user = AuthService.gerarUserFirebase();
                                     String uid = user.uid;
                                     String? emailEscolhido = user.email;
@@ -129,8 +129,8 @@ class _ALoginScreenState extends State<ALoginScreen> {
 
                                     Usuario usuarioBase = storeUser.state.value;
 
-                                    if (usuarioBase.nome == '' ||
-                                        usuarioBase.email == '' ||
+                                    if (usuarioBase.nome == '' &&
+                                        usuarioBase.email == '' &&
                                         usuarioBase.telefone == '') {
                                       Timer(
                                         const Duration(seconds: 1),
