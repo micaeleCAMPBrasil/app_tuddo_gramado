@@ -1,5 +1,5 @@
 // ignore_for_file: file_names
-import 'package:app_tuddo_gramado/services/auth_check.dart';
+import 'package:app_tuddo_gramado/screens/login/ALoginScreen.dart';
 import 'package:app_tuddo_gramado/utils/ADataProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -91,7 +91,7 @@ class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  const CheckUserLoggedInOrNot(),
+                                                  const ALoginScreen(),
                                             ),
                                           );
                                         },
@@ -184,8 +184,7 @@ class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                const CheckUserLoggedInOrNot(),
+                            builder: (context) => const ALoginScreen(),
                           ),
                         );
                       }

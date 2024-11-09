@@ -224,7 +224,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                               heightSpace20,
                               PrimaryTextfieldTelefone(
-                                lableText: 'Telefone',
+                                lableText: 'Telefone (Não obrigatório)',
                                 keyboardType: TextInputType.phone,
                                 controller: telefoneController,
                                 textInputAction: TextInputAction.go,
@@ -239,14 +239,18 @@ class _RegisterPageState extends State<RegisterPage> {
 
                                     setState(() {
                                       widget.usuario.uid = widget.uid;
-                                      widget.usuario.nome =
-                                          nomeController.text.toUpperCase();
+                                      widget.usuario.nome = nomeController
+                                              .text.isEmpty
+                                          ? 'Usuário Tuddo'
+                                          : nomeController.text.toUpperCase();
                                       widget.usuario.username =
                                           userNameController.text;
                                       widget.usuario.email =
                                           emailController.text;
                                       widget.usuario.telefone =
-                                          telefoneController.text;
+                                          telefoneController.text.isEmpty
+                                              ? ' '
+                                              : telefoneController.text;
                                       widget.usuario.tokenAlert = tokenAlert;
                                     });
 

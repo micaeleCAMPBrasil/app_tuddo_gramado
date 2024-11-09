@@ -1,6 +1,6 @@
 // ignore_for_file: file_names
+import 'package:app_tuddo_gramado/services/auth_check.dart';
 import 'package:flutter/material.dart';
-import 'AWalkThroughScreen.dart';
 
 class ASplashScreen extends StatefulWidget {
   const ASplashScreen({super.key});
@@ -21,7 +21,7 @@ class _ASplashScreenState extends State<ASplashScreen> {
           context,
           MaterialPageRoute(
             //builder: (context) => const CheckUserLoggedInOrNot(),
-            builder: (context) => const AWalkThroughScreen(),
+            builder: (context) => const CheckUserLoggedInOrNot(),
           ),
         );
       },
