@@ -1,4 +1,5 @@
 import 'package:app_tuddo_gramado/data/php/api_service.dart';
+import 'package:app_tuddo_gramado/screens/inicio/AWalkThroughScreen.dart';
 import 'package:app_tuddo_gramado/utils/bottom_navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,7 @@ class _CheckUserLoggedInOrNotState extends State<CheckUserLoggedInOrNot> {
             // ignore: use_build_context_synchronously
             context,
             MaterialPageRoute(
-              builder: (context) => const ALoginScreen(),
+              builder: (context) => const AWalkThroughScreen(),
             ),
           );
         } else {
@@ -97,7 +98,8 @@ class _CheckUserLoggedInOrNotState extends State<CheckUserLoggedInOrNot> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const ALoginScreen(),
+            builder: (context) => const AWalkThroughScreen(),
+            //builder: (context) => const ALoginScreen(),
           ),
         );
       }

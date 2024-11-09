@@ -1,4 +1,5 @@
 // ignore_for_file: file_names
+import 'package:app_tuddo_gramado/screens/login/ALoginScreen.dart';
 import 'package:app_tuddo_gramado/services/auth_check.dart';
 import 'package:app_tuddo_gramado/utils/ADataProvider.dart';
 import 'package:flutter/material.dart';
@@ -33,9 +34,9 @@ class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
   void _checkPlatform() {
     final userAgent = html.window.navigator.userAgent.toLowerCase();
     setState(() {
-      _isIOS = userAgent.contains('iphone') || 
-               userAgent.contains('ipad') || 
-               userAgent.contains('ipod');
+      _isIOS = userAgent.contains('iphone') ||
+          userAgent.contains('ipad') ||
+          userAgent.contains('ipod');
       _isIOSChrome = _isIOS && userAgent.contains('chrome');
     });
   }
@@ -144,7 +145,8 @@ class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Container(
-                                      width: MediaQuery.of(context).size.width * 0.25,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.25,
                                       margin: const EdgeInsets.all(10),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(5),
@@ -156,7 +158,7 @@ class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  const CheckUserLoggedInOrNot(),
+                                                  const ALoginScreen(),
                                             ),
                                           );
                                         },
@@ -194,11 +196,14 @@ class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
                             ),
                             const SizedBox(height: 24),
                             // Botão de instalação
-                            if (_isIOS || _isIOSChrome || PWAInstall().installPromptEnabled)
+                            if (_isIOS ||
+                                _isIOSChrome ||
+                                PWAInstall().installPromptEnabled)
                               Container(
                                 width: double.infinity,
                                 height: 56,
-                                margin: const EdgeInsets.symmetric(horizontal: 16),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 16),
                                 child: ElevatedButton(
                                   onPressed: _handleInstallClick,
                                   style: ElevatedButton.styleFrom(
@@ -268,7 +273,7 @@ class _AWalkThroughScreenState extends State<AWalkThroughScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const CheckUserLoggedInOrNot(),
+                            builder: (context) => const ALoginScreen(),
                           ),
                         );
                       }

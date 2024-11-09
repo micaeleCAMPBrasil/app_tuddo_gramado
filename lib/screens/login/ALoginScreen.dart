@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:app_tuddo_gramado/data/php/api_service.dart';
 import 'package:app_tuddo_gramado/helper/ui_helper.dart';
 import 'package:app_tuddo_gramado/services/auth_check.dart';
-import 'package:app_tuddo_gramado/services/logout_wordpress.dart';
 import 'package:app_tuddo_gramado/utils/widgets.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -67,7 +66,7 @@ class _ALoginScreenState extends State<ALoginScreen> {
         ),
         body: Stack(
           children: [
-            const LogOutWordPress(),
+            //const LogOutWordPress(),
             Container(
               height: MediaQuery.of(context).size.height,
               padding: EdgeInsets.only(

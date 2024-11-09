@@ -618,9 +618,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
       ),
       body: Stack(
         children: [
-          LoginWordPress(
+          /*LoginWordPress(
             usuario: usuario,
-          ),
+          ),*/
           _widgetOptions[routa.page].elementAt(routa.index),
         ],
       ),
