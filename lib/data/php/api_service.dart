@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:wp_json_api/models/responses/wp_user_register_response.dart';
 import 'package:wp_json_api/wp_json_api.dart';
+import 'package:http/http.dart' as http;
 
 class APIService {
   Future<bool> createCustomer(Usuario usuario, CustomerModel model) async {
@@ -167,6 +168,98 @@ class APIService {
     return ret;
   }
 
+  Future<String> getUserId(String jwtToken, String email, String urls) async {
+    final url = Uri.parse(urls);
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $jwtToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> users = json.decode(response.body);
+      email.replaceAll('@', '');
+      email.replaceAll('.', '-');
+
+      for (var user in users) {
+        String emails = user['slug'];
+
+        print('ID: ${user['id']}, Nome: ${user['name']}, Email: ${emails}');
+      }
+
+      // Suponha que você já tenha o email ou nome do usuário que quer excluir
+      // Exemplo de filtro por email:
+      final user = users.firstWhere(
+        (u) => u['slug'] == email,
+        orElse: () => null,
+      );
+
+      if (user != null) {
+        print('ID do usuário desejado: ${user['id']}');
+        //return user['id'];
+      } else {
+        print('Usuário não encontrado');
+        //return '';
+      }
+    } else {
+      print('Erro ao buscar usuários: ${response.statusCode}');
+      //return '';
+    }
+
+    return '';
+  }
+
+  // delete
+  Future<bool> deleteUsuarioTuddoGramado(Usuario usuario) async {
+    bool ret = false;
+
+    // String email, String senha
+    Map? data =
+        await getIdTG(Config.tokenURLTG, 'admin', 'K17s31D02@milenaepedro');
+    String tokenadm = data!['token'];
+
+    String url = Config.urlTuddo + Config.customerURL;
+
+    String iduser = await getUserId(
+      tokenadm,
+      usuario.email.toString(),
+      url,
+    );
+
+    debugPrint('id user firebse $url');
+
+    /*if (iduser == '') {
+    } else {
+      try {
+        var response = await Dio().delete(
+          '${Config.urlTuddo}${Config.customerURL}/$iduser',
+          data: model.toJson(),
+          options: Options(
+            headers: {
+              HttpHeaders.authorizationHeader: 'Bearer $tokenadm',
+              HttpHeaders.contentTypeHeader: "application/json",
+            },
+          ),
+        );
+
+        if (response.statusCode == 201) {
+          debugPrint('usuario do tuddo gramado cadastrado');
+          ret = true;
+        }
+      } on DioException catch (e) {
+        if (e.response?.statusCode == 400) {
+          debugPrint("Cadastro Erro TUDDO GRAMADO ${e.message}");
+          ret = false;
+        } else {
+          ret = false;
+        }
+      }
+    }*/
+
+    return ret;
+  }
+
   Future<Map<String, dynamic>?> getIdTG(
       String url, String email, String senha) async {
     var authToken = base64.encode(
@@ -244,58 +337,4 @@ class APIService {
 
     return ret;
   }
-
-  /*Future<void> uploadImage(String token, XFile imageFile) async {
-    final request = http.MultipartRequest(
-      'POST',
-      Uri.parse('https://seu-site.com/wp-json/wp/v2/media'),
-    );
-
-    // Adiciona o arquivo de imagem no corpo da requisição
-    request.files.add(
-      await http.MultipartFile.fromPath(
-        'file',
-        imageFile.path,
-        filename: imageFile.name,
-      ),
-    );
-
-    request.headers['Authorization'] = 'Bearer $token';
-    request.headers['Content-Disposition'] =
-        'attachment; filename="${imageFile.name}"';
-
-    final response = await request.send();
-
-    if (response.statusCode == 201) {
-      print('Imagem enviada com sucesso');
-      final responseData = await http.Response.fromStream(response);
-      final data = jsonDecode(responseData.body);
-      print('ID da mídia: ${data['id']}');
-    } else {
-      print('Falha no upload de imagem');
-    }
-  }
-
-  Future<void> updateProfilePicture(
-      String token, int userId, int mediaId) async {
-    final response = await http.put(
-      Uri.parse('https://seu-site.com/wp-json/wp/v2/users/$userId'),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'meta': {
-          'avatar_id': mediaId, // Supondo que o plugin utilize esse meta field
-        },
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      print('Avatar atualizado com sucesso');
-    } else {
-      print('Falha ao atualizar avatar');
-    }
-  }
-  */
 }

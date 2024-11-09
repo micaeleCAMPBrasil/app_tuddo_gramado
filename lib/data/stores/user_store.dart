@@ -1,3 +1,4 @@
+import 'package:app_tuddo_gramado/data/php/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/data/php/exceptions.dart';
@@ -26,6 +27,8 @@ class UsuarioStore {
   final ValueNotifier<List<Usuario>> list = ValueNotifier<List<Usuario>>([]);
 
   final ValueNotifier<String> erro = ValueNotifier<String>('');
+
+  APIService apiService = APIService();
 
   UsuarioStore({required this.repository});
 
@@ -77,5 +80,10 @@ class UsuarioStore {
       debugPrint('Erro ao atualizar usuário: $e');
       isEditable.value = false;
     }
+  }
+
+  Future excluirConta(Usuario usuario) async {
+    bool resposta = await repository.deleteUsuario(usuario);
+    return resposta;
   }
 }

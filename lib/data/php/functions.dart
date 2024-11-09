@@ -17,6 +17,7 @@ abstract class IFuncoes {
   Future<List<CategoriasButoon>> getCategorias();
 
   Future<List<Usuario>> getListUsersLikes(List<String> uidUsers, String uid);
+  Future<bool> deleteUsuario(Usuario usuario);
 }
 
 class IFuncoesPHP implements IFuncoes {
@@ -414,6 +415,34 @@ class IFuncoesPHP implements IFuncoes {
     } else {
       throw Exception("Não foi possível carregar os usuários.");
     }
+  }
+
+  @override
+  Future<bool> deleteUsuario(Usuario usuario) async {
+    final response = await Dio().get(
+      "https://www.tuddo.org/php/deleteUser.php?user=${usuario.uid}",
+    );
+    bool resposta = false;
+
+    if (response.statusCode == 200) {
+      final body = jsonDecode(response.data);
+
+      if (body == 'dados_vazios') {
+        resposta = false;
+      } else if (body == 'Database erro') {
+        resposta = false;
+      } else if (body == 'Error') {
+        resposta = false;
+      } else if (body == 'Sucesso') {
+        resposta = true;
+      }
+    } else if (response.statusCode == 404) {
+      throw NotFoundException("A url informada não é válida.");
+    } else {
+      throw Exception("Não foi possível carregar os usuários.");
+    }
+
+    return resposta;
   }
 
   @override
