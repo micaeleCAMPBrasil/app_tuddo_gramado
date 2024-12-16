@@ -5,6 +5,7 @@ import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/data/php/config.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:wp_json_api/models/responses/wp_user_info_updated_response.dart';
 import 'package:wp_json_api/models/responses/wp_user_register_response.dart';
 import 'package:wp_json_api/wp_json_api.dart';
 
@@ -81,6 +82,8 @@ class APIService {
         Config.tokenURL, 'tuddoemdobro', 'K17s31D02@milenaepedro');
     String tokenadm = data!['token'];*/
 
+    debugPrint('criando usuario tuddo em dobro');
+
     debugPrint('model - ${model.toJson()}');
 
     try {
@@ -95,17 +98,29 @@ class APIService {
           (request) => request.wpRegister(
             email: model.email.toString(),
             password: model.password.toString(),
-            saveTokenToLocalStorage: true,
+            username: model.email.toString(),
           ),
         );
+
+        /*WPUserInfoUpdatedResponse wpUserInfoUpdatedResponse =
+          await WPJsonAPI.instance.api(
+        (request) => request.wpUpdateUserInfo(
+          firstName: 'CleideaneSales',
+          lastName: 'Sales',
+          displayName: 'Cleideane Sales Ribeiro',
+        ),
+      );
+
+      debugPrint('update tuddo gramado - $wpUserInfoUpdatedResponse');*/
+
         if (wpUserRegisterResponse.status == 200) {
-          debugPrint('login  - ${wpUserRegisterResponse.data?.email}');
+          debugPrint('login tuddo em dobro  - ${wpUserRegisterResponse.data}');
 
           await WPJsonAPI.instance.api(
             (request) => request.wpUpdateUserInfo(
               firstName: model.firstName,
               lastName: model.lastName,
-              displayName: model.displayName,
+              displayName: model.email,
             ),
           );
 

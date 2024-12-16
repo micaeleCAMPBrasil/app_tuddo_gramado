@@ -193,7 +193,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String imgURL = '';
 
   void uploadImage() async {
-    String url = "https://www.tuddo.org/upload_img.php";
+    String url = "http://imagesapi.tuddo.org/upload_img.php";
     try {
       //String
 
@@ -267,7 +267,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             ? widget.usuario.photo != ''
                                 ? widget.usuario.photo
                                 : ""
-                            : "https://www.tuddo.org/$imgURL";
+                            : "http://imagesapi.tuddo.org/$imgURL";
                       });
 
                       debugPrint("A foto do usuário é ${widget.usuario.photo}");
@@ -395,7 +395,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       borderRadius: BorderRadius.circular(100),
                       child: images == null
                           ? usuario.photo == '' ||
-                                  usuario.photo == 'https://tuddo.org/'
+                                  usuario.photo == 'http://imagesapi.tuddo.org'
                               ? Image.asset(
                                   "assets/image/nopicture.png",
                                   fit: BoxFit.fill,

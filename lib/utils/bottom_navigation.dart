@@ -87,11 +87,11 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
     //await apiService.getIdTG(Config.tokenURLTG, usuario.email, usuario.uid);
 
-    await apiService.criandonovousuarioTuddoGramado(model);
+    //await apiService.criandonovousuarioTuddoGramado(model);
 
     await apiService.criandonovousuarioTuddoDobro(model);
 
-    await apiService.criandonovousuarioTransfer(model);
+    //await apiService.criandonovousuarioTransfer(model);
   }
 
   late InAppWebViewController webView;

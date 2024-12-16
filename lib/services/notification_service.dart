@@ -84,13 +84,15 @@ class NotificationService {
       notification.id,
       notification.title,
       notification.body,
+
       tz.TZDateTime.from(date, location),
       NotificationDetails(
         android: androidDetails,
       ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       payload: notification.payload,
       // ignore: deprecated_member_use
-      androidAllowWhileIdle: true,
+      //androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
     );

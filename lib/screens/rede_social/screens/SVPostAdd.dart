@@ -113,7 +113,7 @@ class _SVPostAddState extends State<SVPostAdd> {
   Dio dio = Dio();
 
   void uploadImageFile() async {
-    String url = "https://www.tuddo.org/upload_img.php";
+    String url = "http://imagesapi.tuddo.org/upload_img.php";
 
     try {
       /*String fileName = _image!.path.split('/').last;
@@ -210,7 +210,8 @@ class _SVPostAddState extends State<SVPostAdd> {
                         child: Row(
                           children: [
                             widget.usuario.photo == '' ||
-                                    widget.usuario.photo == 'https://tuddo.org/'
+                                    widget.usuario.photo ==
+                                        'http://imagesapi.tuddo.org'
                                 ? Image.asset(
                                     'assets/image/nopicture.png',
                                     height: 56,
@@ -363,7 +364,7 @@ class _SVPostAddState extends State<SVPostAdd> {
                                 // ignore: unrelated_type_equality_checks
                                 tmpFile == ''
                                     ? ''
-                                    : "https://www.tuddo.org/$imgURL",
+                                    : "http://imagesapi.tuddo.org/$imgURL",
                                 _descriptionTextController.text,
                               );
                             }

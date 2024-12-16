@@ -3,7 +3,7 @@ import 'package:app_tuddo_gramado/data/models/categoriasButton.dart';
 class CategoriasButoonStore {
   static List<CategoriasButoon> getbuttons = [
     CategoriasButoon(
-      name: 'Assine',
+      name: 'TUDDO\nEM DOBRO',
       backgroundImage: 'assets/image/a6.png',
       route: 6,
     ),
@@ -12,11 +12,11 @@ class CategoriasButoonStore {
       backgroundImage: 'assets/image/a1.png',
       route: 1,
     ),
-    CategoriasButoon(
+    /*CategoriasButoon(
       name: 'Tuddo em Dobro',
       backgroundImage: 'assets/image/a2.png',
       route: 2,
-    ),
+    ),*/
     CategoriasButoon(
       name: 'Transfer',
       backgroundImage: 'assets/image/a3.png',

@@ -370,7 +370,7 @@ class _AHomeScreenState extends State<AHomeScreen> {
                           ),
                     child: Text(
                       item.name,
-                      style: item.route == 6 ? blackBold18 : whiteMedium14,
+                      style: item.route == 6 ? blackBold14 : whiteMedium14,
                       textAlign: TextAlign.center,
                     ),
                   ),

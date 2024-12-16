@@ -18,6 +18,7 @@ import 'package:app_tuddo_gramado/screens/login/AUpdateInformacoes.dart';
 import 'package:app_tuddo_gramado/services/auth_service.dart';
 
 import 'package:app_tuddo_gramado/utils/constant.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:provider/provider.dart';
 
 class ALoginScreen extends StatefulWidget {
@@ -107,10 +108,72 @@ class _ALoginScreenState extends State<ALoginScreen> {
                         heightSpace40,
                         PrimaryButton(
                           text: 'Continue',
-                          onTap: () {
+                          onTap: () async {
                             if (mykey.currentState!.validate()) {
-                              UiHelper.showLoadingDialog(context, 'Aguarde...');
-                              AuthService.signInWithEmail(
+                              //UiHelper.showLoadingDialog(context, 'Aguarde...');
+
+                              await AuthService.signInWithEmail(
+                                  _emailTextController.text);
+
+                              User user = AuthService.gerarUserFirebase();
+                              String uid = user.uid;
+                              String? emailEscolhido = user.email;
+                              await storeUser.getUID(uid);
+
+                              Usuario usuarioBase = storeUser.state.value;
+
+                              if (usuarioBase.nome == '' ||
+                                  usuarioBase.email == '' ||
+                                  usuarioBase.telefone == '') {
+                                Timer(
+                                  const Duration(seconds: 1),
+                                  () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => RegisterPage(
+                                          uid: uid,
+                                          email: emailEscolhido!,
+                                          usuario: usuarioBase,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else {
+                                setState(() {
+                                  isApiCallProcess = true;
+                                });
+
+                                Provider.of<UsuarioProvider>(context,
+                                        listen: false)
+                                    .updateUsuario(usuarioBase);
+
+                                Timer(
+                                  const Duration(seconds: 1),
+                                  () {
+                                    /*Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => LoginWP(
+                                                  usuario: usuarioBase.email,
+                                                  senha: usuarioBase.uid,
+                                                ),
+                                              ),
+                                            );*/
+
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const CheckUserLoggedInOrNot(),
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+
+                              /*AuthService.signInWithEmail(
                                       _emailTextController.text)
                                   .then(
                                 (value) async {
@@ -188,7 +251,7 @@ class _ALoginScreenState extends State<ALoginScreen> {
                                     );
                                   }
                                 },
-                              );
+                              );*/
                             }
                           },
                         ),
