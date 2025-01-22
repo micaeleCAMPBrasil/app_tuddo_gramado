@@ -87,11 +87,11 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
     //await apiService.getIdTG(Config.tokenURLTG, usuario.email, usuario.uid);
 
-    //await apiService.criandonovousuarioTuddoGramado(model);
+    await apiService.criandonovousuarioTuddoGramado(model);
 
     await apiService.criandonovousuarioTuddoDobro(model);
 
-    //await apiService.criandonovousuarioTransfer(model);
+    await apiService.criandonovousuarioTransfer(model);
   }
 
   late InAppWebViewController webView;
@@ -101,7 +101,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   Widget build(BuildContext context) {
     Usuario usuario = Provider.of<UsuarioProvider>(context).getUsuario;
     Routa routa = Provider.of<ControlNav>(context).getrouta;
-    //cadastrousuario(usuario);
+    cadastrousuario(usuario);
     int routaCategoriaPatrocinador =
         Provider.of<ControlNav>(context).getIdPatrocinador;
     Patrocinadores ptEscolhido = routa.page == 2 &&

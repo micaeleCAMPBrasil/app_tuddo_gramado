@@ -5,7 +5,6 @@ import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/data/php/config.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:wp_json_api/models/responses/wp_user_info_updated_response.dart';
 import 'package:wp_json_api/models/responses/wp_user_register_response.dart';
 import 'package:wp_json_api/wp_json_api.dart';
 
