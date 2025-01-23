@@ -7,14 +7,11 @@ import 'package:provider/provider.dart';
 import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/firebase_options.dart';
 import 'package:app_tuddo_gramado/services/auth_service.dart';
-import 'package:app_tuddo_gramado/store/AppStore.dart';
 import 'package:app_tuddo_gramado/utils/ADataProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 
-AppStore appStore = AppStore();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,8 +41,6 @@ void main() async {
   /*await Geolocator.requestPermission();
   await Geolocator.getCurrentPosition();*/
   //await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-
-  appStore.toggleDarkMode(value: getBoolAsync(isDarkModeOnPref));
 
   defaultToastGravityGlobal = ToastGravity.BOTTOM;
 
@@ -80,17 +75,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (_) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: const ASplashScreen(),
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          scaffoldBackgroundColor: scaffoldColor,
-          textTheme: Theme.of(context).textTheme.apply(
-                bodyColor: Colors.white,
-              ),
-        ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: const ASplashScreen(),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: scaffoldColor,
+        textTheme: Theme.of(context).textTheme.apply(
+              bodyColor: Colors.white,
+            ),
       ),
     );
   }

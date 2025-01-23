@@ -20,6 +20,7 @@ import 'package:app_tuddo_gramado/services/auth_service.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:provider/provider.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class ALoginScreen extends StatefulWidget {
   const ALoginScreen({super.key});
@@ -45,6 +46,54 @@ class _ALoginScreenState extends State<ALoginScreen> {
   void initState() {
     apiService = APIService();
     super.initState();
+  }
+
+  Future<void> _loginAuthFirebase() async {
+    User user = AuthService.gerarUserFirebase();
+    String uid = user.uid;
+    String? emailEscolhido = user.email;
+    await storeUser.getUID(uid);
+
+    Usuario usuarioBase = storeUser.state.value;
+
+    if (usuarioBase.nome == '' ||
+        usuarioBase.email == '' ||
+        usuarioBase.telefone == '') {
+      Timer(
+        const Duration(seconds: 1),
+        () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RegisterPage(
+                uid: uid,
+                email: emailEscolhido!,
+                usuario: usuarioBase,
+              ),
+            ),
+          );
+        },
+      );
+    } else {
+      setState(() {
+        isApiCallProcess = true;
+      });
+
+      Provider.of<UsuarioProvider>(context, listen: false)
+          .updateUsuario(usuarioBase);
+
+      Timer(
+        const Duration(seconds: 1),
+        () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const CheckUserLoggedInOrNot(),
+            ),
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -114,148 +163,19 @@ class _ALoginScreenState extends State<ALoginScreen> {
 
                               await AuthService.signInWithEmail(
                                   _emailTextController.text);
-
-                              User user = AuthService.gerarUserFirebase();
-                              String uid = user.uid;
-                              String? emailEscolhido = user.email;
-                              await storeUser.getUID(uid);
-
-                              Usuario usuarioBase = storeUser.state.value;
-
-                              if (usuarioBase.nome == '' ||
-                                  usuarioBase.email == '' ||
-                                  usuarioBase.telefone == '') {
-                                Timer(
-                                  const Duration(seconds: 1),
-                                  () {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => RegisterPage(
-                                          uid: uid,
-                                          email: emailEscolhido!,
-                                          usuario: usuarioBase,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              } else {
-                                setState(() {
-                                  isApiCallProcess = true;
-                                });
-
-                                Provider.of<UsuarioProvider>(context,
-                                        listen: false)
-                                    .updateUsuario(usuarioBase);
-
-                                Timer(
-                                  const Duration(seconds: 1),
-                                  () {
-                                    /*Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => LoginWP(
-                                                  usuario: usuarioBase.email,
-                                                  senha: usuarioBase.uid,
-                                                ),
-                                              ),
-                                            );*/
-
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const CheckUserLoggedInOrNot(),
-                                      ),
-                                    );
-                                  },
-                                );
-                              }
-
-                              /*AuthService.signInWithEmail(
-                                      _emailTextController.text)
-                                  .then(
-                                (value) async {
-                                  if (value == "Sucess") {
-                                    User user = AuthService.gerarUserFirebase();
-                                    String uid = user.uid;
-                                    String? emailEscolhido = user.email;
-
-                                    await storeUser.getUID(uid);
-
-                                    Usuario usuarioBase = storeUser.state.value;
-
-                                    if (usuarioBase.nome == '' ||
-                                        usuarioBase.email == '' ||
-                                        usuarioBase.telefone == '') {
-                                      Timer(
-                                        const Duration(seconds: 1),
-                                        () {
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  RegisterPage(
-                                                uid: uid,
-                                                email: emailEscolhido!,
-                                                usuario: usuarioBase,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    } else {
-                                      setState(() {
-                                        isApiCallProcess = true;
-                                      });
-
-                                      Provider.of<UsuarioProvider>(context,
-                                              listen: false)
-                                          .updateUsuario(usuarioBase);
-
-                                      Timer(
-                                        const Duration(seconds: 1),
-                                        () {
-                                          /*Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => LoginWP(
-                                                  usuario: usuarioBase.email,
-                                                  senha: usuarioBase.uid,
-                                                ),
-                                              ),
-                                            );*/
-
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const CheckUserLoggedInOrNot(),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    }
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          value,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        backgroundColor: primaryColor,
-                                      ),
-                                    );
-                                  }
-                                },
-                              );*/
+                              await _loginAuthFirebase();
                             }
                           },
                         ),
                         heightSpace20,
+                        // botao para login com apple
+                        SignInWithAppleButton(
+                          onPressed: () async {
+                            await AuthService.signInWithApple();
+                            await _loginAuthFirebase();
+                          },
+                        ),
+
                         /*Text(
                           'Faça Login usando:',
                           style: whiteRegular15,
