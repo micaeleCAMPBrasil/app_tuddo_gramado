@@ -1,9 +1,9 @@
 // ignore_for_file: library_private_types_in_public_api, file_names, deprecated_member_use, use_build_context_synchronously
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:app_tuddo_gramado/data/php/api_service.dart';
-import 'package:app_tuddo_gramado/helper/ui_helper.dart';
 import 'package:app_tuddo_gramado/services/auth_check.dart';
 import 'package:app_tuddo_gramado/services/logout_wordpress.dart';
 import 'package:app_tuddo_gramado/utils/widgets.dart';
@@ -18,7 +18,6 @@ import 'package:app_tuddo_gramado/screens/login/AUpdateInformacoes.dart';
 import 'package:app_tuddo_gramado/services/auth_service.dart';
 
 import 'package:app_tuddo_gramado/utils/constant.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -56,9 +55,7 @@ class _ALoginScreenState extends State<ALoginScreen> {
 
     Usuario usuarioBase = storeUser.state.value;
 
-    if (usuarioBase.nome == '' ||
-        usuarioBase.email == '' ||
-        usuarioBase.telefone == '') {
+    if (usuarioBase.nome == '' || usuarioBase.email == '' || usuarioBase.telefone == '') {
       Timer(
         const Duration(seconds: 1),
         () {
@@ -69,6 +66,8 @@ class _ALoginScreenState extends State<ALoginScreen> {
                 uid: uid,
                 email: emailEscolhido!,
                 usuario: usuarioBase,
+                nome: user.displayName ?? '',
+                telefone: user.phoneNumber ?? '',
               ),
             ),
           );
@@ -79,8 +78,7 @@ class _ALoginScreenState extends State<ALoginScreen> {
         isApiCallProcess = true;
       });
 
-      Provider.of<UsuarioProvider>(context, listen: false)
-          .updateUsuario(usuarioBase);
+      Provider.of<UsuarioProvider>(context, listen: false).updateUsuario(usuarioBase);
 
       Timer(
         const Duration(seconds: 1),
@@ -159,167 +157,53 @@ class _ALoginScreenState extends State<ALoginScreen> {
                           text: 'Continue',
                           onTap: () async {
                             if (mykey.currentState!.validate()) {
-                              //UiHelper.showLoadingDialog(context, 'Aguarde...');
-
-                              await AuthService.signInWithEmail(
-                                  _emailTextController.text);
+                              await AuthService.signInWithEmail(_emailTextController.text);
                               await _loginAuthFirebase();
                             }
                           },
                         ),
                         heightSpace20,
-                        // botao para login com apple
-                        SignInWithAppleButton(
-                          onPressed: () async {
-                            await AuthService.signInWithApple();
+                        GestureDetector(
+                          onTap: () async {
+                            await AuthService.signInWithGoogle();
                             await _loginAuthFirebase();
                           },
-                        ),
-
-                        /*Text(
-                          'Faça Login usando:',
-                          style: whiteRegular15,
-                          textAlign: TextAlign.center,
-                        ),
-                        heightSpace20,*/
-                        /*Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            /*Expanded(
-                              child: Container(
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xff4267B2),
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      'assets/image/appetit/fb.png',
-                                      width: 30,
-                                      height: 30,
-                                    ),
-                                    widthSpace15,
-                                    Text(
-                                      'Facebook',
-                                      style: whiteMedium16,
-                                    ),
-                                  ],
-                                ),
-                              ),
+                          child: Container(
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color: white,
+                              borderRadius: BorderRadius.circular(5),
                             ),
-                            widthSpace20,*/
-                            /*Expanded(
-                              child: GestureDetector(
-                                onTap: () =>
-                                    AuthService.signInWithGoogle().then(
-                                  (value) async {
-                                    if (value == "Sucess") {
-                                      User user =
-                                          AuthService.gerarUserFirebase();
-                                      String uid = user.uid;
-                                      String? emailEscolhido = user.email;
-
-                                      await storeUser.getUID(uid);
-
-                                      Usuario usuarioBase =
-                                          storeUser.state.value;
-
-                                      if (usuarioBase.nome == '' ||
-                                          usuarioBase.email == '' ||
-                                          usuarioBase.telefone == '') {
-                                        Timer(
-                                          const Duration(seconds: 1),
-                                          () {
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RegisterPage(
-                                                  uid: uid,
-                                                  email: emailEscolhido!,
-                                                  usuario: usuarioBase,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      } else {
-                                        setState(() {
-                                          isApiCallProcess = true;
-                                        });
-
-                                        Provider.of<UsuarioProvider>(context,
-                                                listen: false)
-                                            .updateUsuario(usuarioBase);
-
-                                        Timer(
-                                          const Duration(seconds: 1),
-                                          () {
-                                            /*Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => LoginWP(
-                                                  usuario: usuarioBase.email,
-                                                  senha: usuarioBase.uid,
-                                                ),
-                                              ),
-                                            );*/
-
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const CheckUserLoggedInOrNot(),
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      }
-                                    } else if (value == "n_cadastrado") {
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            value,
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          backgroundColor: primaryColor,
-                                        ),
-                                      );
-                                    }
-                                  },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/image/appetit/google.png',
+                                  width: 45,
+                                  height: 45,
                                 ),
-                                child: Container(
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    color: white,
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset(
-                                        'assets/image/appetit/google.png',
-                                        width: 45,
-                                        height: 45,
-                                      ),
-                                      widthSpace15,
-                                      Text(
-                                        'Google',
-                                        style: blackMedium16,
-                                      ),
-                                    ],
-                                  ),
+                                Text(
+                                  'Login com Google',
+                                  style: blackMedium16,
                                 ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        if (Platform.isIOS)
+                          Column(
+                            children: [
+                              heightSpace20,
+                              // botao para login com apple
+                              SignInWithAppleButton(
+                                text: 'Login com Apple',
+                                onPressed: () async {
+                                  await AuthService.signInWithApple();
+                                  await _loginAuthFirebase();
+                                },
                               ),
-                            ),*/
-                          ],
-                        ),*/
+                            ],
+                          ),
                         heightSpace100,
                       ],
                     ),

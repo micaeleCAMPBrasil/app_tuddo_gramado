@@ -42,8 +42,7 @@ class AuthService extends ChangeNotifier {
 
   // verificar o otp
   static Future loginWithOtp({required String otp}) async {
-    final cred =
-        PhoneAuthProvider.credential(verificationId: verifyId, smsCode: otp);
+    final cred = PhoneAuthProvider.credential(verificationId: verifyId, smsCode: otp);
     try {
       final user = await _firebaseAuth.signInWithCredential(cred);
       if (user.user != null) {
@@ -75,32 +74,11 @@ class AuthService extends ChangeNotifier {
   }
 
   static signInWithGoogle() async {
-    //try {
-
-    //GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-    /*AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
-      //final user = await _firebaseAuth.signInWithCredential(credential);
-      //if (user.user != null) {
-        return "Sucess";
-      /*} else {
-        return "Erro";
-      }*/
-    } on FirebaseAuthException catch (e) {
-      return e.message.toString();*/
     try {
-      const List<String> scopes = <String>[
-        'email',
-        'https://www.googleapis.com/auth/contacts.readonly',
-      ];
-      GoogleSignInAccount? googleUser =
-          await GoogleSignIn(scopes: scopes).signIn();
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
       // Obtain the auth details from the request
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
       // Create a new credential
       final credential = GoogleAuthProvider.credential(
@@ -109,14 +87,8 @@ class AuthService extends ChangeNotifier {
       );
 
       debugPrint('fazendo login');
-      await _firebaseAuth.signInWithCredential(credential);
-      // ignore: unrelated_type_equality_checks
-
-      /*if (cred.hashCode == '') {
-      await _firebaseAuth.createUserWithEmailAndPassword(
-          email: googleUser!.email, password: googleUser.email);
-    }*/
-      return 'Sucess';
+      final user = await _firebaseAuth.signInWithCredential(credential);
+      return user;
       // ignore: unused_catch_clause
     } on FirebaseAuthException catch (e) {
       debugPrint('n_cadastrado');
@@ -130,11 +102,9 @@ class AuthService extends ChangeNotifier {
   /// Generates a cryptographically secure random nonce, to be included in a
   /// credential request.
   static String _generateNonce([int length = 32]) {
-    const charset =
-        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+    const charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
     final random = Random.secure();
-    return List.generate(length, (_) => charset[random.nextInt(charset.length)])
-        .join();
+    return List.generate(length, (_) => charset[random.nextInt(charset.length)]).join();
   }
 
   /// Returns the sha256 hash of [input] in hex notation.
@@ -165,13 +135,13 @@ class AuthService extends ChangeNotifier {
     final oauthCredential = OAuthProvider("apple.com").credential(
       idToken: appleCredential.identityToken,
       rawNonce: rawNonce,
+      accessToken: appleCredential.authorizationCode,
     );
 
     // Sign in the user with Firebase. If the nonce we generated earlier does
     // not match the nonce in `appleCredential.identityToken`, sign in will fail.
     try {
-      final user =
-          await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+      final user = await _firebaseAuth.signInWithCredential(oauthCredential);
       return user;
     } catch (e) {
       debugPrint('$e');
@@ -184,14 +154,12 @@ class AuthService extends ChangeNotifier {
 
     try {
       debugPrint('fazendo login');
-      await _firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: email);
+      await _firebaseAuth.signInWithEmailAndPassword(email: email, password: email);
       return 'Sucess';
       // ignore: unused_catch_clause
     } on FirebaseAuthException catch (e) {
       debugPrint('cadastrando');
-      await _firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: email);
+      await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: email);
       return 'Sucess';
     } catch (e) {
       return "Você não escolheu um e-mail";

@@ -29,7 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   auto_size_text: ^3.0.0
-  cached_network_image: ^3.3.1
+  cached_network_image: ^3.4.1
   carousel_slider: ^5.0.0
   cloud_firestore: ^5.4.1
   cupertino_icons: ^1.0.6
@@ -52,7 +52,7 @@ dependencies:
   # get: ^4.6.6
   google_fonts: ^6.2.1
   google_sign_in: ^6.2.1
-  sign_in_with_apple: ^3.0.0
+  sign_in_with_apple: ^6.1.4
   crypto: ^3.0.1
   # html: ^0.15.4
   http: ^1.2.1

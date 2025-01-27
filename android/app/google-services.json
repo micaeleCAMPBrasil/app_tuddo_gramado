@@ -50,6 +50,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "111160179496-u3c5igllnhesfd83etqdrpetf2he41ph.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tuddo.tuddo.app",
+            "certificate_hash": "97737b1512ec7f9b6070fae2c8c128b72d104b47"
+          }
+        },
+        {
           "client_id": "111160179496-tg3iemjs1hldfa5tgpqg69ku7eiulto1.apps.googleusercontent.com",
           "client_type": 3
         }

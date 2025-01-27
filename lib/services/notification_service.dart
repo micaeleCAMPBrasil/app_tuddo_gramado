@@ -48,10 +48,12 @@ class NotificationService {
 
   _initializeNotifications() async {
     const android = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const iOS = DarwinInitializationSettings();
     // Fazer: macOs, iOS, Linux...
     await localNotificationsPlugin.initialize(
       const InitializationSettings(
         android: android,
+        iOS: iOS,
       ),
     );
   }
@@ -75,8 +77,7 @@ class NotificationService {
     }
   }*/
 
-  showNotificationScheduled(
-      CustomNotification notification, Duration duration) {
+  showNotificationScheduled(CustomNotification notification, Duration duration) {
     final date = DateTime.now().add(duration);
     var location = tz.timeZoneDatabase.get('America/Brazil');
 
@@ -93,8 +94,7 @@ class NotificationService {
       payload: notification.payload,
       // ignore: deprecated_member_use
       //androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
     );
   }
 
@@ -111,8 +111,7 @@ class NotificationService {
   }
 
   checkForNotifications() async {
-    final details =
-        await localNotificationsPlugin.getNotificationAppLaunchDetails();
+    final details = await localNotificationsPlugin.getNotificationAppLaunchDetails();
     if (details != null && details.didNotificationLaunchApp) {
       //notificationTapBackground(details);
     }

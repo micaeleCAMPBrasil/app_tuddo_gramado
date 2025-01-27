@@ -78,6 +78,8 @@ class _RegisterPageState extends State<RegisterPage> {
     setState(() {
       uidController = TextEditingController(text: widget.uid);
       emailController = TextEditingController(text: widget.email);
+      nomeController = TextEditingController(text: widget.nome);
+      telefoneController = TextEditingController(text: widget.telefone);
     });
   }
 
@@ -114,8 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     String userName = '$primeiroNome-$segundoNome';
 
-    List usernamesbase =
-        listUsuarios.where((element) => element.username == userName).toList();
+    List usernamesbase = listUsuarios.where((element) => element.username == userName).toList();
 
     setState(() {
       check = usernamesbase.isEmpty ? false : true;
@@ -139,8 +140,7 @@ class _RegisterPageState extends State<RegisterPage> {
         int n3 = Random().nextInt(9);
         int n4 = Random().nextInt(9);
 
-        String numeros =
-            n1.toString() + n2.toString() + n3.toString() + n4.toString();
+        String numeros = n1.toString() + n2.toString() + n3.toString() + n4.toString();
 
         setState(() {
           userNameController.text = "$userName-$numeros";
@@ -234,36 +234,24 @@ class _RegisterPageState extends State<RegisterPage> {
                                 text: 'Continuar',
                                 onTap: () async {
                                   if (mykey.currentState!.validate()) {
-                                    UiHelper.showLoadingDialog(
-                                        context, mensagemalerta);
+                                    UiHelper.showLoadingDialog(context, mensagemalerta);
 
                                     setState(() {
                                       widget.usuario.uid = widget.uid;
-                                      widget.usuario.nome =
-                                          nomeController.text.toUpperCase();
-                                      widget.usuario.username =
-                                          userNameController.text;
-                                      widget.usuario.email =
-                                          emailController.text;
-                                      widget.usuario.telefone =
-                                          telefoneController.text;
+                                      widget.usuario.nome = nomeController.text.toUpperCase();
+                                      widget.usuario.username = userNameController.text;
+                                      widget.usuario.email = emailController.text;
+                                      widget.usuario.telefone = telefoneController.text;
                                       widget.usuario.tokenAlert = tokenAlert;
                                     });
 
                                     storeUser.update(widget.usuario);
 
-                                    Provider.of<UsuarioProvider>(context,
-                                            listen: false)
-                                        .updateUsuario(widget.usuario);
+                                    Provider.of<UsuarioProvider>(context, listen: false).updateUsuario(widget.usuario);
 
-                                    List<String> split =
-                                        widget.usuario.nome.split(' ');
-                                    String primeiroNome = split[0] == ''
-                                        ? ''
-                                        : split[0].toUpperCase();
-                                    String segundoNome = split[1] == ''
-                                        ? ''
-                                        : split[1].toUpperCase();
+                                    List<String> split = widget.usuario.nome.split(' ');
+                                    String primeiroNome = split[0] == '' ? '' : split[0].toUpperCase();
+                                    String segundoNome = split[1] == '' ? '' : split[1].toUpperCase();
 
                                     CustomerModel model = CustomerModel(
                                       email: widget.usuario.email,
@@ -274,14 +262,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                       roles: ['subscriber'],
                                     );
 
-                                    await apiService
-                                        .criandonovousuarioTuddoGramado(model);
+                                    await apiService.criandonovousuarioTuddoGramado(model);
 
-                                    await apiService
-                                        .criandonovousuarioTuddoDobro(model);
+                                    await apiService.criandonovousuarioTuddoDobro(model);
 
-                                    await apiService
-                                        .criandonovousuarioTransfer(model);
+                                    await apiService.criandonovousuarioTransfer(model);
 
                                     debugPrint('check cadastro - $check');
 
@@ -295,8 +280,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                const CheckUserLoggedInOrNot(),
+                                            builder: (context) => const CheckUserLoggedInOrNot(),
                                           ),
                                         );
                                       },
