@@ -43,10 +43,7 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
 
   @override
   Widget build(BuildContext context) {
-    bool checksize = MediaQuery.of(context).size.width <= 320 ||
-            MediaQuery.of(context).size.height <= 320
-        ? true
-        : false;
+    bool isSmallSize = MediaQuery.sizeOf(context).width <= 320 || MediaQuery.sizeOf(context).height <= 320;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -56,49 +53,11 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
             FutureBuilder(
               future: gerarUsuario(widget.comment.uid),
               builder: (context, dadosUsuario) {
-                Usuario? usuarioQPublicou = dadosUsuario.data;
                 if (dadosUsuario.hasData) {
+                  Usuario usuarioQPublicou = dadosUsuario.data!;
                   return Row(
                     children: [
-                      usuarioQPublicou!.photo == ''
-                          ? Image.asset(
-                              'assets/image/nopicture.png',
-                              height: 56,
-                              width: 56,
-                              fit: BoxFit.cover,
-                            ).cornerRadiusWithClipRRect(12)
-                          : Image(
-                              image: CachedNetworkImageProvider(
-                                usuarioQPublicou.photo.validate(),
-                              ),
-                              height: 56,
-                              width: 56,
-                              fit: BoxFit.cover,
-                              loadingBuilder:
-                                  (context, child, loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child;
-                                }
-                                return Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Center(
-                                      child: CircularProgressIndicator(
-                                        color: Colors.grey[400],
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ).cornerRadiusWithClipRRect(
-                              12) /*Image.network(
-                              usuarioQPublicou.photo.validate(),
-                              height: 56,
-                              width: 56,
-                              fit: BoxFit.cover,
-                            ).cornerRadiusWithClipRRect(12)*/
-                      ,
+                      CommentPicture(usuario: usuarioQPublicou),
                       widthSpace15,
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -110,6 +69,7 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
                                 formatarNome(usuarioQPublicou.nome.validate()),
                                 style: whiteSemiBold18,
                               ),
+                              widthSpace5,
                               Image.asset(
                                 'assets/social/ic_TickSquare.png',
                                 height: 14,
@@ -235,8 +195,7 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
               String idComentario = widget.comment.id.toString();
               bool idLiked = widget.comment.like ?? false;
 
-              await storePost.addLikeComentario(idLiked, widget.comment.uid,
-                  widget.comment.idPost, idComentario);
+              await storePost.addLikeComentario(idLiked, widget.comment.uid, widget.comment.idPost, idComentario);
             }, borderRadius: radius(4)),
           ],
         )
@@ -244,12 +203,59 @@ class _SVCommentComponentState extends State<SVCommentComponent> {
     ).paddingOnly(
       top: 16,
       left: widget.comment.isCommentReply.validate()
-          ? checksize
+          ? isSmallSize
               ? 40
               : 70
           : 16,
       right: 16,
       bottom: 16,
     );
+  }
+}
+
+class CommentPicture extends StatelessWidget {
+  final Usuario usuario;
+
+  const CommentPicture({
+    super.key,
+    required this.usuario,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return usuario.photo == ''
+        ? Image.asset(
+            'assets/image/nopicture.png',
+            height: 56,
+            width: 56,
+            fit: BoxFit.cover,
+          ).cornerRadiusWithClipRRect(12)
+        : CachedNetworkImage(
+            imageUrl: usuario.photo,
+            height: 56,
+            width: 56,
+            fit: BoxFit.cover,
+            errorWidget: (context, url, error) {
+              return Image.asset(
+                'assets/image/nopicture.png',
+                height: 56,
+                width: 56,
+                fit: BoxFit.cover,
+              ).cornerRadiusWithClipRRect(12);
+            },
+            progressIndicatorBuilder: (context, url, progress) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.grey[400],
+                    ),
+                  ),
+                ],
+              );
+            },
+          ).cornerRadiusWithClipRRect(12);
   }
 }

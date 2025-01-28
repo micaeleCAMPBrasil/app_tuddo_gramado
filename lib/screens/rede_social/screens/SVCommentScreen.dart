@@ -98,14 +98,13 @@ class _SVCommentScreenState extends State<SVCommentScreen> {
         children: [
           Container(
             height: MediaQuery.of(context).size.height * 0.9,
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).size.height * 0.1),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.1),
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection("User Post")
                   .doc(widget.idPost)
                   .collection("Comments")
-                  .orderBy('TimeStamp', descending: true)
+                  .orderBy('TimeStamp', descending: false)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
@@ -113,17 +112,15 @@ class _SVCommentScreenState extends State<SVCommentScreen> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       final comentarios = snapshot.data!.docs[index];
-    
+
                       String uidUser = comentarios['idUsuario'];
                       String idPulicacao = comentarios['idPulicacao'];
-    
+
                       if (idPulicacao == widget.idPost) {
-                        List<String> listUIDUser =
-                            List<String>.from(comentarios['likes'] ?? []);
-    
-                        bool isLiked =
-                            listUIDUser.contains(widget.usuario.uid);
-    
+                        List<String> listUIDUser = List<String>.from(comentarios['likes'] ?? []);
+
+                        bool isLiked = listUIDUser.contains(widget.usuario.uid);
+
                         SVCommentModel e = SVCommentModel(
                           id: comentarios.id,
                           idPost: widget.idPost,
@@ -132,10 +129,9 @@ class _SVCommentScreenState extends State<SVCommentScreen> {
                           comment: comentarios['comentario'],
                           like: isLiked,
                           likeCount: listUIDUser.length,
-                          isCommentReply:
-                              widget.usuario.uid == uidUser ? true : false,
+                          isCommentReply: widget.usuario.uid == uidUser ? true : false,
                         );
-    
+
                         return SVCommentComponent(
                           comment: e,
                           check: uidUser == widget.usuario.uid ? true : false,

@@ -27,8 +27,7 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
 
   @override
   Widget build(BuildContext context) {
-    Usuario usuario =
-        Provider.of<UsuarioProvider>(context, listen: false).getUsuario;
+    Usuario usuario = Provider.of<UsuarioProvider>(context, listen: false).getUsuario;
 
     return Scaffold(
       backgroundColor: scaffoldColor,
@@ -48,29 +47,13 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
         ),
         actions: [
           IconButton(
-            icon: /*Image.asset(
-              'assets/icones/ic_Camera.png',
-              width: 24,
-              height: 22,
-              fit: BoxFit.fill,
-              color: color94,
-            ),*/
-                Icon(
+            icon: Icon(
               Icons.add_a_photo,
               size: 23,
               color: color94,
             ),
             onPressed: () async {
-              Provider.of<ControlNav>(context, listen: false)
-                  .updateIndex(3, 1);
-              /*Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SVPostAdd(
-                    usuario: usuario,
-                  ),
-                ),
-              );*/
+              Provider.of<ControlNav>(context, listen: false).updateIndex(3, 1);
             },
           ),
           widthSpace10,
@@ -82,9 +65,7 @@ class _SVHomeFragmentState extends State<SVHomeFragment> {
             /*heightSpace15,
             SVStoryComponent(),*/
             heightSpace10,
-            SVPostComponent(
-              usuario: usuario,
-            ),
+            SVPostComponent(usuario: usuario),
             // SVProfilePostsComponent(), meus posts
             heightSpace15,
           ],
