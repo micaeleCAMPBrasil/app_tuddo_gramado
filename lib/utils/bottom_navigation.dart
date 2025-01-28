@@ -14,7 +14,6 @@ import 'package:app_tuddo_gramado/screens/rede_social/screens/SVCommentScreen.da
 import 'package:app_tuddo_gramado/screens/rede_social/screens/SVPostAdd.dart';
 import 'package:app_tuddo_gramado/screens/rede_social/screens/SVPostUpdate.dart';
 import 'package:app_tuddo_gramado/screens/webscreens/InAppView.dart';
-import 'package:app_tuddo_gramado/services/firebase_messaging_service.dart';
 import 'package:app_tuddo_gramado/services/login_wordpress.dart';
 import 'package:app_tuddo_gramado/services/notification_service.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +50,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
   @override
   void initState() {
     super.initState();
-    initializeFirebaseMessaging();
     checkNotifications();
   }
 
@@ -59,14 +57,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
     client: HttpClient(),
   );
 
-  initializeFirebaseMessaging() async {
-    await Provider.of<FirebaseMessagingService>(context, listen: false)
-        .initialize();
-  }
-
   checkNotifications() async {
-    await Provider.of<NotificationService>(context, listen: false)
-        .checkForNotifications();
+    await Provider.of<NotificationService>(context, listen: false).checkForNotifications();
   }
 
   APIService apiService = APIService();
@@ -102,10 +94,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
     Usuario usuario = Provider.of<UsuarioProvider>(context).getUsuario;
     Routa routa = Provider.of<ControlNav>(context).getrouta;
     cadastrousuario(usuario);
-    int routaCategoriaPatrocinador =
-        Provider.of<ControlNav>(context).getIdPatrocinador;
-    Patrocinadores ptEscolhido = routa.page == 2 &&
-            (routa.index == 2 || routa.index == 3 || routa.index == 4)
+    int routaCategoriaPatrocinador = Provider.of<ControlNav>(context).getIdPatrocinador;
+    Patrocinadores ptEscolhido = routa.page == 2 && (routa.index == 2 || routa.index == 3 || routa.index == 4)
         ? Provider.of<ControlNav>(context).getPatrocinador
         : Patrocinadores(
             id: 0,
@@ -120,17 +110,14 @@ class _BottomNavigationState extends State<BottomNavigation> {
             isMostrarSite: false,
           );
 
-    String idPost = routa.page == 3 && routa.index == 2
-        ? Provider.of<ControlNav>(context).getidpost
-        : "";
+    String idPost = routa.page == 3 && routa.index == 2 ? Provider.of<ControlNav>(context).getidpost : "";
 
     SVPostModel post = routa.page == 3 && routa.index == 3
         ? Provider.of<ControlNav>(context).getpost
         : SVPostModel(idPost: '', idUsuario: '');
 
     String linkurl = Provider.of<ControlNav>(context).urllinksubcribe;
-    String linkurlcategoria =
-        Provider.of<ControlNav>(context).getLinkPatrocinador;
+    String linkurlcategoria = Provider.of<ControlNav>(context).getLinkPatrocinador;
 
     debugPrint('link galeria - $linkurlcategoria');
 
@@ -453,8 +440,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         ),
         // 3 -
         InAppView(
-          url:
-              "https://site.tuddogramado.com.br/member-account/?vendor=mybookings",
+          url: "https://site.tuddogramado.com.br/member-account/?vendor=mybookings",
           page: 4,
           index: 0,
           data: {
@@ -602,8 +588,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
             ),
           ],
           onTap: (int index) {
-            Provider.of<ControlNav>(context, listen: false)
-                .updateIndex(index, 0);
+            Provider.of<ControlNav>(context, listen: false).updateIndex(index, 0);
             //setState(() => widget.selectedIndex = index);
           },
           currentIndex: routa.page,

@@ -12,35 +12,13 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:app_tuddo_gramado/utils/constant.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initialize(aLocaleLanguageList: languageList());
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  /*if (kIsWeb) {
-    // Registrar o viewType 'iframeElement' com a fábrica para criar o IFrameElement
-    ui.platformViewRegistry.registerViewFactory(
-      'login_tuddo_dobro',
-      (int viewId) => IFrameElement()
-        ..src =
-            'https://d.tuddogramado.com.br/wp-login.php?is_api=true&acao=login&user=sales.micaele1911@gmail.com&pass=bRUWHRaEbBbj0313KCtfSdgLWqO2'
-        ..style.border = 'none',
-    );
-  }*/
-
-  /*if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-    await InAppWebViewController.setWebContentsDebuggingEnabled(kDebugMode);
-  }*/
-
-  //LocationPermission permission = await Geolocator.checkPermission();
-  //debugPrint('$permission');
-  /*await Geolocator.requestPermission();
-  await Geolocator.getCurrentPosition();*/
-  //await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  final notificationService = NotificationService();
+  FirebaseMessagingService(notificationService).initialize();
 
   defaultToastGravityGlobal = ToastGravity.BOTTOM;
 
@@ -57,11 +35,10 @@ void main() async {
           create: (context) => UsuarioProvider(),
         ),
         Provider<NotificationService>(
-          create: (context) => NotificationService(),
+          create: (context) => notificationService,
         ),
         Provider<FirebaseMessagingService>(
-          create: (context) =>
-              FirebaseMessagingService(context.read<NotificationService>()),
+          create: (context) => FirebaseMessagingService(context.read<NotificationService>()),
         ),
       ],
       child: const MyApp(),
