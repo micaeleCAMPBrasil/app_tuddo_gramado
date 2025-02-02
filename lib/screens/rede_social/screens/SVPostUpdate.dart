@@ -125,7 +125,7 @@ class _SVPostEditState extends State<SVPostEdit> {
   bool editarImagem = false;
 
   void uploadImageFile() async {
-    String url = "https://www.tuddo.org/upload_img.php";
+    String url = "https://api.tuddo.org/upload_img.php";
 
     try {
       /*String fileName = _image!.path.split('/').last;
@@ -288,7 +288,7 @@ class _SVPostEditState extends State<SVPostEdit> {
                   heightSpace15,
                   !editarImagem
                       ? widget.post.postImage == '' ||
-                              widget.post.postImage == 'https://www.tuddo.org/'
+                              widget.post.postImage == 'https://api.tuddo.org/'
                           ? Image.asset(
                               'assets/social/no-camera.png',
                               height: 300,
@@ -419,7 +419,7 @@ class _SVPostEditState extends State<SVPostEdit> {
                             if (mykey.currentState!.validate()) {
                               postPost(
                                 editarImagem
-                                    ? "https://www.tuddo.org/$imgURL"
+                                    ? "https://api.tuddo.org/$imgURL"
                                     : widget.post.postImage!,
                                 _descriptionTextController.text,
                               );
