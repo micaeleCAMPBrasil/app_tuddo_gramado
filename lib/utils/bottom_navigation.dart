@@ -93,7 +93,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   Widget build(BuildContext context) {
     Usuario usuario = Provider.of<UsuarioProvider>(context).getUsuario;
     Routa routa = Provider.of<ControlNav>(context).getrouta;
-    cadastrousuario(usuario);
+    //cadastrousuario(usuario);
     int routaCategoriaPatrocinador = Provider.of<ControlNav>(context).getIdPatrocinador;
     Patrocinadores ptEscolhido = routa.page == 2 && (routa.index == 2 || routa.index == 3 || routa.index == 4)
         ? Provider.of<ControlNav>(context).getPatrocinador
