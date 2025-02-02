@@ -352,12 +352,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
               lableText: 'Usuário',
             ),
             heightSpace20,
-            PrimaryTextfield(
-              controller: _emailController,
-              lableText: 'E-mail',
-              keyboardType: TextInputType.emailAddress,
-            ),
-            heightSpace20,
+            // PrimaryTextfield(
+            //   controller: _emailController,
+            //   lableText: 'E-mail',
+            //   keyboardType: TextInputType.emailAddress,
+            // ),
+            // heightSpace20,
             PrimaryTextfield(
               controller: _phoneNumberController,
               lableText: 'Telefone',
