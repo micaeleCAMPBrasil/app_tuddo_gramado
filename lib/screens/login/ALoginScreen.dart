@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:app_tuddo_gramado/data/php/api_service.dart';
-import 'package:app_tuddo_gramado/helper/ui_helper.dart';
 import 'package:app_tuddo_gramado/services/auth_check.dart';
 import 'package:app_tuddo_gramado/services/logout_wordpress.dart';
 import 'package:app_tuddo_gramado/utils/widgets.dart';
@@ -18,7 +17,6 @@ import 'package:app_tuddo_gramado/screens/login/AUpdateInformacoes.dart';
 import 'package:app_tuddo_gramado/services/auth_service.dart';
 
 import 'package:app_tuddo_gramado/utils/constant.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:provider/provider.dart';
 
 class ALoginScreen extends StatefulWidget {
