@@ -4,6 +4,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:app_tuddo_gramado/data/php/api_service.dart';
+import 'package:app_tuddo_gramado/screens/login/apple_button.dart';
+import 'package:app_tuddo_gramado/screens/login/google_button.dart';
 import 'package:app_tuddo_gramado/services/auth_check.dart';
 import 'package:app_tuddo_gramado/services/logout_wordpress.dart';
 import 'package:app_tuddo_gramado/utils/widgets.dart';
@@ -19,7 +21,6 @@ import 'package:app_tuddo_gramado/services/auth_service.dart';
 
 import 'package:app_tuddo_gramado/utils/constant.dart';
 import 'package:provider/provider.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class ALoginScreen extends StatefulWidget {
   const ALoginScreen({super.key});
@@ -162,48 +163,16 @@ class _ALoginScreenState extends State<ALoginScreen> {
                             }
                           },
                         ),
-                        heightSpace20,
-                        GestureDetector(
-                          onTap: () async {
-                            await AuthService.signInWithGoogle();
-                            await _loginAuthFirebase();
-                          },
-                          child: Container(
-                            height: 44,
-                            decoration: BoxDecoration(
-                              color: white,
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  'assets/image/appetit/google.png',
-                                  width: 45,
-                                  height: 45,
-                                ),
-                                Text(
-                                  'Login com Google',
-                                  style: blackMedium16,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        // heightSpace20,
+                        // GoogleButton(onTap: () async {
+                        //   await AuthService.signInWithGoogle();
+                        //   await _loginAuthFirebase();
+                        // }),
                         if (Platform.isIOS)
-                          Column(
-                            children: [
-                              heightSpace20,
-                              // botao para login com apple
-                              SignInWithAppleButton(
-                                text: 'Login com Apple',
-                                onPressed: () async {
-                                  await AuthService.signInWithApple();
-                                  await _loginAuthFirebase();
-                                },
-                              ),
-                            ],
-                          ),
+                          AppleButton(onTap: () async {
+                            await AuthService.signInWithApple();
+                            await _loginAuthFirebase();
+                          }),
                         heightSpace100,
                       ],
                     ),
