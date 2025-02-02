@@ -262,11 +262,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         widget.usuario.username = _userNameController.text;
                         widget.usuario.email = _emailController.text;
                         widget.usuario.telefone = _phoneNumberController.text;
-                        // ignore: unrelated_type_equality_checks
-                        widget.usuario.photo = tmpFile == ''
+                        /*widget.usuario.photo = tmpFile == ''
                             ? widget.usuario.photo != ''
-                                ? widget.usuario.photo
-                                : ""
+                                ? imgURL == ''
+                                : widget.usuario.photo
+                            : "http://imagesapi.tuddo.org/$imgURL";*/
+                        // ignore: unrelated_type_equality_checks
+                        widget.usuario.photo = tmpFile == '' || imgURL == ''
+                            ? widget.usuario.photo
                             : "http://imagesapi.tuddo.org/$imgURL";
                       });
 
@@ -349,12 +352,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
               lableText: 'Usuário',
             ),
             heightSpace20,
-            PrimaryTextfield(
-              controller: _emailController,
-              lableText: 'E-mail',
-              keyboardType: TextInputType.emailAddress,
-            ),
-            heightSpace20,
+            // PrimaryTextfield(
+            //   controller: _emailController,
+            //   lableText: 'E-mail',
+            //   keyboardType: TextInputType.emailAddress,
+            // ),
+            // heightSpace20,
             PrimaryTextfield(
               controller: _phoneNumberController,
               lableText: 'Telefone',
@@ -395,7 +398,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       borderRadius: BorderRadius.circular(100),
                       child: images == null
                           ? usuario.photo == '' ||
-                                  usuario.photo == 'http://imagesapi.tuddo.org'
+                                  usuario.photo ==
+                                      'http://imagesapi.tuddo.org/' ||
+                                  usuario.photo == 'https://tuddo.org/'
                               ? Image.asset(
                                   "assets/image/nopicture.png",
                                   fit: BoxFit.fill,
