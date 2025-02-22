@@ -5,8 +5,8 @@ import 'package:app_tuddo_gramado/data/models/usuario.dart';
 import 'package:app_tuddo_gramado/data/php/config.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:wp_json_api/models/responses/wp_user_register_response.dart';
-import 'package:wp_json_api/wp_json_api.dart';
+//import 'package:wp_json_api/models/responses/wp_user_register_response.dart';
+//import 'package:wp_json_api/wp_json_api.dart';
 
 class APIService {
   Future<bool> createCustomer(Usuario usuario, CustomerModel model) async {
@@ -72,6 +72,36 @@ class APIService {
 
   Future<bool> criandonovousuarioTuddoDobro(CustomerModel model) async {
     bool ret = false;
+
+    String tokenadm = Config.tokentuddodobro;
+
+    try {
+      var response = await Dio().post(
+        "https://site.tuddogramado.com.br/wp-json/custom-api/v1/register-user/",
+        data: model.toJson(),
+        options: Options(
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $tokenadm',
+            HttpHeaders.contentTypeHeader: "application/json",
+          },
+        ),
+      );
+
+      if (response.statusCode == 201) {
+        debugPrint('usuario do tuddo dobro cadastrado');
+        ret = true;
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        debugPrint("Cadastro Erro TUDDO DOBRO ${e.message}");
+        ret = false;
+      } else {
+        ret = false;
+      }
+    }
+
+    return ret;
+    /*bool ret = false;
     WPJsonAPI.instance.init(
       baseUrl: "https://site.tuddogramado.com.br",
     );
@@ -142,7 +172,7 @@ class APIService {
       ret = false;
     }
 
-    return ret;
+    return ret;*/
   }
 
   Future<bool> criandonovousuarioTransfer(CustomerModel model) async {

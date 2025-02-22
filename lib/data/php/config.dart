@@ -3,6 +3,8 @@ class Config {
   static String screet = "cs_3f11ba5ee7a6400179647efc0796d346e5ae9605";
   static String url = "https://site.tuddogramado.com.br/wp-json/wp/v2/";
 
+  static String tokentuddodobro = "93287e415cd6755ab1d32bff178355afda0a1b1e";
+
   static String tokenURL =
       "https://site.tuddogramado.com.br/wp-json/jwt-auth/v1/token";
 
