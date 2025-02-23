@@ -65,8 +65,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   cadastrousuario(Usuario usuario) async {
     List<String> split = usuario.nome.split(' ');
-    String primeiroNome = split[0] == '' ? '' : split[0].toUpperCase();
-    String segundoNome = split[1] == '' ? '' : split[1].toUpperCase();
+    String primeiroNome = split.first == '' ? '' : split.first.toUpperCase();
+    String segundoNome = split.last == '' ? '' : split.last.toUpperCase();
 
     CustomerModel model = CustomerModel(
       email: usuario.email,

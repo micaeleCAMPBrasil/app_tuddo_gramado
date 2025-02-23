@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:app_tuddo_gramado/data/php/api_service.dart';
+import 'package:app_tuddo_gramado/helper/ui_helper.dart';
 import 'package:app_tuddo_gramado/screens/login/apple_button.dart';
 import 'package:app_tuddo_gramado/screens/login/google_button.dart';
 import 'package:app_tuddo_gramado/services/auth_check.dart';
@@ -158,16 +159,18 @@ class _ALoginScreenState extends State<ALoginScreen> {
                           text: 'Continue',
                           onTap: () async {
                             if (mykey.currentState!.validate()) {
+                              UiHelper.showLoadingDialog(context, 'Aguarde...');
                               await AuthService.signInWithEmail(_emailTextController.text);
                               await _loginAuthFirebase();
+                              Navigator.of(context).pop();
                             }
                           },
                         ),
-                        // heightSpace20,
-                        // GoogleButton(onTap: () async {
-                        //   await AuthService.signInWithGoogle();
-                        //   await _loginAuthFirebase();
-                        // }),
+                        heightSpace20,
+                        GoogleButton(onTap: () async {
+                          await AuthService.signInWithGoogle();
+                          await _loginAuthFirebase();
+                        }),
                         if (Platform.isIOS)
                           AppleButton(onTap: () async {
                             await AuthService.signInWithApple();
